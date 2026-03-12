@@ -8,7 +8,7 @@ import numpy as np
 from OCP.TopExp import TopExp_Explorer
 from OCP.TopAbs import TopAbs_FACE, TopAbs_REVERSED
 from OCP.BRepAdaptor import BRepAdaptor_Surface
-from OCP.GeomAbs import GeomAbs_Cylinder, GeomAbs_Cone
+from OCP.GeomAbs import GeomAbs_Cylinder, GeomAbs_Cone, GeomAbs_Sphere
 from OCP.TopoDS import TopoDS, TopoDS_Shape
 from OCP.GProp import GProp_GProps
 from OCP.BRepGProp import BRepGProp
@@ -129,6 +129,41 @@ def extract_cylindrical_faces(shape: TopoDS_Shape) -> list[CylindricalFeature]:
                 cone_half_angle=round(math.degrees(abs(semi_angle)), 2),
             ))
 
+        elif surf_type == GeomAbs_Sphere:
+            # Spherical faces → ball-end holes, spherical countersinks
+            is_concave = face.Orientation() == TopAbs_REVERSED
+            if not is_concave:
+                face_id += 1
+                explorer.Next()
+                continue
+
+            sphere = adaptor.Sphere()
+            center_pt = sphere.Location()
+            radius = sphere.Radius()
+
+            props = GProp_GProps()
+            BRepGProp.SurfaceProperties_s(face, props)
+            area = props.Mass()
+
+            # Approximate depth as radius (hemisphere depth)
+            estimated_depth = radius
+
+            feat_counter += 1
+            features.append(CylindricalFeature(
+                id=f"feat_{feat_counter:03d}",
+                face_ids=[face_id],
+                radius=round(radius, 4),
+                diameter=round(radius * 2, 4),
+                center=(
+                    round(center_pt.X(), 4),
+                    round(center_pt.Y(), 4),
+                    round(center_pt.Z(), 4),
+                ),
+                axis_direction=(0.0, 0.0, 1.0),  # Default axis for spherical
+                estimated_depth=round(estimated_depth, 4),
+                surface_area=round(area, 4),
+            ))
+
         face_id += 1
         explorer.Next()
 
@@ -214,6 +249,8 @@ def group_coaxial_features(features: list[CylindricalFeature]) -> list[HoleGroup
             hole_type = "stepped"
 
         primary_d = min(m.diameter for m in group_members)
+        max_d = max(m.diameter for m in group_members)
+        secondary_d = round(max_d, 4) if len(diameters) > 1 and max_d > primary_d + 0.1 else None
         total_depth = sum(m.estimated_depth for m in group_members)
 
         primary_feat = min(group_members, key=lambda f: f.diameter)
@@ -222,6 +259,7 @@ def group_coaxial_features(features: list[CylindricalFeature]) -> list[HoleGroup
             id=group_id,
             features=group_members,
             primary_diameter=round(primary_d, 4),
+            secondary_diameter=secondary_d,
             total_depth=round(total_depth, 4),
             center=primary_feat.center,
             axis_direction=primary_feat.axis_direction,

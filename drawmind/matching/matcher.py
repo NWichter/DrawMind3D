@@ -55,19 +55,23 @@ def match_annotations_to_features(
     if not hole_annotations or not holes:
         return [], hole_annotations, holes
 
-    # Separate multiplier annotations from single annotations
-    single_annotations = [a for a in hole_annotations if a.multiplier <= 1]
-    multi_annotations = [a for a in hole_annotations if a.multiplier > 1]
+    # Expand multiplier annotations into virtual copies for unified Hungarian
+    # e.g., "4X Ø8" becomes 4 entries so Hungarian can optimally assign each
+    expanded_annotations = []
+    for ann in hole_annotations:
+        count = max(ann.multiplier, 1)
+        for _ in range(count):
+            expanded_annotations.append(ann)
 
-    # --- Phase 1: Optimal assignment for single annotations (Hungarian) ---
-    score_details = {}  # (ann_idx, hole_idx) -> score_result
-    n_ann = len(single_annotations)
+    # --- Unified Hungarian assignment ---
+    score_details = {}  # (exp_idx, hole_idx) -> score_result
+    n_exp = len(expanded_annotations)
     n_holes = len(holes)
 
-    if n_ann > 0 and n_holes > 0:
+    if n_exp > 0 and n_holes > 0:
         # Build cost matrix (Hungarian minimizes, so we use 1 - score)
-        cost_matrix = np.ones((n_ann, n_holes))
-        for i, ann in enumerate(single_annotations):
+        cost_matrix = np.ones((n_exp, n_holes))
+        for i, ann in enumerate(expanded_annotations):
             for j, hole in enumerate(holes):
                 score_result = compute_match_score(ann, hole, holes, hole_annotations)
                 score_details[(i, j)] = score_result
@@ -91,8 +95,12 @@ def match_annotations_to_features(
         if total_score < MATCH_CONFIDENCE_THRESHOLD:
             continue
 
-        ann = single_annotations[r]
+        ann = expanded_annotations[r]
         hole = holes[c]
+
+        # Prevent duplicate hole assignments (safety check)
+        if hole.id in matched_holes:
+            continue
 
         match_counter += 1
         results.append(_create_match_result(match_counter, ann, hole, score_result))
@@ -101,33 +109,6 @@ def match_annotations_to_features(
 
         if total_score < LLM_REVIEW_THRESHOLD:
             ambiguous.append(results[-1])
-
-    # --- Phase 2: Handle multiplier annotations (e.g. '4x M8') ---
-    for ann in multi_annotations:
-        # Score against all unmatched holes
-        candidates = []
-        for j, hole in enumerate(holes):
-            if hole.id in matched_holes:
-                continue
-            score_result = compute_match_score(ann, hole, holes, hole_annotations)
-            if score_result["total_score"] >= MATCH_CONFIDENCE_THRESHOLD:
-                candidates.append((hole, score_result))
-
-        # Sort by score, take up to multiplier count
-        candidates.sort(key=lambda x: x[1]["total_score"], reverse=True)
-        assigned = 0
-        for hole, score_result in candidates:
-            if assigned >= ann.multiplier:
-                break
-            if hole.id in matched_holes:
-                continue
-            match_counter += 1
-            results.append(_create_match_result(match_counter, ann, hole, score_result))
-            matched_holes.add(hole.id)
-            assigned += 1
-
-        if assigned > 0:
-            matched_annotations.add(ann.id)
 
     # Collect unmatched items
     unmatched_ann = [a for a in hole_annotations if a.id not in matched_annotations]
@@ -146,22 +127,34 @@ def _associate_depths(
     hole_annotations: list[PDFAnnotation],
     depth_annotations: list[PDFAnnotation],
 ) -> None:
-    """Associate standalone depth annotations with nearest hole annotation."""
+    """Associate standalone depth annotations with nearest hole annotation.
+
+    Uses both vertical and horizontal proximity to handle different drawing
+    layouts (vertical stacking, horizontal leader lines, or mixed).
+    """
     for depth_ann in depth_annotations:
         best_dist = float("inf")
         best_hole_ann = None
+
+        # Depth annotation center
+        dc_x = (depth_ann.bbox.x0 + depth_ann.bbox.x1) / 2
+        dc_y = (depth_ann.bbox.y0 + depth_ann.bbox.y1) / 2
 
         for hole_ann in hole_annotations:
             if depth_ann.bbox.page != hole_ann.bbox.page:
                 continue
 
-            # Vertical distance
-            dist = abs(depth_ann.bbox.y0 - hole_ann.bbox.y1)
+            # Hole annotation center
+            hc_x = (hole_ann.bbox.x0 + hole_ann.bbox.x1) / 2
+            hc_y = (hole_ann.bbox.y0 + hole_ann.bbox.y1) / 2
+
+            # Euclidean distance between annotation centers
+            dist = ((dc_x - hc_x) ** 2 + (dc_y - hc_y) ** 2) ** 0.5
             if dist < best_dist:
                 best_dist = dist
                 best_hole_ann = hole_ann
 
-        if best_hole_ann and best_dist < 100:  # Within 100 points
+        if best_hole_ann and best_dist < 150:  # Within 150 points (covers horizontal layouts)
             if depth_ann.id not in best_hole_ann.associated_annotations:
                 best_hole_ann.associated_annotations.append(depth_ann.id)
             # Transfer depth info
@@ -188,6 +181,7 @@ def _create_match_result(
             "hole_group_id": hole.id,
             "face_ids": [fid for feat in hole.features for fid in feat.face_ids],
             "primary_diameter_mm": hole.primary_diameter,
+            "secondary_diameter_mm": hole.secondary_diameter,
             "center": list(hole.center),
             "axis_direction": list(hole.axis_direction),
             "total_depth_mm": hole.total_depth,

@@ -8,16 +8,16 @@ from drawmind.config import DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM
 
 
 # Scoring weights (diameter is the strongest signal, count rarely informative)
-WEIGHT_DIAMETER = 0.45
+WEIGHT_DIAMETER = 0.43
 WEIGHT_DEPTH = 0.20
-WEIGHT_TYPE_COMPAT = 0.20
+WEIGHT_TYPE_COMPAT = 0.18
 WEIGHT_COUNT = 0.05
-WEIGHT_UNIQUENESS = 0.10
-WEIGHT_SPATIAL = 0.0  # Disabled — projection heuristic too noisy
+WEIGHT_UNIQUENESS = 0.09
+WEIGHT_SPATIAL = 0.05  # Spatial position correlation (kept low — projection heuristic is noisy)
 
 # Neutral score for missing data: "no evidence for or against"
-# Lower than 0.7 to avoid artificially inflating scores when data is missing
-NEUTRAL_SCORE = 0.55
+# Must be high enough that matches with partial data can still pass confidence threshold
+NEUTRAL_SCORE = 0.50
 
 
 def compute_match_score(
@@ -36,11 +36,17 @@ def compute_match_score(
     # 1. Diameter match
     scores["diameter"] = _score_diameter(annotation, hole)
 
-    # 2. Depth match
+    # 2. Depth match (includes through-hole agreement signal)
     scores["depth"] = _score_depth(annotation, hole)
 
     # 3. Type compatibility
     scores["type_compatibility"] = _score_type_compatibility(annotation, hole)
+
+    # Through-hole agreement bonus/penalty applied to depth score
+    if annotation.is_through and hole.is_through_hole:
+        scores["depth"] = max(scores["depth"], 0.95)  # Strong agreement
+    elif annotation.is_through and not hole.is_through_hole:
+        scores["depth"] = min(scores["depth"], 0.15)  # Contradiction
 
     # 4. Count agreement
     scores["count_agreement"] = _score_count(annotation, hole, all_holes)
@@ -88,15 +94,33 @@ def _score_diameter(annotation: PDFAnnotation, hole: HoleGroup) -> float:
         )
         return score
 
+    elif annotation.annotation_type in (AnnotationType.COUNTERBORE, AnnotationType.COUNTERSINK):
+        # Counterbore/countersink diameter refers to the LARGER (outer) diameter
+        compare_d = hole.secondary_diameter if hole.secondary_diameter else hole.primary_diameter
+        diff = abs(ann_diameter - compare_d)
+        if diff <= 0.1:
+            return 1.0
+        elif diff <= DIAMETER_TOLERANCE_MM:
+            return 1.0 - (diff / DIAMETER_TOLERANCE_MM)
+        # Also check primary diameter as fallback
+        diff_primary = abs(ann_diameter - hole.primary_diameter)
+        if diff_primary <= DIAMETER_TOLERANCE_MM:
+            return 0.7 * (1.0 - diff_primary / DIAMETER_TOLERANCE_MM)
+        return 0.0
+
     else:
-        # Direct diameter comparison
+        # Direct diameter comparison against primary
         diff = abs(ann_diameter - hole.primary_diameter)
         if diff <= 0.1:
             return 1.0
         elif diff <= DIAMETER_TOLERANCE_MM:
             return 1.0 - (diff / DIAMETER_TOLERANCE_MM)
-        else:
-            return 0.0
+        # Also check secondary diameter (annotation may reference outer bore)
+        if hole.secondary_diameter:
+            diff_sec = abs(ann_diameter - hole.secondary_diameter)
+            if diff_sec <= DIAMETER_TOLERANCE_MM:
+                return 0.7 * (1.0 - diff_sec / DIAMETER_TOLERANCE_MM)
+        return 0.0
 
 
 def _score_depth(annotation: PDFAnnotation, hole: HoleGroup) -> float:
@@ -284,7 +308,16 @@ def _score_spatial(
 
 
 def _format_thread_spec(annotation: PDFAnnotation) -> str:
-    """Format a thread specification string for table lookup (e.g. 'M10' not 'M10.0')."""
+    """Format a thread specification string for table lookup.
+
+    Supports both ISO metric (M10) and UTS (1/4-20 UNC) threads.
+    """
+    standard = annotation.parsed.get("standard", "ISO_metric")
+
+    if standard == "UTS":
+        # For UTS threads, return the full spec for table lookup
+        return annotation.parsed.get("thread_spec", "")
+
     nom_d = annotation.parsed.get("nominal_diameter", 0)
     # Use integer format if it's a whole number (M10 not M10.0)
     if nom_d == int(nom_d):

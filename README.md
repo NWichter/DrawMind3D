@@ -80,23 +80,23 @@ Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases and **5 synthe
 
 | Category | Cases | Precision | Recall | F1 | Linking | Confidence |
 |----------|-------|-----------|--------|-----|---------|------------|
-| CTC (Combinational) | 5 | 47.7% | 50.7% | 48.3% | 60.2% | 76.0% |
-| FTC (Fully-Toleranced) | 6 | 74.4% | 98.5% | 82.9% | 75.5% | 77.7% |
-| Synthetic | 5 | 79.2% | 81.5% | 79.7% | 94.9% | 92.8% |
-| **Overall (16 cases)** | **16** | **67.6%** | **78.2%** | **71.1%** | **76.8%** | **81.9%** |
+| CTC (Combinational) | 5 | 46.7% | 50.7% | 47.5% | 64.0% | 79.7% |
+| FTC (Fully-Toleranced) | 6 | 70.1% | 98.1% | 79.7% | 77.0% | 81.1% |
+| Synthetic | 5 | 78.7% | 92.1% | 84.8% | 94.9% | 92.0% |
+| **Overall (16 cases)** | **16** | **65.4%** | **81.4%** | **71.2%** | **79.9%** | **84.1%** |
 
-**Top performers:** FTC-08 (100% F1, 100% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-07 (90.9% F1, 100% Linking)
+**Top performers:** FTC-08 (94.7% F1, 95.2% Linking), SYN-05 (100% F1, 100% Linking), FTC-09 (90.9% F1, 94.4% Linking)
 
 ### Without LLM (Regex + OCR only)
 
 | Category | F1 | Linking | Note |
 |----------|----|---------|------|
 | CTC | 0.0% | 0.0% | Vector-drawn PDFs, no extractable text |
-| FTC | 22.5% | 33.3% | Only FTC-07, FTC-09, FTC-10 have extractable text |
-| Synthetic | 76.3% | 100.0% | Pure regex extraction, no vision needed |
-| **Overall** | **32.3%** | **50.0%** | |
+| FTC | 23.3% | 55.4% | Only FTC-07, FTC-09, FTC-10 have extractable text |
+| Synthetic | 81.6% | 100.0% | Pure regex extraction, no vision needed |
+| **Overall** | **34.2%** | **47.8%** | |
 
-**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 32.3% to 71.1%. Thread-aware matching ensures correct evaluation of threaded features (M6, M8, M10).
+**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 34.2% to 71.2%. Multi-factor scoring with secondary diameter support and UTS thread matching ensures accurate linking of complex features.
 
 Evaluation charts: [`data/evaluation/presentation/`](data/evaluation/presentation/)
 

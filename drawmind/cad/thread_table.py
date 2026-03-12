@@ -62,17 +62,84 @@ ISO_METRIC_FINE_PITCHES: dict[str, list[float]] = {
 }
 
 
+# UTS (Unified Thread Standard) Data — UNC/UNF threads
+# Sizes are stored in mm (converted from inches)
+# major_d: Nominal (major) diameter in mm
+# tpi: Threads per inch
+# pitch_d: Pitch diameter in mm
+# minor_d: Minor diameter in mm
+# drill_d: Tap drill diameter in mm
+UTS_THREADS: dict[str, dict] = {
+    # Number sizes
+    "#0-80 UNF":    {"major_d": 1.524,  "tpi": 80,  "pitch_d": 1.318,  "minor_d": 1.181,  "drill_d": 1.25},
+    "#1-64 UNC":    {"major_d": 1.854,  "tpi": 64,  "pitch_d": 1.599,  "minor_d": 1.425,  "drill_d": 1.50},
+    "#1-72 UNF":    {"major_d": 1.854,  "tpi": 72,  "pitch_d": 1.626,  "minor_d": 1.473,  "drill_d": 1.55},
+    "#2-56 UNC":    {"major_d": 2.184,  "tpi": 56,  "pitch_d": 1.890,  "minor_d": 1.695,  "drill_d": 1.80},
+    "#2-64 UNF":    {"major_d": 2.184,  "tpi": 64,  "pitch_d": 1.929,  "minor_d": 1.755,  "drill_d": 1.85},
+    "#3-48 UNC":    {"major_d": 2.515,  "tpi": 48,  "pitch_d": 2.172,  "minor_d": 1.941,  "drill_d": 2.10},
+    "#4-40 UNC":    {"major_d": 2.845,  "tpi": 40,  "pitch_d": 2.433,  "minor_d": 2.157,  "drill_d": 2.35},
+    "#4-48 UNF":    {"major_d": 2.845,  "tpi": 48,  "pitch_d": 2.502,  "minor_d": 2.271,  "drill_d": 2.40},
+    "#5-40 UNC":    {"major_d": 3.175,  "tpi": 40,  "pitch_d": 2.764,  "minor_d": 2.487,  "drill_d": 2.65},
+    "#5-44 UNF":    {"major_d": 3.175,  "tpi": 44,  "pitch_d": 2.798,  "minor_d": 2.540,  "drill_d": 2.70},
+    "#6-32 UNC":    {"major_d": 3.505,  "tpi": 32,  "pitch_d": 2.990,  "minor_d": 2.642,  "drill_d": 2.85},
+    "#6-40 UNF":    {"major_d": 3.505,  "tpi": 40,  "pitch_d": 3.094,  "minor_d": 2.817,  "drill_d": 2.95},
+    "#8-32 UNC":    {"major_d": 4.166,  "tpi": 32,  "pitch_d": 3.650,  "minor_d": 3.302,  "drill_d": 3.50},
+    "#8-36 UNF":    {"major_d": 4.166,  "tpi": 36,  "pitch_d": 3.708,  "minor_d": 3.378,  "drill_d": 3.50},
+    "#10-24 UNC":   {"major_d": 4.826,  "tpi": 24,  "pitch_d": 4.138,  "minor_d": 3.683,  "drill_d": 3.90},
+    "#10-32 UNF":   {"major_d": 4.826,  "tpi": 32,  "pitch_d": 4.311,  "minor_d": 3.962,  "drill_d": 4.10},
+    "#12-24 UNC":   {"major_d": 5.486,  "tpi": 24,  "pitch_d": 4.798,  "minor_d": 4.344,  "drill_d": 4.50},
+    "#12-28 UNF":   {"major_d": 5.486,  "tpi": 28,  "pitch_d": 4.893,  "minor_d": 4.470,  "drill_d": 4.65},
+    # Fractional sizes
+    "1/4-20 UNC":   {"major_d": 6.350,  "tpi": 20,  "pitch_d": 5.537,  "minor_d": 4.978,  "drill_d": 5.10},
+    "1/4-28 UNF":   {"major_d": 6.350,  "tpi": 28,  "pitch_d": 5.757,  "minor_d": 5.334,  "drill_d": 5.50},
+    "5/16-18 UNC":  {"major_d": 7.938,  "tpi": 18,  "pitch_d": 7.034,  "minor_d": 6.401,  "drill_d": 6.60},
+    "5/16-24 UNF":  {"major_d": 7.938,  "tpi": 24,  "pitch_d": 7.249,  "minor_d": 6.795,  "drill_d": 6.90},
+    "3/8-16 UNC":   {"major_d": 9.525,  "tpi": 16,  "pitch_d": 8.509,  "minor_d": 7.798,  "drill_d": 7.94},
+    "3/8-24 UNF":   {"major_d": 9.525,  "tpi": 24,  "pitch_d": 8.836,  "minor_d": 8.382,  "drill_d": 8.50},
+    "7/16-14 UNC":  {"major_d": 11.112, "tpi": 14,  "pitch_d": 9.963,  "minor_d": 9.144,  "drill_d": 9.35},
+    "7/16-20 UNF":  {"major_d": 11.112, "tpi": 20,  "pitch_d": 10.300, "minor_d": 9.740,  "drill_d": 9.90},
+    "1/2-13 UNC":   {"major_d": 12.700, "tpi": 13,  "pitch_d": 11.430, "minor_d": 10.541, "drill_d": 10.80},
+    "1/2-20 UNF":   {"major_d": 12.700, "tpi": 20,  "pitch_d": 11.887, "minor_d": 11.328, "drill_d": 11.50},
+    "9/16-12 UNC":  {"major_d": 14.288, "tpi": 12,  "pitch_d": 12.913, "minor_d": 11.938, "drill_d": 12.20},
+    "9/16-18 UNF":  {"major_d": 14.288, "tpi": 18,  "pitch_d": 13.384, "minor_d": 12.751, "drill_d": 12.90},
+    "5/8-11 UNC":   {"major_d": 15.875, "tpi": 11,  "pitch_d": 14.376, "minor_d": 13.310, "drill_d": 13.50},
+    "5/8-18 UNF":   {"major_d": 15.875, "tpi": 18,  "pitch_d": 14.971, "minor_d": 14.338, "drill_d": 14.50},
+    "3/4-10 UNC":   {"major_d": 19.050, "tpi": 10,  "pitch_d": 17.399, "minor_d": 16.220, "drill_d": 16.50},
+    "3/4-16 UNF":   {"major_d": 19.050, "tpi": 16,  "pitch_d": 18.034, "minor_d": 17.323, "drill_d": 17.50},
+    "7/8-9 UNC":    {"major_d": 22.225, "tpi": 9,   "pitch_d": 20.391, "minor_d": 19.063, "drill_d": 19.45},
+    "7/8-14 UNF":   {"major_d": 22.225, "tpi": 14,  "pitch_d": 21.076, "minor_d": 20.257, "drill_d": 20.40},
+    "1-8 UNC":      {"major_d": 25.400, "tpi": 8,   "pitch_d": 23.338, "minor_d": 21.843, "drill_d": 22.25},
+    "1-12 UNF":     {"major_d": 25.400, "tpi": 12,  "pitch_d": 24.026, "minor_d": 23.051, "drill_d": 23.25},
+}
+
+
 def get_thread_diameters(thread_designation: str) -> dict[str, float] | None:
     """Look up possible diameters for a thread designation.
 
+    Supports both ISO metric (M10, M10x1.5) and UTS (1/4-20 UNC, #10-32 UNF).
+
     Args:
-        thread_designation: e.g. "M10", "M10x1.5", "M8"
+        thread_designation: e.g. "M10", "M10x1.5", "M8", "1/4-20 UNC", "#10-32 UNF"
 
     Returns:
         Dict with major_d, pitch_d, minor_d, drill_d or None if not found
     """
-    # Extract the base thread size (e.g., "M10" from "M10x1.5-6H")
-    base = thread_designation.split("x")[0].split("X")[0].split("-")[0].strip()
+    designation = thread_designation.strip()
+
+    # Check UTS threads first (fractional or number-size format)
+    if not designation.upper().startswith("M"):
+        # Try exact match in UTS table
+        for key, data in UTS_THREADS.items():
+            if designation.upper() == key.upper():
+                return data
+        # Try partial match (e.g., "1/4-20" matches "1/4-20 UNC")
+        for key, data in UTS_THREADS.items():
+            if key.upper().startswith(designation.upper()):
+                return data
+        return None
+
+    # ISO metric threads
+    base = designation.split("x")[0].split("X")[0].split("-")[0].strip()
     base = base.upper()
 
     return ISO_METRIC_THREADS.get(base)

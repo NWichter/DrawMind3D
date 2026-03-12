@@ -54,49 +54,49 @@
           "ann_diameter": 35.0,
           "feature_diameter": 35.0,
           "gt_diameter": 35.0,
-          "confidence": 0.8572
+          "confidence": 0.8389
         },
         {
           "correct": true,
           "ann_diameter": 20.0,
           "feature_diameter": 20.0,
           "gt_diameter": 20.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 34.8,
-          "feature_diameter": 35.0,
-          "gt_diameter": 35.0,
-          "confidence": 0.7312
-        },
-        {
-          "correct": true,
-          "ann_diameter": 25.0,
-          "feature_diameter": 25.0,
-          "gt_diameter": 25.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 34.8,
-          "feature_diameter": 35.0,
-          "gt_diameter": 35.0,
-          "confidence": 0.7312
+          "confidence": 0.8493
         },
         {
           "correct": true,
           "ann_diameter": 35.0,
           "feature_diameter": 35.0,
           "gt_diameter": 35.0,
-          "confidence": 0.8572
+          "confidence": 0.8476
+        },
+        {
+          "correct": true,
+          "ann_diameter": 25.0,
+          "feature_diameter": 25.0,
+          "gt_diameter": 25.0,
+          "confidence": 0.8389
+        },
+        {
+          "correct": true,
+          "ann_diameter": 35.0,
+          "feature_diameter": 35.0,
+          "gt_diameter": 35.0,
+          "confidence": 0.8423
+        },
+        {
+          "correct": true,
+          "ann_diameter": 35.0,
+          "feature_diameter": 35.0,
+          "gt_diameter": 35.0,
+          "confidence": 0.8389
         }
       ]
     },
     "annotations_found": 6,
     "holes_found": 41,
     "matches_found": 6,
-    "avg_confidence": 0.8152
+    "avg_confidence": 0.8427
   },
   {
     "test_case": "CTC-02",
@@ -174,81 +174,81 @@
       "linking_accuracy": 0.6,
       "link_details": [
         {
-          "correct": true,
-          "ann_diameter": 40.0,
-          "feature_diameter": 40.0,
-          "gt_diameter": 40.0,
-          "confidence": 0.9062
-        },
-        {
-          "correct": false,
-          "ann_diameter": 85.0,
-          "feature_diameter": 6.2765,
-          "gt_diameter": 85.0,
-          "confidence": 0.5703
-        },
-        {
-          "correct": true,
-          "ann_diameter": 12.0,
-          "feature_diameter": 12.0,
-          "gt_diameter": 12.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 22.0,
-          "feature_diameter": 22.0,
-          "gt_diameter": 22.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 22.0,
-          "feature_diameter": 22.0,
-          "gt_diameter": 22.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 12.0,
-          "feature_diameter": 12.0,
-          "gt_diameter": 12.0,
-          "confidence": 0.8572
-        },
-        {
           "correct": false,
           "ann_diameter": 100.0,
           "feature_diameter": 9.0934,
           "gt_diameter": 100.0,
-          "confidence": 0.586
+          "confidence": 0.5951
         },
         {
           "correct": false,
           "ann_diameter": 100.0,
           "feature_diameter": 9.1366,
           "gt_diameter": 100.0,
-          "confidence": 0.586
+          "confidence": 0.5949
         },
         {
           "correct": true,
           "ann_diameter": 52.0,
           "feature_diameter": 52.0,
           "gt_diameter": 52.0,
-          "confidence": 0.8975
+          "confidence": 0.882
         },
         {
           "correct": false,
           "ann_diameter": 52.0,
-          "feature_diameter": 6.2765,
+          "feature_diameter": 20.0,
           "gt_diameter": 52.0,
-          "confidence": 0.5965
+          "confidence": 0.6102
+        },
+        {
+          "correct": true,
+          "ann_diameter": 40.0,
+          "feature_diameter": 40.0,
+          "gt_diameter": 40.0,
+          "confidence": 0.883
+        },
+        {
+          "correct": false,
+          "ann_diameter": 85.0,
+          "feature_diameter": 50.0,
+          "gt_diameter": 85.0,
+          "confidence": 0.578
+        },
+        {
+          "correct": true,
+          "ann_diameter": 12.0,
+          "feature_diameter": 12.0,
+          "gt_diameter": 12.0,
+          "confidence": 0.8575
+        },
+        {
+          "correct": true,
+          "ann_diameter": 22.0,
+          "feature_diameter": 22.0,
+          "gt_diameter": 22.0,
+          "confidence": 0.8608
+        },
+        {
+          "correct": true,
+          "ann_diameter": 22.0,
+          "feature_diameter": 22.0,
+          "gt_diameter": 22.0,
+          "confidence": 0.8449
+        },
+        {
+          "correct": true,
+          "ann_diameter": 12.0,
+          "feature_diameter": 12.0,
+          "gt_diameter": 12.0,
+          "confidence": 0.8532
         }
       ]
     },
     "annotations_found": 8,
-    "holes_found": 142,
+    "holes_found": 143,
     "matches_found": 10,
-    "avg_confidence": 0.7571
+    "avg_confidence": 0.756
   },
   {
     "test_case": "CTC-03",
@@ -292,82 +292,82 @@
       "linking_accuracy": 0.7273,
       "link_details": [
         {
-          "correct": false,
-          "reason": "no GT for diameter 50.80mm",
-          "confidence": 0.9062
+          "correct": true,
+          "ann_diameter": 11.1252,
+          "feature_diameter": 11.1252,
+          "gt_diameter": 11.125,
+          "confidence": 0.8588
         },
         {
           "correct": true,
           "ann_diameter": 11.1252,
           "feature_diameter": 11.1252,
           "gt_diameter": 11.125,
-          "confidence": 0.8572
+          "confidence": 0.8519
+        },
+        {
+          "correct": false,
+          "reason": "no GT for diameter 50.80mm",
+          "confidence": 0.889
+        },
+        {
+          "correct": true,
+          "ann_diameter": 15.875,
+          "feature_diameter": 15.875,
+          "gt_diameter": 15.875,
+          "confidence": 0.8736
+        },
+        {
+          "correct": true,
+          "ann_diameter": 15.875,
+          "feature_diameter": 15.875,
+          "gt_diameter": 15.875,
+          "confidence": 0.8733
+        },
+        {
+          "correct": true,
+          "ann_diameter": 15.875,
+          "feature_diameter": 15.875,
+          "gt_diameter": 15.875,
+          "confidence": 0.8704
+        },
+        {
+          "correct": true,
+          "ann_diameter": 15.875,
+          "feature_diameter": 15.875,
+          "gt_diameter": 15.875,
+          "confidence": 0.8698
+        },
+        {
+          "correct": true,
+          "ann_diameter": 11.1252,
+          "feature_diameter": 11.1252,
+          "gt_diameter": 11.125,
+          "confidence": 0.8556
         },
         {
           "correct": false,
           "reason": "no GT for diameter 27.05mm",
-          "confidence": 0.9062
+          "confidence": 0.8982
         },
         {
           "correct": true,
           "ann_diameter": 11.1252,
           "feature_diameter": 11.1252,
           "gt_diameter": 11.125,
-          "confidence": 0.8572
+          "confidence": 0.8623
         },
         {
           "correct": false,
           "reason": "no GT for diameter 38.10mm",
-          "confidence": 0.9062
-        },
-        {
-          "correct": true,
-          "ann_diameter": 11.1252,
-          "feature_diameter": 11.1252,
-          "gt_diameter": 11.125,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 11.1252,
-          "feature_diameter": 11.1252,
-          "gt_diameter": 11.125,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 15.875,
-          "feature_diameter": 15.875,
-          "gt_diameter": 15.875,
-          "confidence": 0.873
-        },
-        {
-          "correct": true,
-          "ann_diameter": 15.875,
-          "feature_diameter": 15.875,
-          "gt_diameter": 15.875,
-          "confidence": 0.873
-        },
-        {
-          "correct": true,
-          "ann_diameter": 15.875,
-          "feature_diameter": 15.875,
-          "gt_diameter": 15.875,
-          "confidence": 0.873
-        },
-        {
-          "correct": true,
-          "ann_diameter": 15.875,
-          "feature_diameter": 15.875,
-          "gt_diameter": 15.875,
-          "confidence": 0.873
+          "confidence": 0.8953
         }
       ]
     },
     "annotations_found": 7,
     "holes_found": 35,
     "matches_found": 11,
-    "avg_confidence": 0.8773
+    "avg_confidence": 0.8726
   },
   {
     "test_case": "CTC-04",
@@ -384,7 +384,7 @@
       "total_ground_truth": 5,
       "match_details": [
         {
-          "extracted": "4X M12 x 1.75 -6H \u21a7 25\u00b10.25",
+          "extracted": "4X M12 x 1.75 -6H 25\u00b10.25",
           "ground_truth": "4X M12x1.75-6H threaded holes",
           "ext_diameter_mm": 12.0,
           "gt_diameter_mm": 12.0,
@@ -392,7 +392,7 @@
           "correct": true
         },
         {
-          "extracted": "4X \u21a7 \u00d820 \u00b10.2 \u21a7 20 \u00b10.2",
+          "extracted": "4X L \u00d820 \u00b10.2 20 \u00b10.2",
           "ground_truth": "4X \u00c3\u02dc20 \u00c2\u00b10.2 counterbored holes",
           "ext_diameter_mm": 20.0,
           "gt_diameter_mm": 20.0,
@@ -414,522 +414,515 @@
       ]
     },
     "linking": {
-      "correct_links": 32,
-      "total_links": 74,
-      "linking_accuracy": 0.4324,
+      "correct_links": 34,
+      "total_links": 73,
+      "linking_accuracy": 0.4658,
       "link_details": [
         {
           "correct": false,
           "reason": "no GT for diameter 6.65mm",
-          "confidence": 0.7959
+          "confidence": 0.8005
         },
         {
           "correct": false,
           "reason": "no GT for diameter 6.65mm",
-          "confidence": 0.6344
+          "confidence": 0.7855
         },
         {
           "correct": false,
           "reason": "no GT for diameter 6.65mm",
-          "confidence": 0.5755
+          "confidence": 0.7855
         },
         {
           "correct": false,
           "reason": "no GT for diameter 6.65mm",
-          "confidence": 0.5755
+          "confidence": 0.7855
         },
         {
           "correct": false,
           "reason": "no GT for diameter 6.65mm",
-          "confidence": 0.5755
+          "confidence": 0.7855
         },
         {
           "correct": false,
           "reason": "no GT for diameter 6.65mm",
-          "confidence": 0.5755
+          "confidence": 0.7855
         },
         {
           "correct": true,
           "ann_diameter": 12.0,
           "feature_diameter": 10.0,
           "gt_diameter": 12.0,
-          "confidence": 0.7209
+          "confidence": 0.7315
         },
         {
           "correct": true,
           "ann_diameter": 12.0,
           "feature_diameter": 10.0,
           "gt_diameter": 12.0,
-          "confidence": 0.7209
+          "confidence": 0.7307
         },
         {
           "correct": true,
           "ann_diameter": 12.0,
           "feature_diameter": 10.0,
           "gt_diameter": 12.0,
-          "confidence": 0.7209
+          "confidence": 0.7271
         },
         {
           "correct": true,
           "ann_diameter": 12.0,
           "feature_diameter": 10.0,
           "gt_diameter": 12.0,
-          "confidence": 0.7209
+          "confidence": 0.7268
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 8.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5685
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 8.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5685
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 8.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5685
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 8.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5685
+          "confidence": 0.5761
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8788
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8759
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8736
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8707
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8681
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8655
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
           "correct": true,
           "ann_diameter": 14.0,
           "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.873
+          "confidence": 0.8624
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 14.0,
-          "feature_diameter": 0.0,
+          "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.5475
+          "confidence": 0.8624
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 14.0,
-          "feature_diameter": 0.0,
+          "feature_diameter": 14.0,
           "gt_diameter": 14.0,
-          "confidence": 0.5475
+          "confidence": 0.8624
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.8792
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.878
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.8771
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.8771
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5839
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5839
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5819
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5792
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5782
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5767
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5767
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         },
         {
           "correct": false,
           "ann_diameter": 20.0,
           "feature_diameter": 0.0,
           "gt_diameter": 20.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": false,
-          "ann_diameter": 20.0,
-          "feature_diameter": 0.0,
-          "gt_diameter": 20.0,
-          "confidence": 0.5755
+          "confidence": 0.5761
         }
       ]
     },
     "annotations_found": 5,
     "holes_found": 127,
-    "matches_found": 74,
-    "avg_confidence": 0.6986
+    "matches_found": 73,
+    "avg_confidence": 0.7373
   },
   {
     "test_case": "CTC-05",
@@ -937,12 +930,12 @@
     "llm_enhanced": true,
     "extraction": {
       "true_positives": 1,
-      "false_positives": 3,
+      "false_positives": 4,
       "false_negatives": 2,
-      "precision": 0.25,
+      "precision": 0.2,
       "recall": 0.3333,
-      "f1": 0.2857,
-      "total_extracted": 4,
+      "f1": 0.25,
+      "total_extracted": 5,
       "total_ground_truth": 3,
       "match_details": [
         {
@@ -961,50 +954,40 @@
     },
     "linking": {
       "correct_links": 1,
-      "total_links": 4,
-      "linking_accuracy": 0.25,
+      "total_links": 2,
+      "linking_accuracy": 0.5,
       "link_details": [
         {
           "correct": false,
-          "reason": "no GT for diameter 0.13mm",
-          "confidence": 0.5703
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 50.80mm",
-          "confidence": 0.5703
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 31.75mm",
-          "confidence": 0.5703
+          "reason": "no GT for diameter 127.00mm",
+          "confidence": 0.6381
         },
         {
           "correct": true,
           "ann_diameter": 254.0,
           "feature_diameter": 254.0,
           "gt_diameter": 254.0,
-          "confidence": 0.9062
+          "confidence": 0.9021
         }
       ]
     },
-    "annotations_found": 4,
+    "annotations_found": 5,
     "holes_found": 35,
-    "matches_found": 4,
-    "avg_confidence": 0.6543
+    "matches_found": 2,
+    "avg_confidence": 0.7701
   },
   {
     "test_case": "FTC-06",
     "unit_system": "inch",
     "llm_enhanced": true,
     "extraction": {
-      "true_positives": 9,
-      "false_positives": 7,
-      "false_negatives": 0,
-      "precision": 0.5625,
-      "recall": 1.0,
-      "f1": 0.72,
-      "total_extracted": 16,
+      "true_positives": 8,
+      "false_positives": 3,
+      "false_negatives": 1,
+      "precision": 0.7273,
+      "recall": 0.8889,
+      "f1": 0.8,
+      "total_extracted": 11,
       "total_ground_truth": 9,
       "match_details": [
         {
@@ -1024,7 +1007,7 @@
           "correct": true
         },
         {
-          "extracted": "\u00d8.812 \u00b1.020 \u21a7.56\u00b1.02",
+          "extracted": "2X L\u00d8.812 \u00b1.020 \u21a7.56\u00b1.02",
           "ground_truth": "\u00c3\u02dc.812 counterbore",
           "ext_diameter_mm": 20.6248,
           "gt_diameter_mm": 20.625,
@@ -1040,7 +1023,7 @@
           "correct": true
         },
         {
-          "extracted": "\u00d8.625 \u00b1.020 \u21a7.50 \u00b1.02",
+          "extracted": "L\u00d8.625 \u00b1.020 \u21a7.50 \u00b1.02",
           "ground_truth": "\u00c3\u02dc.625 counterbore",
           "ext_diameter_mm": 15.875,
           "gt_diameter_mm": 15.875,
@@ -1056,18 +1039,10 @@
           "correct": true
         },
         {
-          "extracted": "\u00d8.40\u00b1.01 \u21a7.31 \u00b1.02",
+          "extracted": "L\u00d8.40\u00b1.01 \u21a7.31 \u00b1.02",
           "ground_truth": "\u00c3\u02dc.40 counterbore",
           "ext_diameter_mm": 10.16,
           "gt_diameter_mm": 10.16,
-          "diff_mm": 0.0,
-          "correct": true
-        },
-        {
-          "extracted": "1.00 : 2.00",
-          "ground_truth": "(\u00c3\u02dc1.000) reference diameter",
-          "ext_diameter_mm": 25.4,
-          "gt_diameter_mm": 25.4,
           "diff_mm": 0.0,
           "correct": true
         },
@@ -1080,187 +1055,160 @@
           "correct": true
         }
       ],
-      "missed_annotations": []
+      "missed_annotations": [
+        "(\u00c3\u02dc1.000) reference diameter"
+      ]
     },
     "linking": {
-      "correct_links": 6,
-      "total_links": 23,
-      "linking_accuracy": 0.2609,
+      "correct_links": 12,
+      "total_links": 18,
+      "linking_accuracy": 0.6667,
       "link_details": [
         {
           "correct": false,
-          "ann_diameter": 20.6248,
-          "feature_diameter": 6.35,
-          "gt_diameter": 20.625,
-          "confidence": 0.6422
-        },
-        {
-          "correct": false,
-          "ann_diameter": 15.875,
-          "feature_diameter": 10.541,
-          "gt_diameter": 15.875,
-          "confidence": 0.6282
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.16,
-          "feature_diameter": 7.1374,
-          "gt_diameter": 10.541,
-          "confidence": 0.6002
-        },
-        {
-          "correct": false,
-          "ann_diameter": 25.4,
-          "feature_diameter": 10.541,
-          "gt_diameter": 25.4,
-          "confidence": 0.5703
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 304.80mm",
-          "confidence": 0.5703
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 12.70mm",
-          "confidence": 0.5703
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 12.70mm",
-          "confidence": 0.5703
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 7.137,
-          "confidence": 0.8757
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 7.137,
-          "confidence": 0.8572
-        },
-        {
-          "correct": false,
           "ann_diameter": 31.75,
-          "feature_diameter": 14.2875,
+          "feature_diameter": 9.0934,
           "gt_diameter": 31.75,
-          "confidence": 0.595
+          "confidence": 0.5836
         },
         {
           "correct": false,
           "ann_diameter": 31.75,
           "feature_diameter": 9.1366,
           "gt_diameter": 31.75,
-          "confidence": 0.595
+          "confidence": 0.5836
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 14.2748,
-          "feature_diameter": 9.0934,
+          "feature_diameter": 14.2875,
           "gt_diameter": 14.275,
-          "confidence": 0.595
+          "confidence": 0.8846
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 14.2748,
-          "feature_diameter": 7.1374,
+          "feature_diameter": 14.2875,
           "gt_diameter": 14.275,
-          "confidence": 0.5845
+          "confidence": 0.8846
         },
         {
           "correct": false,
-          "ann_diameter": 10.541,
-          "feature_diameter": 7.1374,
-          "gt_diameter": 10.541,
-          "confidence": 0.5565
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.541,
-          "feature_diameter": 7.1374,
-          "gt_diameter": 10.541,
-          "confidence": 0.5565
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.541,
+          "ann_diameter": 20.6248,
           "feature_diameter": 6.35,
-          "gt_diameter": 10.541,
-          "confidence": 0.5565
+          "gt_diameter": 20.625,
+          "confidence": 0.6078
         },
         {
           "correct": false,
-          "ann_diameter": 10.541,
+          "ann_diameter": 20.6248,
           "feature_diameter": 6.35,
+          "gt_diameter": 20.625,
+          "confidence": 0.612
+        },
+        {
+          "correct": true,
+          "ann_diameter": 10.541,
+          "feature_diameter": 10.541,
           "gt_diameter": 10.541,
-          "confidence": 0.5565
+          "confidence": 0.8594
+        },
+        {
+          "correct": true,
+          "ann_diameter": 10.541,
+          "feature_diameter": 10.541,
+          "gt_diameter": 10.541,
+          "confidence": 0.8594
+        },
+        {
+          "correct": true,
+          "ann_diameter": 10.541,
+          "feature_diameter": 10.541,
+          "gt_diameter": 10.541,
+          "confidence": 0.8594
+        },
+        {
+          "correct": true,
+          "ann_diameter": 10.541,
+          "feature_diameter": 10.541,
+          "gt_diameter": 10.541,
+          "confidence": 0.8594
+        },
+        {
+          "correct": false,
+          "ann_diameter": 15.875,
+          "feature_diameter": 25.4,
+          "gt_diameter": 15.875,
+          "confidence": 0.643
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.1374,
+          "feature_diameter": 7.1374,
+          "gt_diameter": 7.137,
+          "confidence": 0.856
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.1374,
+          "feature_diameter": 7.1374,
+          "gt_diameter": 7.137,
+          "confidence": 0.8559
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.1374,
+          "feature_diameter": 7.1374,
+          "gt_diameter": 7.137,
+          "confidence": 0.8489
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.0343,
           "gt_diameter": 7.137,
-          "confidence": 0.8065
-        },
-        {
-          "correct": true,
-          "ann_diameter": 7.1374,
-          "feature_diameter": 6.35,
-          "gt_diameter": 7.137,
-          "confidence": 0.5565
-        },
-        {
-          "correct": true,
-          "ann_diameter": 7.1374,
-          "feature_diameter": 6.35,
-          "gt_diameter": 7.137,
-          "confidence": 0.5565
-        },
-        {
-          "correct": true,
-          "ann_diameter": 7.1374,
-          "feature_diameter": 6.35,
-          "gt_diameter": 7.137,
-          "confidence": 0.5565
+          "confidence": 0.7931
         },
         {
           "correct": false,
-          "ann_diameter": 25.4,
-          "feature_diameter": 6.35,
-          "gt_diameter": 25.4,
-          "confidence": 0.5755
+          "ann_diameter": 10.16,
+          "feature_diameter": 7.1374,
+          "gt_diameter": 10.541,
+          "confidence": 0.8076
         },
         {
-          "correct": false,
-          "ann_diameter": 25.4,
+          "correct": true,
+          "ann_diameter": 6.35,
           "feature_diameter": 6.35,
-          "gt_diameter": 25.4,
-          "confidence": 0.5755
+          "gt_diameter": 7.137,
+          "confidence": 0.8704
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 7.137,
+          "confidence": 0.8704
         }
       ]
     },
-    "annotations_found": 16,
-    "holes_found": 32,
-    "matches_found": 23,
-    "avg_confidence": 0.6134
+    "annotations_found": 11,
+    "holes_found": 33,
+    "matches_found": 18,
+    "avg_confidence": 0.7855
   },
   {
     "test_case": "FTC-07",
     "unit_system": "inch",
     "llm_enhanced": true,
     "extraction": {
-      "true_positives": 10,
-      "false_positives": 1,
-      "false_negatives": 1,
-      "precision": 0.9091,
-      "recall": 0.9091,
-      "f1": 0.9091,
-      "total_extracted": 11,
+      "true_positives": 11,
+      "false_positives": 5,
+      "false_negatives": 0,
+      "precision": 0.6875,
+      "recall": 1.0,
+      "f1": 0.8148,
+      "total_extracted": 16,
       "total_ground_truth": 11,
       "match_details": [
         {
@@ -1336,6 +1284,14 @@
           "correct": true
         },
         {
+          "extracted": "3X \u00d8.875 \u00b1.010",
+          "ground_truth": "3X 0.875 +/-.010",
+          "ext_diameter_mm": 22.225,
+          "gt_diameter_mm": 22.225,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "2X \u00d8.594 +.012",
           "ground_truth": "2X 0.594 +.012/-.002",
           "ext_diameter_mm": 15.0876,
@@ -1344,154 +1300,180 @@
           "correct": true
         }
       ],
-      "missed_annotations": [
-        "3X 0.875 +/-.010"
-      ]
+      "missed_annotations": []
     },
     "linking": {
-      "correct_links": 19,
-      "total_links": 19,
-      "linking_accuracy": 1.0,
+      "correct_links": 15,
+      "total_links": 23,
+      "linking_accuracy": 0.6522,
       "link_details": [
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5889
+          "confidence": 0.6718
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5889
+          "confidence": 0.6706
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5964
+          "confidence": 0.6796
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5964
+          "confidence": 0.6746
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6872
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6872
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6832
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6767
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.8238
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.797
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.797
         },
         {
           "correct": true,
           "ann_diameter": 22.225,
           "feature_diameter": 22.225,
           "gt_diameter": 22.225,
-          "confidence": 0.88
+          "confidence": 0.8571
         },
         {
           "correct": true,
           "ann_diameter": 22.225,
           "feature_diameter": 22.225,
           "gt_diameter": 22.225,
-          "confidence": 0.88
+          "confidence": 0.8571
         },
         {
           "correct": true,
           "ann_diameter": 22.225,
           "feature_diameter": 22.225,
           "gt_diameter": 22.225,
-          "confidence": 0.88
+          "confidence": 0.8571
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.8068
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.806
         }
       ]
     },
-    "annotations_found": 11,
-    "holes_found": 82,
-    "matches_found": 19,
-    "avg_confidence": 0.7911
+    "annotations_found": 16,
+    "holes_found": 84,
+    "matches_found": 23,
+    "avg_confidence": 0.7703
   },
   {
     "test_case": "FTC-08",
@@ -1499,12 +1481,12 @@
     "llm_enhanced": true,
     "extraction": {
       "true_positives": 9,
-      "false_positives": 0,
+      "false_positives": 1,
       "false_negatives": 0,
-      "precision": 1.0,
+      "precision": 0.9,
       "recall": 1.0,
-      "f1": 1.0,
-      "total_extracted": 9,
+      "f1": 0.9474,
+      "total_extracted": 10,
       "total_ground_truth": 9,
       "match_details": [
         {
@@ -1584,155 +1566,160 @@
     },
     "linking": {
       "correct_links": 20,
-      "total_links": 20,
-      "linking_accuracy": 1.0,
+      "total_links": 21,
+      "linking_accuracy": 0.9524,
       "link_details": [
         {
           "correct": true,
           "ann_diameter": 6.0452,
           "feature_diameter": 6.096,
           "gt_diameter": 6.045,
-          "confidence": 0.8572
+          "confidence": 0.8617
         },
         {
           "correct": true,
           "ann_diameter": 6.0452,
           "feature_diameter": 6.096,
           "gt_diameter": 6.045,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.7912,
-          "feature_diameter": 5.7912,
-          "gt_diameter": 6.045,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.1468,
-          "feature_diameter": 6.096,
-          "gt_diameter": 6.045,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.7912,
-          "feature_diameter": 5.7912,
-          "gt_diameter": 6.045,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.1468,
-          "feature_diameter": 6.096,
-          "gt_diameter": 6.045,
-          "confidence": 0.8572
+          "confidence": 0.8617
         },
         {
           "correct": true,
           "ann_diameter": 6.0452,
           "feature_diameter": 6.096,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8407
         },
         {
           "correct": true,
           "ann_diameter": 6.0452,
           "feature_diameter": 6.096,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.848
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8448
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8448
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8448
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 5.4102,
           "feature_diameter": 5.4102,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8429
         },
         {
           "correct": true,
           "ann_diameter": 6.35,
           "feature_diameter": 6.35,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.858
         },
         {
           "correct": true,
           "ann_diameter": 6.35,
           "feature_diameter": 6.35,
           "gt_diameter": 6.045,
-          "confidence": 0.8625
+          "confidence": 0.8566
+        },
+        {
+          "correct": false,
+          "reason": "no GT for diameter 27.94mm",
+          "confidence": 0.5718
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.7912,
+          "feature_diameter": 5.7912,
+          "gt_diameter": 6.045,
+          "confidence": 0.846
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.1468,
+          "feature_diameter": 6.096,
+          "gt_diameter": 6.045,
+          "confidence": 0.8468
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.7912,
+          "feature_diameter": 5.7912,
+          "gt_diameter": 6.045,
+          "confidence": 0.8535
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.1468,
+          "feature_diameter": 6.096,
+          "gt_diameter": 6.045,
+          "confidence": 0.8589
         }
       ]
     },
-    "annotations_found": 9,
+    "annotations_found": 10,
     "holes_found": 95,
-    "matches_found": 20,
-    "avg_confidence": 0.8609
+    "matches_found": 21,
+    "avg_confidence": 0.8352
   },
   {
     "test_case": "FTC-09",
@@ -1740,12 +1727,12 @@
     "llm_enhanced": true,
     "extraction": {
       "true_positives": 15,
-      "false_positives": 4,
+      "false_positives": 3,
       "false_negatives": 0,
-      "precision": 0.7895,
+      "precision": 0.8333,
       "recall": 1.0,
-      "f1": 0.8824,
-      "total_extracted": 19,
+      "f1": 0.9091,
+      "total_extracted": 18,
       "total_ground_truth": 15,
       "match_details": [
         {
@@ -1872,279 +1859,264 @@
       "missed_annotations": []
     },
     "linking": {
-      "correct_links": 30,
-      "total_links": 39,
-      "linking_accuracy": 0.7692,
+      "correct_links": 34,
+      "total_links": 36,
+      "linking_accuracy": 0.9444,
       "link_details": [
         {
           "correct": true,
-          "ann_diameter": 5.9436,
-          "feature_diameter": 5.9436,
+          "ann_diameter": 8.001,
+          "feature_diameter": 8.001,
+          "gt_diameter": 8.001,
+          "confidence": 0.8332
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.001,
+          "feature_diameter": 8.001,
+          "gt_diameter": 8.001,
+          "confidence": 0.8286
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
           "gt_diameter": 5.9436,
-          "confidence": 0.8642
+          "confidence": 0.8629
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.874
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8703
         },
         {
           "correct": true,
           "ann_diameter": 5.9436,
           "feature_diameter": 5.9436,
           "gt_diameter": 5.9436,
-          "confidence": 0.8642
+          "confidence": 0.8707
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.9436,
+          "feature_diameter": 5.9436,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8684
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.9436,
+          "feature_diameter": 5.9436,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8559
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8774
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8762
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8705
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.9436,
+          "feature_diameter": 5.9436,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8601
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8748
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8599
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8473
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8541
+        },
+        {
+          "correct": false,
+          "reason": "no GT for diameter 25.40mm",
+          "confidence": 0.5789
+        },
+        {
+          "correct": false,
+          "reason": "no GT for diameter 25.40mm",
+          "confidence": 0.5825
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8599
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 6.35,
+          "gt_diameter": 5.9436,
+          "confidence": 0.8599
         },
         {
           "correct": true,
           "ann_diameter": 9.525,
           "feature_diameter": 9.525,
           "gt_diameter": 9.525,
-          "confidence": 0.8572
+          "confidence": 0.8389
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.9624,
+          "feature_diameter": 3.9688,
+          "gt_diameter": 3.556,
+          "confidence": 0.8668
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.9624,
+          "feature_diameter": 3.9688,
+          "gt_diameter": 3.556,
+          "confidence": 0.8665
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.9624,
+          "feature_diameter": 3.9688,
+          "gt_diameter": 3.556,
+          "confidence": 0.8665
         },
         {
           "correct": true,
           "ann_diameter": 9.525,
           "feature_diameter": 9.525,
           "gt_diameter": 9.525,
-          "confidence": 0.8572
+          "confidence": 0.8476
         },
         {
           "correct": true,
           "ann_diameter": 3.556,
           "feature_diameter": 3.556,
           "gt_diameter": 3.556,
-          "confidence": 0.8572
+          "confidence": 0.8464
         },
         {
           "correct": true,
           "ann_diameter": 19.05,
           "feature_diameter": 19.05,
           "gt_diameter": 19.05,
-          "confidence": 0.9252
+          "confidence": 0.9134
         },
         {
           "correct": true,
-          "ann_diameter": 8.001,
-          "feature_diameter": 8.001,
-          "gt_diameter": 8.001,
-          "confidence": 0.835
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.001,
-          "feature_diameter": 8.001,
-          "gt_diameter": 8.001,
-          "confidence": 0.835
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.9436,
-          "feature_diameter": 5.9436,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.9436,
-          "feature_diameter": 5.9436,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8695
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 25.40mm",
-          "confidence": 0.5825
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 25.40mm",
-          "confidence": 0.5825
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.35,
-          "feature_diameter": 6.35,
-          "gt_diameter": 5.9436,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.9624,
-          "feature_diameter": 3.9688,
-          "gt_diameter": 3.556,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.9624,
-          "feature_diameter": 3.9688,
-          "gt_diameter": 3.556,
-          "confidence": 0.8695
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.9624,
-          "feature_diameter": 3.9688,
-          "gt_diameter": 3.556,
-          "confidence": 0.8695
-        },
-        {
-          "correct": false,
           "ann_diameter": 5.6134,
-          "feature_diameter": 7.1374,
+          "feature_diameter": 5.6134,
           "gt_diameter": 5.9436,
-          "confidence": 0.5665
+          "confidence": 0.8726
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 5.6134,
-          "feature_diameter": 7.1374,
+          "feature_diameter": 5.6134,
           "gt_diameter": 5.9436,
-          "confidence": 0.5665
+          "confidence": 0.8716
         },
         {
           "correct": true,
           "ann_diameter": 3.9624,
           "feature_diameter": 3.9688,
           "gt_diameter": 3.556,
-          "confidence": 0.8815
+          "confidence": 0.8659
         },
         {
           "correct": true,
           "ann_diameter": 3.9624,
           "feature_diameter": 3.9688,
           "gt_diameter": 3.556,
-          "confidence": 0.8815
+          "confidence": 0.8659
         },
         {
           "correct": true,
           "ann_diameter": 3.9624,
           "feature_diameter": 3.9688,
           "gt_diameter": 3.556,
-          "confidence": 0.8815
+          "confidence": 0.8734
         },
         {
           "correct": true,
           "ann_diameter": 3.9624,
           "feature_diameter": 3.9688,
           "gt_diameter": 3.556,
-          "confidence": 0.8815
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 1.52mm",
-          "confidence": 0.598
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 1.52mm",
-          "confidence": 0.5945
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 1.52mm",
-          "confidence": 0.5875
+          "confidence": 0.8733
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
-          "feature_diameter": 7.0343,
+          "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.8095
+          "confidence": 0.873
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 7.1374,
-          "feature_diameter": 12.7,
+          "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.5595
+          "confidence": 0.8714
         },
         {
-          "correct": false,
+          "correct": true,
           "ann_diameter": 7.1374,
-          "feature_diameter": 12.7,
+          "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.5595
+          "confidence": 0.8675
         }
       ]
     },
-    "annotations_found": 19,
+    "annotations_found": 18,
     "holes_found": 54,
-    "matches_found": 39,
-    "avg_confidence": 0.7999
+    "matches_found": 36,
+    "avg_confidence": 0.8485
   },
   {
     "test_case": "FTC-10",
@@ -2152,12 +2124,12 @@
     "llm_enhanced": true,
     "extraction": {
       "true_positives": 16,
-      "false_positives": 4,
+      "false_positives": 5,
       "false_negatives": 0,
-      "precision": 0.8,
+      "precision": 0.7619,
       "recall": 1.0,
-      "f1": 0.8889,
-      "total_extracted": 20,
+      "f1": 0.8649,
+      "total_extracted": 21,
       "total_ground_truth": 16,
       "match_details": [
         {
@@ -2225,6 +2197,14 @@
           "correct": true
         },
         {
+          "extracted": "10 \u00b10.2",
+          "ground_truth": "4X \u00e2\u2020\u00a7\u00c3\u02dc10 \u00c2\u00b10.25 counterbored holes (set 2)",
+          "ext_diameter_mm": 10.0,
+          "gt_diameter_mm": 10.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "\u00d85.5 \u00b10.2",
           "ground_truth": "\u00c3\u02dc5.5 \u00c2\u00b10.2",
           "ext_diameter_mm": 5.5,
@@ -2234,7 +2214,7 @@
         },
         {
           "extracted": "4X L \u00d810 \u00b10.25",
-          "ground_truth": "4X \u00e2\u2020\u00a7\u00c3\u02dc10 \u00c2\u00b10.25 counterbored holes (set 2)",
+          "ground_truth": "4X \u00e2\u2020\u00a7\u00c3\u02dc10 \u00c2\u00b10.25 counterbored holes (set 3)",
           "ext_diameter_mm": 10.0,
           "gt_diameter_mm": 10.0,
           "diff_mm": 0.0,
@@ -2253,14 +2233,6 @@
           "ground_truth": "\u00c3\u02dc5.5 \u00c2\u00b10.2",
           "ext_diameter_mm": 5.5,
           "gt_diameter_mm": 5.5,
-          "diff_mm": 0.0,
-          "correct": true
-        },
-        {
-          "extracted": "4X L\u00d810 \u00b10.25",
-          "ground_truth": "4X \u00e2\u2020\u00a7\u00c3\u02dc10 \u00c2\u00b10.25 counterbored holes (set 3)",
-          "ext_diameter_mm": 10.0,
-          "gt_diameter_mm": 10.0,
           "diff_mm": 0.0,
           "correct": true
         },
@@ -2293,292 +2265,281 @@
     },
     "linking": {
       "correct_links": 20,
-      "total_links": 40,
-      "linking_accuracy": 0.5,
+      "total_links": 38,
+      "linking_accuracy": 0.5263,
       "link_details": [
         {
           "correct": true,
           "ann_diameter": 3.0,
           "feature_diameter": 2.5,
           "gt_diameter": 3.0,
-          "confidence": 0.6375
+          "confidence": 0.6469
         },
         {
           "correct": true,
           "ann_diameter": 3.0,
           "feature_diameter": 2.5,
           "gt_diameter": 3.0,
-          "confidence": 0.6375
+          "confidence": 0.6461
         },
         {
           "correct": true,
           "ann_diameter": 3.0,
           "feature_diameter": 2.5,
           "gt_diameter": 3.0,
-          "confidence": 0.6375
+          "confidence": 0.6439
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.5,
-          "feature_diameter": 7.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.5493
-        },
-        {
-          "correct": false,
-          "ann_diameter": 5.5,
-          "feature_diameter": 2.75,
-          "gt_diameter": 6.0,
-          "confidence": 0.5832
-        },
-        {
-          "correct": false,
-          "reason": "no annotation diameter"
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.5,
-          "feature_diameter": 3.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.5,
-          "feature_diameter": 3.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.5,
-          "feature_diameter": 3.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8572
-        },
-        {
-          "correct": true,
-          "ann_diameter": 2.5,
-          "feature_diameter": 2.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 2.5,
-          "feature_diameter": 2.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 2.5,
-          "feature_diameter": 2.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 2.5,
-          "feature_diameter": 2.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 2.5,
-          "feature_diameter": 2.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 2.5,
-          "feature_diameter": 2.75,
-          "gt_diameter": 2.5,
-          "confidence": 0.705
-        },
-        {
-          "correct": false,
-          "ann_diameter": 2.5,
           "feature_diameter": 4.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.5579
+        },
+        {
+          "correct": true,
+          "ann_diameter": 2.5,
+          "feature_diameter": 2.5,
           "gt_diameter": 2.5,
-          "confidence": 0.558
+          "confidence": 0.8652
+        },
+        {
+          "correct": true,
+          "ann_diameter": 2.5,
+          "feature_diameter": 2.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8652
+        },
+        {
+          "correct": true,
+          "ann_diameter": 2.5,
+          "feature_diameter": 2.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8652
+        },
+        {
+          "correct": true,
+          "ann_diameter": 2.5,
+          "feature_diameter": 2.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8652
         },
         {
           "correct": false,
           "ann_diameter": 2.5,
+          "feature_diameter": 1.2295,
+          "gt_diameter": 2.5,
+          "confidence": 0.74
+        },
+        {
+          "correct": true,
+          "ann_diameter": 2.5,
+          "feature_diameter": 2.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8633
+        },
+        {
+          "correct": false,
+          "ann_diameter": 2.5,
+          "feature_diameter": 1.2295,
+          "gt_diameter": 2.5,
+          "confidence": 0.74
+        },
+        {
+          "correct": false,
+          "ann_diameter": 2.5,
+          "feature_diameter": 1.2295,
+          "gt_diameter": 2.5,
+          "confidence": 0.7403
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.8519
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.8519
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.849
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.8175
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
           "feature_diameter": 4.0,
-          "gt_diameter": 2.5,
-          "confidence": 0.558
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.8625
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 7.0,
           "gt_diameter": 10.0,
-          "confidence": 0.593
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 7.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.593
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5755
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.5,
-          "feature_diameter": 3.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.5,
-          "feature_diameter": 3.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": true,
-          "ann_diameter": 3.5,
-          "feature_diameter": 3.5,
-          "gt_diameter": 2.5,
-          "confidence": 0.8625
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5951
-        },
-        {
-          "correct": false,
-          "ann_diameter": 10.0,
-          "feature_diameter": 2.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.5951
+          "confidence": 0.5314
         },
         {
           "correct": false,
           "ann_diameter": 10.0,
           "feature_diameter": 1.2295,
           "gt_diameter": 10.0,
-          "confidence": 0.5832
+          "confidence": 0.5818
         },
         {
           "correct": false,
           "ann_diameter": 10.0,
           "feature_diameter": 1.2295,
           "gt_diameter": 10.0,
-          "confidence": 0.5832
+          "confidence": 0.5818
         },
         {
           "correct": false,
-          "ann_diameter": 7.0,
-          "feature_diameter": 2.0,
+          "ann_diameter": 5.5,
+          "feature_diameter": 2.75,
           "gt_diameter": 6.0,
-          "confidence": 0.5475
+          "confidence": 0.8026
         },
         {
           "correct": false,
-          "ann_diameter": 7.0,
+          "ann_diameter": 10.0,
           "feature_diameter": 2.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.5475
+          "gt_diameter": 10.0,
+          "confidence": 0.6533
         },
         {
           "correct": false,
-          "ann_diameter": 7.0,
+          "ann_diameter": 10.0,
           "feature_diameter": 2.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.5475
+          "gt_diameter": 10.0,
+          "confidence": 0.6464
         },
         {
           "correct": false,
-          "ann_diameter": 7.0,
+          "ann_diameter": 10.0,
           "feature_diameter": 2.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.6418
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
+          "feature_diameter": 2.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.6413
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.5,
+          "feature_diameter": 3.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8459
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.5,
+          "feature_diameter": 3.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8459
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.5,
+          "feature_diameter": 3.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8459
+        },
+        {
+          "correct": false,
+          "ann_diameter": 5.5,
+          "feature_diameter": 2.75,
           "gt_diameter": 6.0,
-          "confidence": 0.5475
+          "confidence": 0.7966
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
+          "feature_diameter": 2.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.6072
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
+          "feature_diameter": 1.2295,
+          "gt_diameter": 10.0,
+          "confidence": 0.5947
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
+          "feature_diameter": 3.5,
+          "gt_diameter": 10.0,
+          "confidence": 0.6522
+        },
+        {
+          "correct": false,
+          "ann_diameter": 10.0,
+          "feature_diameter": 2.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.6111
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.5,
+          "feature_diameter": 3.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8534
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.5,
+          "feature_diameter": 3.5,
+          "gt_diameter": 2.5,
+          "confidence": 0.8433
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.0,
+          "feature_diameter": 7.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.8764
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.0,
+          "feature_diameter": 7.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.8764
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.0,
+          "feature_diameter": 7.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.8764
+        },
+        {
+          "correct": true,
+          "ann_diameter": 7.0,
+          "feature_diameter": 7.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.8764
         }
       ]
     },
-    "annotations_found": 20,
+    "annotations_found": 21,
     "holes_found": 57,
-    "matches_found": 40,
-    "avg_confidence": 0.6926
+    "matches_found": 38,
+    "avg_confidence": 0.7498
   },
   {
     "test_case": "FTC-11",
@@ -2586,12 +2547,12 @@
     "llm_enhanced": true,
     "extraction": {
       "true_positives": 2,
-      "false_positives": 3,
+      "false_positives": 5,
       "false_negatives": 0,
-      "precision": 0.4,
+      "precision": 0.2857,
       "recall": 1.0,
-      "f1": 0.5714,
-      "total_extracted": 5,
+      "f1": 0.4444,
+      "total_extracted": 7,
       "total_ground_truth": 2,
       "match_details": [
         {
@@ -2623,27 +2584,27 @@
           "ann_diameter": 32.0,
           "feature_diameter": 32.0,
           "gt_diameter": 32.0,
-          "confidence": 0.9062
+          "confidence": 0.889
         }
       ]
     },
-    "annotations_found": 5,
+    "annotations_found": 7,
     "holes_found": 1,
     "matches_found": 1,
-    "avg_confidence": 0.9062
+    "avg_confidence": 0.889
   },
   {
     "test_case": "SYN-01-SimpleBlock",
     "unit_system": "metric",
     "llm_enhanced": true,
     "extraction": {
-      "true_positives": 5,
+      "true_positives": 6,
       "false_positives": 2,
-      "false_negatives": 1,
-      "precision": 0.7143,
-      "recall": 0.8333,
-      "f1": 0.7692,
-      "total_extracted": 7,
+      "false_negatives": 0,
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571,
+      "total_extracted": 8,
       "total_ground_truth": 6,
       "match_details": [
         {
@@ -2671,6 +2632,14 @@
           "correct": true
         },
         {
+          "extracted": "\u00d88.0 THRU",
+          "ground_truth": "Hole 4",
+          "ext_diameter_mm": 8.0,
+          "gt_diameter_mm": 8.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "\u00d812.0 depth 15",
           "ground_truth": "Hole 5",
           "ext_diameter_mm": 12.0,
@@ -2687,9 +2656,7 @@
           "correct": true
         }
       ],
-      "missed_annotations": [
-        "Hole 4"
-      ]
+      "missed_annotations": []
     },
     "linking": {
       "correct_links": 6,
@@ -2701,49 +2668,49 @@
           "ann_diameter": 8.0,
           "feature_diameter": 8.0,
           "gt_diameter": 8.0,
-          "confidence": 0.9075
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 8.0,
           "feature_diameter": 8.0,
           "gt_diameter": 8.0,
-          "confidence": 0.9075
+          "confidence": 0.9126
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.9126
         },
         {
           "correct": true,
           "ann_diameter": 12.0,
           "feature_diameter": 12.0,
           "gt_diameter": 12.0,
-          "confidence": 0.8875
+          "confidence": 0.9
         },
         {
           "correct": true,
           "ann_diameter": 10.0,
           "feature_diameter": 10.0,
           "gt_diameter": 10.0,
-          "confidence": 0.9463
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.93
+          "confidence": 0.924
         }
       ]
     },
-    "annotations_found": 7,
+    "annotations_found": 8,
     "holes_found": 6,
     "matches_found": 6,
-    "avg_confidence": 0.9181
+    "avg_confidence": 0.9122
   },
   {
     "test_case": "SYN-02-ThreadedPlate",
@@ -2751,12 +2718,12 @@
     "llm_enhanced": true,
     "extraction": {
       "true_positives": 5,
-      "false_positives": 2,
+      "false_positives": 3,
       "false_negatives": 2,
-      "precision": 0.7143,
+      "precision": 0.625,
       "recall": 0.7143,
-      "f1": 0.7143,
-      "total_extracted": 7,
+      "f1": 0.6667,
+      "total_extracted": 8,
       "total_ground_truth": 7,
       "match_details": [
         {
@@ -2784,18 +2751,18 @@
           "correct": true
         },
         {
-          "extracted": "2X M8x1.25 depth 12",
-          "ground_truth": "Hole 5",
-          "ext_diameter_mm": 8.0,
-          "gt_diameter_mm": 6.8,
+          "extracted": "M6x1.0 THRU",
+          "ground_truth": "Hole 4",
+          "ext_diameter_mm": 6.0,
+          "gt_diameter_mm": 5.0,
           "diff_mm": 0.0,
           "correct": true
         },
         {
-          "extracted": "Plate with metric threaded holes M6, M8, M10 with tolerance classes",
-          "ground_truth": "Hole 4",
-          "ext_diameter_mm": 6.0,
-          "gt_diameter_mm": 5.0,
+          "extracted": "2X M8x1.25 depth 12",
+          "ground_truth": "Hole 5",
+          "ext_diameter_mm": 8.0,
+          "gt_diameter_mm": 6.8,
           "diff_mm": 0.0,
           "correct": true
         }
@@ -2815,54 +2782,54 @@
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9475
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9475
+          "confidence": 0.9535
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.8675
+          "confidence": 0.948
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 5.0,
+          "gt_diameter": 5.0,
+          "confidence": 0.9535
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 6.8,
+          "gt_diameter": 6.8,
+          "confidence": 0.9409
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 6.8,
+          "gt_diameter": 6.8,
+          "confidence": 0.925
         },
         {
           "correct": false,
           "reason": "no GT for diameter 10.00mm",
-          "confidence": 0.9603
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 5.0,
-          "gt_diameter": 5.0,
-          "confidence": 0.97
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 6.8,
-          "gt_diameter": 6.8,
-          "confidence": 0.95
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 6.8,
-          "gt_diameter": 6.8,
-          "confidence": 0.95
+          "confidence": 0.9401
         }
       ]
     },
-    "annotations_found": 7,
+    "annotations_found": 8,
     "holes_found": 7,
     "matches_found": 7,
-    "avg_confidence": 0.9418
+    "avg_confidence": 0.9441
   },
   {
     "test_case": "SYN-03-InchPart",
@@ -2931,55 +2898,55 @@
           "ann_diameter": 6.35,
           "feature_diameter": 6.35,
           "gt_diameter": 6.35,
-          "confidence": 0.9475
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.7325,
-          "feature_diameter": 8.731,
-          "gt_diameter": 8.731,
-          "confidence": 0.9775
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.0,
-          "feature_diameter": 4.2,
-          "gt_diameter": 4.2,
-          "confidence": 0.8875
-        },
-        {
-          "correct": true,
-          "ann_diameter": 11.1125,
-          "feature_diameter": 11.1125,
-          "gt_diameter": 11.1125,
-          "confidence": 0.8412
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 6.35,
           "feature_diameter": 6.35,
           "gt_diameter": 6.35,
-          "confidence": 0.97
+          "confidence": 0.948
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.7325,
+          "feature_diameter": 8.731,
+          "gt_diameter": 8.731,
+          "confidence": 0.9605
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.0,
+          "feature_diameter": 4.2,
+          "gt_diameter": 4.2,
+          "confidence": 0.75
+        },
+        {
+          "correct": true,
+          "ann_diameter": 11.1125,
+          "feature_diameter": 11.1125,
+          "gt_diameter": 11.1125,
+          "confidence": 0.924
         }
       ]
     },
     "annotations_found": 6,
     "holes_found": 5,
     "matches_found": 5,
-    "avg_confidence": 0.9247
+    "avg_confidence": 0.9061
   },
   {
     "test_case": "SYN-04-MixedFeatures",
     "unit_system": "metric",
     "llm_enhanced": true,
     "extraction": {
-      "true_positives": 7,
+      "true_positives": 8,
       "false_positives": 3,
-      "false_negatives": 2,
-      "precision": 0.7,
-      "recall": 0.7778,
-      "f1": 0.7368,
-      "total_extracted": 10,
+      "false_negatives": 1,
+      "precision": 0.7273,
+      "recall": 0.8889,
+      "f1": 0.8,
+      "total_extracted": 11,
       "total_ground_truth": 9,
       "match_details": [
         {
@@ -3001,6 +2968,14 @@
         {
           "extracted": "\u00d86.0 THRU \u00b7\u00d812.0 depth 5.0",
           "ground_truth": "Hole 3",
+          "ext_diameter_mm": 6.0,
+          "gt_diameter_mm": 6.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d86.0 THRU \u00b7\u00d812.0 depth 5.0",
+          "ground_truth": "Hole 4",
           "ext_diameter_mm": 6.0,
           "gt_diameter_mm": 6.0,
           "diff_mm": 0.0,
@@ -3040,7 +3015,6 @@
         }
       ],
       "missed_annotations": [
-        "Hole 4",
         "Hole 8"
       ]
     },
@@ -3054,81 +3028,81 @@
           "ann_diameter": 6.0,
           "feature_diameter": 6.0,
           "gt_diameter": 6.0,
-          "confidence": 0.9075
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 6.0,
           "gt_diameter": 6.0,
-          "confidence": 0.9075
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.927
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.927
         },
         {
           "correct": true,
           "ann_diameter": 10.0,
           "feature_diameter": 10.0,
           "gt_diameter": 10.0,
-          "confidence": 0.8975
+          "confidence": 0.9062
+        },
+        {
+          "correct": true,
+          "ann_diameter": 10.0,
+          "feature_diameter": 10.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.898
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9075
+          "confidence": 0.887
         },
         {
           "correct": true,
           "ann_diameter": 5.0,
           "feature_diameter": 5.0,
           "gt_diameter": 6.0,
-          "confidence": 0.9475
+          "confidence": 0.923
         },
         {
           "correct": false,
           "reason": "no GT for diameter 8.00mm",
-          "confidence": 0.9252
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 10.0,
-          "feature_diameter": 10.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.88
+          "confidence": 0.9115
         }
       ]
     },
-    "annotations_found": 10,
+    "annotations_found": 11,
     "holes_found": 9,
     "matches_found": 9,
-    "avg_confidence": 0.9147
+    "avg_confidence": 0.9115
   },
   {
     "test_case": "SYN-05-ManyHoles",
     "unit_system": "metric",
     "llm_enhanced": true,
     "extraction": {
-      "true_positives": 9,
+      "true_positives": 12,
       "false_positives": 0,
-      "false_negatives": 3,
+      "false_negatives": 0,
       "precision": 1.0,
-      "recall": 0.75,
-      "f1": 0.8571,
-      "total_extracted": 9,
+      "recall": 1.0,
+      "f1": 1.0,
+      "total_extracted": 12,
       "total_ground_truth": 12,
       "match_details": [
         {
@@ -3164,6 +3138,22 @@
           "correct": true
         },
         {
+          "extracted": "\u00d84.0 THRU",
+          "ground_truth": "Hole 5",
+          "ext_diameter_mm": 4.0,
+          "gt_diameter_mm": 4.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d84.0 THRU",
+          "ground_truth": "Hole 6",
+          "ext_diameter_mm": 4.0,
+          "gt_diameter_mm": 4.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "3X \u00d88.0 H8 THRU",
           "ground_truth": "Hole 7",
           "ext_diameter_mm": 8.0,
@@ -3174,6 +3164,14 @@
         {
           "extracted": "\u00d88.0 THRU",
           "ground_truth": "Hole 8",
+          "ext_diameter_mm": 8.0,
+          "gt_diameter_mm": 8.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d88.0 THRU",
+          "ground_truth": "Hole 9",
           "ext_diameter_mm": 8.0,
           "gt_diameter_mm": 8.0,
           "diff_mm": 0.0,
@@ -3197,18 +3195,14 @@
         },
         {
           "extracted": "M4x0.7 THRU",
-          "ground_truth": "Hole 5",
+          "ground_truth": "Hole 11",
           "ext_diameter_mm": 4.0,
-          "gt_diameter_mm": 4.0,
-          "diff_mm": 0.0,
+          "gt_diameter_mm": 3.3,
+          "diff_mm": 0.7000000000000002,
           "correct": true
         }
       ],
-      "missed_annotations": [
-        "Hole 6",
-        "Hole 9",
-        "Hole 11"
-      ]
+      "missed_annotations": []
     },
     "linking": {
       "correct_links": 12,
@@ -3220,90 +3214,90 @@
           "ann_diameter": 4.0,
           "feature_diameter": 4.0,
           "gt_diameter": 4.0,
-          "confidence": 0.9075
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 4.0,
           "feature_diameter": 4.0,
           "gt_diameter": 4.0,
-          "confidence": 0.9075
+          "confidence": 0.9182
         },
         {
           "correct": true,
           "ann_diameter": 4.0,
           "feature_diameter": 4.0,
           "gt_diameter": 4.0,
-          "confidence": 0.9075
+          "confidence": 0.9168
+        },
+        {
+          "correct": true,
+          "ann_diameter": 4.0,
+          "feature_diameter": 4.0,
+          "gt_diameter": 4.0,
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 4.0,
+          "feature_diameter": 4.0,
+          "gt_diameter": 4.0,
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 4.0,
+          "feature_diameter": 4.0,
+          "gt_diameter": 4.0,
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 8.0,
           "feature_diameter": 8.0,
           "gt_diameter": 8.0,
-          "confidence": 0.9475
+          "confidence": 0.9618
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.948
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 16.0,
           "feature_diameter": 16.0,
           "gt_diameter": 16.0,
-          "confidence": 0.9775
+          "confidence": 0.9657
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9475
+          "confidence": 0.9326
         },
         {
           "correct": true,
           "ann_diameter": 4.0,
           "feature_diameter": 3.3,
           "gt_diameter": 4.0,
-          "confidence": 0.9323
-        },
-        {
-          "correct": true,
-          "ann_diameter": 4.0,
-          "feature_diameter": 4.0,
-          "gt_diameter": 4.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 4.0,
-          "feature_diameter": 4.0,
-          "gt_diameter": 4.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 4.0,
-          "feature_diameter": 4.0,
-          "gt_diameter": 4.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.97
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.97
+          "confidence": 0.9119
         }
       ]
     },
-    "annotations_found": 9,
+    "annotations_found": 12,
     "holes_found": 12,
     "matches_found": 12,
-    "avg_confidence": 0.9381
+    "avg_confidence": 0.9293
   }
 ]

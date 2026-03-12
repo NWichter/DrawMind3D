@@ -67,7 +67,7 @@
       "link_details": []
     },
     "annotations_found": 0,
-    "holes_found": 142,
+    "holes_found": 143,
     "matches_found": 0,
     "avg_confidence": 0.0
   },
@@ -200,7 +200,7 @@
       "link_details": []
     },
     "annotations_found": 0,
-    "holes_found": 32,
+    "holes_found": 33,
     "matches_found": 0,
     "avg_confidence": 0.0
   },
@@ -209,13 +209,13 @@
     "unit_system": "inch",
     "llm_enhanced": false,
     "extraction": {
-      "true_positives": 10,
+      "true_positives": 11,
       "false_positives": 1,
-      "false_negatives": 1,
-      "precision": 0.9091,
-      "recall": 0.9091,
-      "f1": 0.9091,
-      "total_extracted": 11,
+      "false_negatives": 0,
+      "precision": 0.9167,
+      "recall": 1.0,
+      "f1": 0.9565,
+      "total_extracted": 12,
       "total_ground_truth": 11,
       "match_details": [
         {
@@ -291,6 +291,14 @@
           "correct": true
         },
         {
+          "extracted": "3X \u00d8.875 \u00b1.010",
+          "ground_truth": "3X 0.875 +/-.010",
+          "ext_diameter_mm": 22.225,
+          "gt_diameter_mm": 22.225,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "2X \u00d8.594 +.012",
           "ground_truth": "2X 0.594 +.012/-.002",
           "ext_diameter_mm": 15.0876,
@@ -299,154 +307,180 @@
           "correct": true
         }
       ],
-      "missed_annotations": [
-        "3X 0.875 +/-.010"
-      ]
+      "missed_annotations": []
     },
     "linking": {
-      "correct_links": 19,
-      "total_links": 19,
-      "linking_accuracy": 1.0,
+      "correct_links": 15,
+      "total_links": 23,
+      "linking_accuracy": 0.6522,
       "link_details": [
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5889
+          "confidence": 0.6718
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5889
+          "confidence": 0.6706
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5964
+          "confidence": 0.6796
         },
         {
-          "correct": true,
+          "correct": false,
           "ann_diameter": 6.35,
-          "feature_diameter": 6.096,
+          "feature_diameter": 3.175,
           "gt_diameter": 6.35,
-          "confidence": 0.5964
+          "confidence": 0.6746
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6872
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6872
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6832
+        },
+        {
+          "correct": false,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.175,
+          "gt_diameter": 6.35,
+          "confidence": 0.6767
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 4.3942,
           "feature_diameter": 4.3942,
           "gt_diameter": 4.3942,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.8238
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 7.1374,
           "feature_diameter": 7.1374,
           "gt_diameter": 6.35,
-          "confidence": 0.84
+          "confidence": 0.812
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.797
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.797
         },
         {
           "correct": true,
           "ann_diameter": 22.225,
           "feature_diameter": 22.225,
           "gt_diameter": 22.225,
-          "confidence": 0.88
+          "confidence": 0.8571
         },
         {
           "correct": true,
           "ann_diameter": 22.225,
           "feature_diameter": 22.225,
           "gt_diameter": 22.225,
-          "confidence": 0.88
+          "confidence": 0.8571
         },
         {
           "correct": true,
           "ann_diameter": 22.225,
           "feature_diameter": 22.225,
           "gt_diameter": 22.225,
-          "confidence": 0.88
+          "confidence": 0.8571
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.8068
         },
         {
           "correct": true,
           "ann_diameter": 15.0876,
           "feature_diameter": 15.0825,
           "gt_diameter": 15.0876,
-          "confidence": 0.825
+          "confidence": 0.806
         }
       ]
     },
-    "annotations_found": 11,
-    "holes_found": 82,
-    "matches_found": 19,
-    "avg_confidence": 0.7911
+    "annotations_found": 12,
+    "holes_found": 84,
+    "matches_found": 23,
+    "avg_confidence": 0.7703
   },
   {
     "test_case": "FTC-08",
@@ -535,21 +569,21 @@
           "ann_diameter": 8.001,
           "feature_diameter": 8.001,
           "gt_diameter": 8.001,
-          "confidence": 0.835
+          "confidence": 0.8332
         },
         {
           "correct": true,
           "ann_diameter": 8.001,
           "feature_diameter": 8.001,
           "gt_diameter": 8.001,
-          "confidence": 0.835
+          "confidence": 0.8286
         }
       ]
     },
     "annotations_found": 1,
     "holes_found": 54,
     "matches_found": 2,
-    "avg_confidence": 0.835
+    "avg_confidence": 0.8309
   },
   {
     "test_case": "FTC-10",
@@ -616,28 +650,28 @@
           "ann_diameter": 3.0,
           "feature_diameter": 2.5,
           "gt_diameter": 3.0,
-          "confidence": 0.6375
+          "confidence": 0.6469
         },
         {
           "correct": true,
           "ann_diameter": 3.0,
           "feature_diameter": 2.5,
           "gt_diameter": 3.0,
-          "confidence": 0.6375
+          "confidence": 0.6461
         },
         {
           "correct": true,
           "ann_diameter": 3.0,
           "feature_diameter": 2.5,
           "gt_diameter": 3.0,
-          "confidence": 0.6375
+          "confidence": 0.6439
         }
       ]
     },
     "annotations_found": 3,
     "holes_found": 57,
     "matches_found": 3,
-    "avg_confidence": 0.6375
+    "avg_confidence": 0.6456
   },
   {
     "test_case": "FTC-11",
@@ -674,13 +708,13 @@
     "unit_system": "metric",
     "llm_enhanced": false,
     "extraction": {
-      "true_positives": 4,
+      "true_positives": 5,
       "false_positives": 2,
-      "false_negatives": 2,
-      "precision": 0.6667,
-      "recall": 0.6667,
-      "f1": 0.6667,
-      "total_extracted": 6,
+      "false_negatives": 1,
+      "precision": 0.7143,
+      "recall": 0.8333,
+      "f1": 0.7692,
+      "total_extracted": 7,
       "total_ground_truth": 6,
       "match_details": [
         {
@@ -708,6 +742,14 @@
           "correct": true
         },
         {
+          "extracted": "\u00d88.0 THRU",
+          "ground_truth": "Hole 4",
+          "ext_diameter_mm": 8.0,
+          "gt_diameter_mm": 8.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "\u00d812.0 depth 15",
           "ground_truth": "Hole 5",
           "ext_diameter_mm": 12.0,
@@ -717,7 +759,6 @@
         }
       ],
       "missed_annotations": [
-        "Hole 4",
         "Hole 6"
       ]
     },
@@ -731,42 +772,42 @@
           "ann_diameter": 8.0,
           "feature_diameter": 8.0,
           "gt_diameter": 8.0,
-          "confidence": 0.9075
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 8.0,
           "feature_diameter": 8.0,
           "gt_diameter": 8.0,
-          "confidence": 0.9075
+          "confidence": 0.9126
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.9126
         },
         {
           "correct": true,
           "ann_diameter": 12.0,
           "feature_diameter": 12.0,
           "gt_diameter": 12.0,
-          "confidence": 0.8875
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.93
+          "confidence": 0.9
         }
       ]
     },
-    "annotations_found": 6,
+    "annotations_found": 7,
     "holes_found": 6,
     "matches_found": 5,
-    "avg_confidence": 0.9125
+    "avg_confidence": 0.9098
   },
   {
     "test_case": "SYN-02-ThreadedPlate",
@@ -774,12 +815,12 @@
     "llm_enhanced": false,
     "extraction": {
       "true_positives": 5,
-      "false_positives": 1,
+      "false_positives": 2,
       "false_negatives": 2,
-      "precision": 0.8333,
+      "precision": 0.7143,
       "recall": 0.7143,
-      "f1": 0.7692,
-      "total_extracted": 6,
+      "f1": 0.7143,
+      "total_extracted": 7,
       "total_ground_truth": 7,
       "match_details": [
         {
@@ -807,18 +848,18 @@
           "correct": true
         },
         {
-          "extracted": "2X M8x1.25 depth 12",
-          "ground_truth": "Hole 5",
-          "ext_diameter_mm": 8.0,
-          "gt_diameter_mm": 6.8,
+          "extracted": "M6x1.0 THRU",
+          "ground_truth": "Hole 4",
+          "ext_diameter_mm": 6.0,
+          "gt_diameter_mm": 5.0,
           "diff_mm": 0.0,
           "correct": true
         },
         {
-          "extracted": "Plate with metric threaded holes M6, M8, M10 with tolerance classes",
-          "ground_truth": "Hole 4",
-          "ext_diameter_mm": 6.0,
-          "gt_diameter_mm": 5.0,
+          "extracted": "2X M8x1.25 depth 12",
+          "ground_truth": "Hole 5",
+          "ext_diameter_mm": 8.0,
+          "gt_diameter_mm": 6.8,
           "diff_mm": 0.0,
           "correct": true
         }
@@ -838,49 +879,49 @@
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9475
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9475
+          "confidence": 0.9535
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.8675
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.97
+          "confidence": 0.9535
         },
         {
           "correct": true,
           "ann_diameter": 8.0,
           "feature_diameter": 6.8,
           "gt_diameter": 6.8,
-          "confidence": 0.95
+          "confidence": 0.9409
         },
         {
           "correct": true,
           "ann_diameter": 8.0,
           "feature_diameter": 6.8,
           "gt_diameter": 6.8,
-          "confidence": 0.95
+          "confidence": 0.925
         }
       ]
     },
-    "annotations_found": 6,
+    "annotations_found": 7,
     "holes_found": 7,
     "matches_found": 6,
-    "avg_confidence": 0.9388
+    "avg_confidence": 0.9448
   },
   {
     "test_case": "SYN-03-InchPart",
@@ -943,48 +984,48 @@
           "ann_diameter": 6.35,
           "feature_diameter": 6.35,
           "gt_diameter": 6.35,
-          "confidence": 0.9475
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.7325,
-          "feature_diameter": 8.731,
-          "gt_diameter": 8.731,
-          "confidence": 0.9775
-        },
-        {
-          "correct": true,
-          "ann_diameter": 5.0,
-          "feature_diameter": 4.2,
-          "gt_diameter": 4.2,
-          "confidence": 0.7775
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 6.35,
           "feature_diameter": 6.35,
           "gt_diameter": 6.35,
-          "confidence": 0.97
+          "confidence": 0.948
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.7325,
+          "feature_diameter": 8.731,
+          "gt_diameter": 8.731,
+          "confidence": 0.9605
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.0,
+          "feature_diameter": 4.2,
+          "gt_diameter": 4.2,
+          "confidence": 0.75
         }
       ]
     },
     "annotations_found": 5,
     "holes_found": 5,
     "matches_found": 4,
-    "avg_confidence": 0.9181
+    "avg_confidence": 0.9016
   },
   {
     "test_case": "SYN-04-MixedFeatures",
     "unit_system": "metric",
     "llm_enhanced": false,
     "extraction": {
-      "true_positives": 7,
+      "true_positives": 8,
       "false_positives": 2,
-      "false_negatives": 2,
-      "precision": 0.7778,
-      "recall": 0.7778,
-      "f1": 0.7778,
-      "total_extracted": 9,
+      "false_negatives": 1,
+      "precision": 0.8,
+      "recall": 0.8889,
+      "f1": 0.8421,
+      "total_extracted": 10,
       "total_ground_truth": 9,
       "match_details": [
         {
@@ -1006,6 +1047,14 @@
         {
           "extracted": "\u00d86.0 THRU \u00b7\u00d812.0 depth 5.0",
           "ground_truth": "Hole 3",
+          "ext_diameter_mm": 6.0,
+          "gt_diameter_mm": 6.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d86.0 THRU \u00b7\u00d812.0 depth 5.0",
+          "ground_truth": "Hole 4",
           "ext_diameter_mm": 6.0,
           "gt_diameter_mm": 6.0,
           "diff_mm": 0.0,
@@ -1045,7 +1094,6 @@
         }
       ],
       "missed_annotations": [
-        "Hole 4",
         "Hole 8"
       ]
     },
@@ -1059,76 +1107,76 @@
           "ann_diameter": 6.0,
           "feature_diameter": 6.0,
           "gt_diameter": 6.0,
-          "confidence": 0.9075
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 6.0,
           "gt_diameter": 6.0,
-          "confidence": 0.9075
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.927
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.0,
+          "feature_diameter": 6.0,
+          "gt_diameter": 6.0,
+          "confidence": 0.927
         },
         {
           "correct": true,
           "ann_diameter": 10.0,
           "feature_diameter": 10.0,
           "gt_diameter": 10.0,
-          "confidence": 0.8975
+          "confidence": 0.9062
+        },
+        {
+          "correct": true,
+          "ann_diameter": 10.0,
+          "feature_diameter": 10.0,
+          "gt_diameter": 10.0,
+          "confidence": 0.898
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9075
+          "confidence": 0.887
         },
         {
           "correct": true,
           "ann_diameter": 5.0,
           "feature_diameter": 5.0,
           "gt_diameter": 6.0,
-          "confidence": 0.9475
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 6.0,
-          "feature_diameter": 6.0,
-          "gt_diameter": 6.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 10.0,
-          "feature_diameter": 10.0,
-          "gt_diameter": 10.0,
-          "confidence": 0.88
+          "confidence": 0.923
         }
       ]
     },
-    "annotations_found": 9,
+    "annotations_found": 10,
     "holes_found": 9,
     "matches_found": 8,
-    "avg_confidence": 0.9134
+    "avg_confidence": 0.9115
   },
   {
     "test_case": "SYN-05-ManyHoles",
     "unit_system": "metric",
     "llm_enhanced": false,
     "extraction": {
-      "true_positives": 8,
+      "true_positives": 11,
       "false_positives": 0,
-      "false_negatives": 4,
+      "false_negatives": 1,
       "precision": 1.0,
-      "recall": 0.6667,
-      "f1": 0.8,
-      "total_extracted": 8,
+      "recall": 0.9167,
+      "f1": 0.9565,
+      "total_extracted": 11,
       "total_ground_truth": 12,
       "match_details": [
         {
@@ -1164,6 +1212,22 @@
           "correct": true
         },
         {
+          "extracted": "\u00d84.0 THRU",
+          "ground_truth": "Hole 5",
+          "ext_diameter_mm": 4.0,
+          "gt_diameter_mm": 4.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d84.0 THRU",
+          "ground_truth": "Hole 6",
+          "ext_diameter_mm": 4.0,
+          "gt_diameter_mm": 4.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
           "extracted": "3X \u00d88.0 H8 THRU",
           "ground_truth": "Hole 7",
           "ext_diameter_mm": 8.0,
@@ -1174,6 +1238,14 @@
         {
           "extracted": "\u00d88.0 THRU",
           "ground_truth": "Hole 8",
+          "ext_diameter_mm": 8.0,
+          "gt_diameter_mm": 8.0,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d88.0 THRU",
+          "ground_truth": "Hole 9",
           "ext_diameter_mm": 8.0,
           "gt_diameter_mm": 8.0,
           "diff_mm": 0.0,
@@ -1197,9 +1269,6 @@
         }
       ],
       "missed_annotations": [
-        "Hole 5",
-        "Hole 6",
-        "Hole 9",
         "Hole 11"
       ]
     },
@@ -1213,83 +1282,83 @@
           "ann_diameter": 4.0,
           "feature_diameter": 4.0,
           "gt_diameter": 4.0,
-          "confidence": 0.9075
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 4.0,
           "feature_diameter": 4.0,
           "gt_diameter": 4.0,
-          "confidence": 0.9075
+          "confidence": 0.9182
         },
         {
           "correct": true,
           "ann_diameter": 4.0,
           "feature_diameter": 4.0,
           "gt_diameter": 4.0,
-          "confidence": 0.9075
+          "confidence": 0.9168
+        },
+        {
+          "correct": true,
+          "ann_diameter": 4.0,
+          "feature_diameter": 4.0,
+          "gt_diameter": 4.0,
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 4.0,
+          "feature_diameter": 4.0,
+          "gt_diameter": 4.0,
+          "confidence": 0.912
+        },
+        {
+          "correct": true,
+          "ann_diameter": 4.0,
+          "feature_diameter": 4.0,
+          "gt_diameter": 4.0,
+          "confidence": 0.912
         },
         {
           "correct": true,
           "ann_diameter": 8.0,
           "feature_diameter": 8.0,
           "gt_diameter": 8.0,
-          "confidence": 0.9475
+          "confidence": 0.9618
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.948
+        },
+        {
+          "correct": true,
+          "ann_diameter": 8.0,
+          "feature_diameter": 8.0,
+          "gt_diameter": 8.0,
+          "confidence": 0.948
         },
         {
           "correct": true,
           "ann_diameter": 16.0,
           "feature_diameter": 16.0,
           "gt_diameter": 16.0,
-          "confidence": 0.9775
+          "confidence": 0.9657
         },
         {
           "correct": true,
           "ann_diameter": 6.0,
           "feature_diameter": 5.0,
           "gt_diameter": 5.0,
-          "confidence": 0.9475
-        },
-        {
-          "correct": true,
-          "ann_diameter": 4.0,
-          "feature_diameter": 4.0,
-          "gt_diameter": 4.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 4.0,
-          "feature_diameter": 4.0,
-          "gt_diameter": 4.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 4.0,
-          "feature_diameter": 4.0,
-          "gt_diameter": 4.0,
-          "confidence": 0.93
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.97
-        },
-        {
-          "correct": true,
-          "ann_diameter": 8.0,
-          "feature_diameter": 8.0,
-          "gt_diameter": 8.0,
-          "confidence": 0.97
+          "confidence": 0.9326
         }
       ]
     },
-    "annotations_found": 8,
+    "annotations_found": 11,
     "holes_found": 12,
     "matches_found": 11,
-    "avg_confidence": 0.9386
+    "avg_confidence": 0.9308
   }
 ]

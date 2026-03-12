@@ -10,53 +10,59 @@ SYSTEM_ENGINEERING = (
 VISION_EXTRACT_PROMPT = """\
 Analyze this engineering/technical drawing page. Extract ALL hole-related annotations you can find.
 
-IMPORTANT DISTINCTIONS:
+CRITICAL DISTINCTIONS:
 - **Diameter callouts** (hole sizes): ⌀.250, 4X ⌀.250 +.003/-.001, ⌀8.5 — these specify actual hole diameters
-- **GD&T tolerance zones**: ⌀.015, ⌀.020 followed by datum references (A, B, C) — these are geometric tolerance values, NOT hole diameters. Do NOT include GD&T tolerance zones as diameter annotations.
+- **GD&T tolerance zones**: ⌀.015, ⌀.020 followed by datum references (A, B, C) in feature control frames — these are geometric tolerance values, NOT hole diameters. Do NOT include GD&T tolerance zones.
+- **Part dimensions**: 2.500, 1.750, 4.000 standing alone as overall sizes (length, width, height) — these are NOT hole diameters. Do NOT include overall part envelope dimensions.
+- **Leader lines**: Follow leader lines from annotation text to the feature they reference. The same hole may be shown in multiple views.
 
 Extract these annotation types:
 1. **Thread callouts**
    - Metric: M10×1.5, M8-6H, M12x1.25-6H
-   - Imperial/Unified: 1/4-20 UNC, 3/8-16 UNC-2B, #10-32 UNF
-   - IMPORTANT: For inch drawings, thread callouts like "1/4-20 UNC" mean 1/4 inch diameter, 20 threads per inch, Unified Coarse
+   - Imperial/Unified: 1/4-20 UNC, 3/8-16 UNC-2B, #10-32 UNF, #6-32 UNC
+   - IMPORTANT: For inch drawings, "1/4-20 UNC" = 1/4 inch diameter, 20 TPI, Unified Coarse
+   - Number sizes: #0 through #12 (e.g., #10-32 UNF = screw size 10, 32 TPI, Unified Fine)
 2. **Diameter dimensions**
    - Metric: Ø20, ⌀8.5
-   - Inch: ⌀.250, .438 DIA, Ø.500 — decimal inch values often START with a decimal point (no leading zero)
-   - Must be actual hole sizes, NOT GD&T tolerances
+   - Inch: ⌀.250, .438 DIA, Ø.500 — decimal values often start with decimal point (no leading zero)
+   - Values with bilateral tolerances: .234 +.003/-.001, .500 ±.002
+   - Must be actual hole sizes, NOT GD&T tolerances or overall part dimensions
 3. **Depth callouts** (↧15, depth .425, .500 DEEP, .750 DP)
 4. **Through-hole indicators** (THRU, through, THRU ALL)
-5. **Counterbore specs** (⌳⌀18 ↧8, CBORE .500 DP .250)
+5. **Counterbore specs** (⌳⌀18 ↧8, CBORE .500 DP .250, counterbore diameter and depth)
 6. **Countersink specs** (⌵⌀12×90°, CSINK 82°, CSK .500 X 82°)
 7. **Tolerance classes** (H7, g6, H7/g6, 6H)
-8. **Count prefixes** (4x, 6×, "4 holes", "4 PLACES", "4 PL")
+8. **Count prefixes** (4X, 6×, "4 holes", "4 PLACES", "4 PL")
 
 UNIT AWARENESS:
-- Inch drawings use decimal inches: .250, .438, .500, 1.250 (often WITHOUT leading zero)
-- Metric drawings use mm: 8.5, 10.0, 20
-- Report ALL values exactly as shown in the drawing — do NOT convert units
-- Pay attention to the title block for unit declarations (INCHES, MILLIMETERS)
-- Fractional inch threads (1/4, 3/8, 1/2) should be reported as fractions in the text but as decimal in parsed values (1/4 = 0.25)
+- Inch drawings: .250, .438, .500, 1.250 (often WITHOUT leading zero)
+- Metric drawings: 8.5, 10.0, 20 mm
+- Report values exactly as shown — do NOT convert units
+- Check title block for INCHES / MILLIMETERS declaration
+- Fractional inch threads: report text as fraction, parsed as decimal (1/4 → 0.25)
 
-IMPORTANT: For each hole callout, try to capture the COMPLETE specification including:
-- The diameter or thread designation
-- Whether it goes THROUGH or has a specific depth
-- Any count prefix (4X, 6×, "4 PL")
-- Any tolerance class or fit specification
-- Any bilateral tolerances (+.003/-.001)
+COMPLETENESS: For each hole callout, capture the COMPLETE specification:
+- Diameter or thread designation
+- THRU or specific depth
+- Count prefix (4X, 6×, "4 PL")
+- Tolerance class or fit (H7, 6H)
+- Bilateral tolerances (+.003/-.001)
+- Counterbore/countersink if combined (e.g., ⌀.250 THRU ⌳⌀.438 ↧.250)
 
 For each annotation found, return a JSON array with:
-- "text": the exact text as it appears in the drawing
+- "text": exact text from drawing
 - "type": one of "thread", "diameter", "depth", "counterbore", "countersink", "tolerance", "through"
-- "parsed": structured interpretation. Include ALL available fields:
-  - For metric threads: {{"nominal_diameter": 10, "pitch": 1.5, "tolerance_class": "6H", "depth": 15.0, "through": false}}
-  - For inch threads: {{"nominal_diameter": 0.25, "pitch": 0.05, "thread_spec": "1/4-20 UNC", "through": true}}
-  - For diameters: {{"value": 0.250, "depth": 0.500, "through": false}}
-  - For through-holes: {{"through": true}}
-  - For counterbores: {{"diameter": 18, "depth": 8}}
-  - Always include "depth" (numeric in drawing units) or "through" (boolean) when visible in the callout
-- "bbox_percent": approximate bounding box as {{"x": 0-100, "y": 0-100, "w": width%, "h": height%}} relative to page dimensions
-- "confidence": your confidence 0.0-1.0
-- "multiplier": count prefix if present (e.g., 4 for "4X"), otherwise 1
+- "parsed": structured data:
+  - Metric threads: {{"nominal_diameter": 10, "pitch": 1.5, "tolerance_class": "6H", "depth": 15.0, "through": false}}
+  - Inch threads: {{"nominal_diameter": 0.25, "pitch": 0.05, "thread_spec": "1/4-20 UNC", "through": true}}
+  - Diameters: {{"value": 0.250, "depth": 0.500, "through": false}}
+  - Through-holes: {{"through": true}}
+  - Counterbores: {{"diameter": 0.438, "depth": 0.250}}
+  - Countersinks: {{"diameter": 0.500, "angle": 82}}
+  - Always include "depth" or "through" when visible
+- "bbox_percent": {{"x": 0-100, "y": 0-100, "w": width%, "h": height%}} relative to page
+- "confidence": 0.0-1.0
+- "multiplier": count prefix value (e.g., 4 for "4X"), otherwise 1
 
 Return the JSON array only."""
 

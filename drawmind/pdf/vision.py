@@ -219,9 +219,22 @@ def _deduplicate_vision_batch(
 
     The LLM often returns the same callout multiple times with slightly
     different text/bbox. Two annotations are duplicates if they match on
-    type + diameter + multiplier AND are either textually similar or
-    spatially close (bbox center distance < 10% of page width).
+    type + diameter AND are spatially close. The proximity threshold is
+    dynamic based on annotation density to avoid over-merging on dense pages.
     """
+    if not annotations:
+        return []
+
+    # Dynamic threshold: scale based on annotation density
+    # Dense drawings need tighter thresholds to avoid merging distinct callouts
+    n_ann = len(annotations)
+    if n_ann <= 5:
+        base_threshold = 60  # Generous for sparse pages
+    elif n_ann <= 15:
+        base_threshold = 40  # Moderate for medium density
+    else:
+        base_threshold = 25  # Tight for dense pages
+
     kept: list[PDFAnnotation] = []
     for ann in annotations:
         dia = _get_ann_diameter(ann)
@@ -231,21 +244,17 @@ def _deduplicate_vision_batch(
             if (
                 ann.annotation_type == ex.annotation_type
                 and ann.bbox.page == ex.bbox.page
+                and ann.multiplier == ex.multiplier
                 and dia is not None
                 and ex_dia is not None
                 and abs(dia - ex_dia) < diameter_tol_mm
             ):
-                # Require spatial proximity — separate callouts for
-                # different features can have identical text (e.g.,
-                # "2X 0.156" for two different hole groups)
                 cx1 = (ann.bbox.x0 + ann.bbox.x1) / 2
                 cy1 = (ann.bbox.y0 + ann.bbox.y1) / 2
                 cx2 = (ex.bbox.x0 + ex.bbox.x1) / 2
                 cy2 = (ex.bbox.y0 + ex.bbox.y1) / 2
                 dist = ((cx1 - cx2) ** 2 + (cy1 - cy2) ** 2) ** 0.5
-                # Vision LLM uses percentage-based coords → page ~600-800px
-                # 60px ≈ ~8-10% of page width — generous to catch near-dupes
-                if dist < 60:
+                if dist < base_threshold:
                     is_dup = True
                     if ann.confidence > ex.confidence:
                         kept[i] = ann

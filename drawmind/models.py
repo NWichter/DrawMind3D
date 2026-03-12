@@ -67,7 +67,8 @@ class HoleGroup(BaseModel):
     """A group of coaxial cylindrical features forming one logical hole."""
     id: str
     features: list[CylindricalFeature]
-    primary_diameter: float  # The main hole diameter
+    primary_diameter: float  # The main (smallest) hole diameter
+    secondary_diameter: Optional[float] = None  # Larger diameter (counterbore/countersink outer)
     total_depth: float
     center: tuple[float, float, float]
     axis_direction: tuple[float, float, float]

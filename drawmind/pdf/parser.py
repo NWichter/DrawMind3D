@@ -14,6 +14,11 @@ INCH_TO_MM = 25.4
 # very small (< 0.1" / < 2.5mm). Real hole diameters are larger.
 _GDT_MAX_INCH_VALUE = 0.1  # Values below this with \ufffd are likely GD&T, not diameters
 
+# Maximum plausible hole diameter — values larger than this without a diameter
+# symbol or thread designation are likely overall part dimensions, not holes
+_MAX_HOLE_DIAMETER_MM = 100.0
+_MAX_HOLE_DIAMETER_INCH = 4.0
+
 
 def parse_annotations(
     raw_texts: list[dict], unit_system: str = "metric"
@@ -193,7 +198,7 @@ def _parse_individual_patterns(
     """Try individual regex patterns on the text."""
     results = []
 
-    # Thread patterns
+    # Thread patterns — metric
     match = pat.THREAD_METRIC.search(text)
     if match:
         counter += 1
@@ -232,8 +237,61 @@ def _parse_individual_patterns(
         ))
         return results
 
-    # Diameter patterns
-    for dp in [pat.DIAMETER_SYMBOL, pat.DIAMETER_TEXT]:
+    # Thread patterns — UTS (Unified: UNC, UNF, UNEF)
+    match = pat.THREAD_UNIFIED.search(text)
+    if match:
+        counter += 1
+        size_str = match.group(1).strip()  # e.g., "1/4", "#10", "3/8"
+        tpi = int(match.group(2))          # threads per inch
+        series = match.group(3).upper()    # UNC, UNF, etc.
+        thread_class = match.group(4)      # e.g., "2B" (optional)
+
+        # Convert size to decimal inches then to mm
+        if "/" in size_str:
+            parts = size_str.split("/")
+            nom_inch = float(parts[0]) / float(parts[1])
+        elif size_str.startswith("#"):
+            num = int(size_str.replace("#", ""))
+            nom_inch = 0.060 + num * 0.013
+        else:
+            nom_inch = float(size_str)
+
+        nom_d_mm = round(nom_inch * INCH_TO_MM, 4)
+        thread_spec_str = f"{size_str}-{tpi} {series}"
+        if thread_class:
+            thread_spec_str += f"-{thread_class}"
+
+        parsed = {
+            "nominal_diameter": nom_d_mm,
+            "thread_type": "unified",
+            "thread_spec": thread_spec_str,
+            "standard": "UTS",
+            "tpi": tpi,
+            "series": series,
+            "original_inch": nom_inch,
+        }
+        if thread_class:
+            parsed["tolerance_class"] = thread_class
+
+        mult_match = pat.MULTIPLIER.search(text[:match.start()])
+        multiplier = int(mult_match.group(1)) if mult_match else 1
+        is_through = bool(pat.THROUGH_HOLE.search(text))
+
+        results.append(PDFAnnotation(
+            id=f"ann_{counter:03d}",
+            raw_text=text,
+            annotation_type=AnnotationType.THREAD,
+            parsed=parsed,
+            bbox=bbox,
+            source=source,
+            multiplier=multiplier,
+            is_through=is_through,
+            unit_system="inch",
+        ))
+        return results
+
+    # Diameter patterns (including decimal tolerance pattern for FTC drawings)
+    for dp in [pat.DIAMETER_SYMBOL, pat.DIAMETER_TEXT, pat.DIAMETER_DECIMAL_TOL]:
         match = dp.search(text)
         if match:
             raw_value = float(match.group(1).replace(",", "."))
@@ -241,6 +299,18 @@ def _parse_individual_patterns(
             # GD&T disambiguation: skip small \ufffd-prefixed values
             if _is_gdt_false_positive(text, raw_value, unit_system):
                 continue
+
+            # Skip very small values that are likely tolerances, not diameters
+            if dp is pat.DIAMETER_DECIMAL_TOL and raw_value < 0.5 and unit_system == "inch":
+                continue
+            if dp is pat.DIAMETER_DECIMAL_TOL and raw_value < 1.0 and unit_system == "metric":
+                continue
+
+            # Skip implausibly large values (overall part dimensions, not holes)
+            if dp is pat.DIAMETER_DECIMAL_TOL:
+                max_d = _MAX_HOLE_DIAMETER_INCH if unit_system == "inch" else _MAX_HOLE_DIAMETER_MM
+                if raw_value > max_d:
+                    continue
 
             counter += 1
             converted = _convert_value(raw_value, unit_system)
