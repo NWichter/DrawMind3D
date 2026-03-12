@@ -38,7 +38,7 @@ class Viewer3D {
         this.renderer.setSize(rect.width, height);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1.2;
+        this.renderer.toneMappingExposure = 1.6;
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -52,11 +52,11 @@ class Viewer3D {
         this.scene.environment = this._envMap;
 
         // Hemisphere light (sky/ground) for natural ambient
-        const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0d1117, 0.8);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444466, 1.2);
         this.scene.add(hemiLight);
 
         // Main directional light (key light) with shadows
-        const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
+        const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
         dirLight1.position.set(150, 250, 150);
         dirLight1.castShadow = true;
         dirLight1.shadow.mapSize.width = 1024;
@@ -70,14 +70,19 @@ class Viewer3D {
         this.scene.add(dirLight1);
 
         // Fill light (softer, from opposite side)
-        const dirLight2 = new THREE.DirectionalLight(0x8899bb, 0.4);
+        const dirLight2 = new THREE.DirectionalLight(0xaabbdd, 0.8);
         dirLight2.position.set(-100, 50, -100);
         this.scene.add(dirLight2);
 
         // Rim light from behind for edge definition
-        const dirLight3 = new THREE.DirectionalLight(0x4488cc, 0.3);
+        const dirLight3 = new THREE.DirectionalLight(0x6699cc, 0.6);
         dirLight3.position.set(0, -50, -200);
         this.scene.add(dirLight3);
+
+        // Bottom fill to avoid pitch-black undersides
+        const dirLight4 = new THREE.DirectionalLight(0x667788, 0.4);
+        dirLight4.position.set(50, -150, 50);
+        this.scene.add(dirLight4);
 
         // Grid helper
         const grid = new THREE.GridHelper(200, 20, 0x2a2d3a, 0x1f2230);
@@ -100,25 +105,36 @@ class Viewer3D {
         const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
         pmremGenerator.compileEquirectangularShader();
 
-        // Create a simple gradient scene as environment
+        // Create a bright studio environment for metallic reflections
         const envScene = new THREE.Scene();
-        const envColors = [0x1a1d27, 0x2a3040, 0x3a4a5a, 0x5a6a7a, 0x8a9aaa];
+        // Base sky dome — bright neutral gray
+        const skyGeo = new THREE.SphereGeometry(500, 16, 8);
+        const skyMat = new THREE.MeshBasicMaterial({ color: 0x8899aa, side: THREE.BackSide });
+        envScene.add(new THREE.Mesh(skyGeo, skyMat));
+        // Gradient bands for subtle variation
+        const envColors = [0x6688aa, 0x88aacc, 0xaaccdd, 0xccddee, 0xeef2f6];
         envColors.forEach((color, i) => {
-            const geo = new THREE.SphereGeometry(500, 8, 4);
+            const geo = new THREE.SphereGeometry(490 - i * 5, 8, 4);
             const mat = new THREE.MeshBasicMaterial({
-                color, side: THREE.BackSide, opacity: 0.3 + i * 0.15, transparent: true,
+                color, side: THREE.BackSide, opacity: 0.4 + i * 0.12, transparent: true,
             });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.rotation.y = i * 1.2;
             envScene.add(mesh);
         });
-        // Add bright spot for specular highlight
-        const spotGeo = new THREE.PlaneGeometry(200, 200);
-        const spotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-        const spot = new THREE.Mesh(spotGeo, spotMat);
-        spot.position.set(0, 300, 200);
-        spot.lookAt(0, 0, 0);
-        envScene.add(spot);
+        // Large bright area lights for studio-like reflections
+        const addPanel = (x, y, z, size, brightness) => {
+            const geo = new THREE.PlaneGeometry(size, size);
+            const mat = new THREE.MeshBasicMaterial({ color: brightness, side: THREE.DoubleSide });
+            const panel = new THREE.Mesh(geo, mat);
+            panel.position.set(x, y, z);
+            panel.lookAt(0, 0, 0);
+            envScene.add(panel);
+        };
+        addPanel(0, 350, 200, 400, 0xffffff);   // Top key
+        addPanel(-300, 100, 200, 300, 0xddeeff); // Left fill
+        addPanel(300, 50, -100, 250, 0xeeeeff);  // Right fill
+        addPanel(0, -200, 100, 300, 0x667788);   // Ground bounce
 
         const envMap = pmremGenerator.fromScene(envScene, 0.04).texture;
         pmremGenerator.dispose();
@@ -172,6 +188,10 @@ class Viewer3D {
                     // Apply PBR metallic material for machined-metal look
                     this.model.traverse((child) => {
                         if (child.isMesh) {
+                            // GLB from trimesh may lack normals — compute them for proper shading
+                            if (!child.geometry.attributes.normal) {
+                                child.geometry.computeVertexNormals();
+                            }
                             child.material = this._createMaterial();
                             child.castShadow = true;
                             child.receiveShadow = true;
@@ -199,6 +219,9 @@ class Viewer3D {
         loader.load(
             url,
             (geometry) => {
+                if (!geometry.attributes.normal) {
+                    geometry.computeVertexNormals();
+                }
                 const material = this._createMaterial();
                 this.model = new THREE.Mesh(geometry, material);
                 this.model.castShadow = true;
@@ -216,14 +239,14 @@ class Viewer3D {
     /** Shared PBR material for machined metal look. */
     _createMaterial() {
         return new THREE.MeshPhysicalMaterial({
-            color: 0xb0bec5,
-            metalness: 0.6,
+            color: 0xc0ccd4,
+            metalness: 0.4,
             roughness: 0.35,
-            clearcoat: 0.1,
-            clearcoatRoughness: 0.4,
+            clearcoat: 0.15,
+            clearcoatRoughness: 0.3,
             side: THREE.DoubleSide,
             envMap: this._envMap,
-            envMapIntensity: 0.5,
+            envMapIntensity: 1.0,
         });
     }
 
@@ -231,9 +254,9 @@ class Viewer3D {
         // Extract edges at crease angle for CAD-style wireframe overlay
         const edges = new THREE.EdgesGeometry(mesh.geometry, 30);
         const lineMat = new THREE.LineBasicMaterial({
-            color: 0x3a4a5a,
+            color: 0x2a3a4a,
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.35,
         });
         const lines = new THREE.LineSegments(edges, lineMat);
         // Lines are added as children — they inherit parent transforms automatically
