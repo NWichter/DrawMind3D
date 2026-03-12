@@ -23,14 +23,13 @@ build/
 # Data (large files)
 data/nist/
 data/output/
-*.step
-*.stp
 *.stl
 *.glb
 *.gltf
 
-# Keep samples
-!data/samples/
+# Keep example STEP files (small, needed for test cases)
+!examples/**/*.stp
+!examples/**/*.step
 
 # OS
 Thumbs.db
