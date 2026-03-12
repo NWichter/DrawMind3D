@@ -14,6 +14,7 @@ from drawmind.models import (
     PDFAnnotation, AnnotationType, CylindricalFeature, HoleGroup, MatchResult,
 )
 from drawmind.matching.scoring import compute_match_score
+from drawmind.matching.llm_resolver import resolve_ambiguous_matches
 from drawmind.config import MATCH_CONFIDENCE_THRESHOLD, LLM_REVIEW_THRESHOLD
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,8 @@ HOLE_ANNOTATION_TYPES = {
 def match_annotations_to_features(
     annotations: list[PDFAnnotation],
     holes: list[HoleGroup],
+    pdf_path: str | None = None,
+    use_llm_resolver: bool = False,
 ) -> tuple[list[MatchResult], list[PDFAnnotation], list[HoleGroup]]:
     """Match PDF annotations to 3D hole features using optimal assignment.
 
@@ -119,6 +122,25 @@ def match_annotations_to_features(
             f"{len(ambiguous)} matches below confidence threshold "
             f"({LLM_REVIEW_THRESHOLD}) flagged for review"
         )
+
+    # LLM disambiguation for unmatched annotations (if enabled)
+    if use_llm_resolver and unmatched_ann and unmatched_holes:
+        try:
+            llm_results = resolve_ambiguous_matches(
+                unmatched_ann, unmatched_holes, pdf_path
+            )
+            for llm_match in llm_results:
+                if llm_match.confidence >= MATCH_CONFIDENCE_THRESHOLD:
+                    results.append(llm_match)
+                    matched_annotations.add(llm_match.annotation_id)
+                    matched_holes.add(llm_match.feature_id)
+            # Re-collect unmatched after LLM resolution
+            unmatched_ann = [a for a in hole_annotations if a.id not in matched_annotations]
+            unmatched_holes = [h for h in holes if h.id not in matched_holes]
+            if llm_results:
+                logger.info(f"LLM resolver resolved {len(llm_results)} additional matches")
+        except Exception as e:
+            logger.warning(f"LLM resolver failed: {e}")
 
     return results, unmatched_ann, unmatched_holes
 

@@ -122,7 +122,7 @@ def main():
     # === Step 4: Match annotations to features ===
     logger.info("Matching annotations to 3D features...")
     matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
-        annotations, holes
+        annotations, holes, pdf_path=str(pdf_path), use_llm_resolver=use_llm,
     )
     logger.info(
         f"  {len(matches)} matches, "

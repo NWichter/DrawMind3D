@@ -131,9 +131,11 @@ async def analyze(job_id: str, use_llm: bool = True):
 
         job["glb_path"] = str(glb_path)
 
-        # 5. Matching
+        # 5. Matching (with LLM resolver when using LLM mode)
         matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
-            annotations, holes
+            annotations, holes,
+            pdf_path=pdf_path if use_llm else None,
+            use_llm_resolver=use_llm and USE_VISION_LLM,
         )
 
         # 6. Write output

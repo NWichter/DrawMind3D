@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 from drawmind.models import PDFAnnotation, AnnotationType, CylindricalFeature, HoleGroup
-from drawmind.cad.thread_table import match_thread_to_diameter, get_thread_diameters
+from drawmind.cad.thread_table import match_thread_to_diameter, get_thread_diameters, get_clearance_hole_diameter
 from drawmind.config import DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM
+
+# Diameter ratio beyond which a match is implausible (e.g., ann=100mm vs feat=9mm)
+MAX_DIAMETER_RATIO = 3.0
 
 
 # Scoring weights (diameter is the strongest signal, count rarely informative)
@@ -55,7 +58,19 @@ def compute_match_score(
     scores["uniqueness"] = _score_uniqueness(annotation, hole, all_holes)
 
     # 6. Spatial position correlation
-    scores["spatial"] = _score_spatial(annotation, hole, all_holes)
+    scores["spatial"] = _score_spatial(annotation, hole, all_holes, all_annotations)
+
+    # 7. Diameter ratio sanity check — reject wildly mismatched sizes
+    ann_d = _get_annotation_diameter(annotation)
+    if ann_d is not None and ann_d > 0:
+        compare_d = hole.primary_diameter
+        # For counterbore annotations, also check secondary diameter
+        if hole.secondary_diameter and hole.secondary_diameter > compare_d:
+            compare_d = max(compare_d, hole.secondary_diameter)
+        ratio = max(ann_d, compare_d) / max(min(ann_d, compare_d), 0.01)
+        if ratio > MAX_DIAMETER_RATIO:
+            # Implausible match (e.g., 100mm annotation vs 9mm hole)
+            return {"total_score": 0.0, "breakdown": {**scores, "rejected": "diameter_ratio"}}
 
     # Weighted total
     total = (
@@ -71,8 +86,9 @@ def compute_match_score(
     # (Vision LLM annotations carry their detection confidence)
     source_conf = annotation.confidence
     if source_conf < 1.0:
-        # Blend: 70% matching score + 30% source confidence
-        total = total * 0.7 + source_conf * 0.3
+        # Gentle blend: 85% matching score + 15% source confidence
+        # (previous 70/30 was too aggressive, pushing correct matches below threshold)
+        total = total * 0.85 + source_conf * 0.15
     scores["source_confidence"] = source_conf
 
     return {"total_score": round(total, 4), "breakdown": scores}
@@ -89,9 +105,21 @@ def _score_diameter(annotation: PDFAnnotation, hole: HoleGroup) -> float:
         thread_spec = _format_thread_spec(annotation)
         pitch = _safe_float(annotation.parsed.get("pitch"))
 
-        score, _ = match_thread_to_diameter(
+        score, matched_type = match_thread_to_diameter(
             thread_spec, hole.primary_diameter, DIAMETER_TOLERANCE_MM, pitch=pitch
         )
+
+        # Also check clearance hole diameter (bolt-through patterns)
+        # An M10 thread annotation may match an 11mm clearance hole
+        if score < 0.8:
+            clearance_d = get_clearance_hole_diameter(thread_spec)
+            if clearance_d is not None:
+                for fit_d in [clearance_d]:  # medium fit
+                    diff = abs(hole.primary_diameter - fit_d)
+                    if diff < DIAMETER_TOLERANCE_MM:
+                        clearance_score = 0.85 * (1.0 - diff / DIAMETER_TOLERANCE_MM)
+                        score = max(score, clearance_score)
+
         return score
 
     elif annotation.annotation_type in (AnnotationType.COUNTERBORE, AnnotationType.COUNTERSINK):
@@ -116,10 +144,14 @@ def _score_diameter(annotation: PDFAnnotation, hole: HoleGroup) -> float:
         elif diff <= DIAMETER_TOLERANCE_MM:
             return 1.0 - (diff / DIAMETER_TOLERANCE_MM)
         # Also check secondary diameter (annotation may reference outer bore)
+        # Give full score (not capped at 0.7) since the annotation likely describes
+        # the counterbore outer diameter — this is a valid match, not a fallback
         if hole.secondary_diameter:
             diff_sec = abs(ann_diameter - hole.secondary_diameter)
-            if diff_sec <= DIAMETER_TOLERANCE_MM:
-                return 0.7 * (1.0 - diff_sec / DIAMETER_TOLERANCE_MM)
+            if diff_sec <= 0.1:
+                return 0.95  # Strong match to secondary diameter
+            elif diff_sec <= DIAMETER_TOLERANCE_MM:
+                return 0.90 * (1.0 - diff_sec / DIAMETER_TOLERANCE_MM)
         return 0.0
 
 
@@ -260,7 +292,8 @@ def _score_uniqueness(
 
 
 def _score_spatial(
-    annotation: PDFAnnotation, hole: HoleGroup, all_holes: list[HoleGroup]
+    annotation: PDFAnnotation, hole: HoleGroup, all_holes: list[HoleGroup],
+    all_annotations: list[PDFAnnotation] | None = None,
 ) -> float:
     """Score based on spatial position correlation between PDF and 3D model.
 
@@ -271,11 +304,23 @@ def _score_spatial(
     if len(all_holes) < 2:
         return NEUTRAL_SCORE  # Can't compute spatial with single hole
 
-    # Annotation center normalized to page dimensions (~A4/Letter)
+    # Annotation center normalized to page dimensions
+    # Infer page size from all annotations on the same page (max bbox extent)
+    # Falls back to US Letter (612 x 792 pts) if no other annotations
+    if all_annotations:
+        page_anns = [a for a in all_annotations if a.bbox.page == annotation.bbox.page]
+        page_w = max((a.bbox.x1 for a in page_anns), default=612.0)
+        page_h = max((a.bbox.y1 for a in page_anns), default=792.0)
+    else:
+        page_w, page_h = 612.0, 792.0
+    # Ensure minimum page dimensions (at least A4/Letter)
+    page_w = max(page_w, 500.0)
+    page_h = max(page_h, 700.0)
+
     ann_x = (annotation.bbox.x0 + annotation.bbox.x1) / 2
     ann_y = (annotation.bbox.y0 + annotation.bbox.y1) / 2
-    ann_nx = min(ann_x / 612.0, 1.0)
-    ann_ny = min(ann_y / 792.0, 1.0)
+    ann_nx = min(ann_x / page_w, 1.0)
+    ann_ny = min(ann_y / page_h, 1.0)
 
     # If leader line target is available, use it instead of bbox center
     leader = annotation.parsed.get("leader_target")

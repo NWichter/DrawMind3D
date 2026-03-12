@@ -217,11 +217,13 @@ def _parse_individual_patterns(
         if match.group(3):
             parsed["tolerance_class"] = match.group(3)
 
-        # Check for multiplier prefix
+        # Check for multiplier prefix (try numeric "4X" first, then text "4 holes")
         mult_match = pat.MULTIPLIER.search(text[:match.start()])
+        if not mult_match:
+            mult_match = pat.MULTIPLIER_TEXT.search(text[:match.start()])
         multiplier = int(mult_match.group(1)) if mult_match else 1
 
-        # Check for through-hole
+        # Check for through-hole (including THRU ALL)
         is_through = bool(pat.THROUGH_HOLE.search(text))
 
         results.append(PDFAnnotation(
@@ -274,6 +276,8 @@ def _parse_individual_patterns(
             parsed["tolerance_class"] = thread_class
 
         mult_match = pat.MULTIPLIER.search(text[:match.start()])
+        if not mult_match:
+            mult_match = pat.MULTIPLIER_TEXT.search(text[:match.start()])
         multiplier = int(mult_match.group(1)) if mult_match else 1
         is_through = bool(pat.THROUGH_HOLE.search(text))
 
@@ -323,8 +327,10 @@ def _parse_individual_patterns(
             if tol_match:
                 parsed["tolerance_class"] = tol_match.group(0)
 
-            # Check for multiplier
+            # Check for multiplier (try numeric "4X" first, then text "4 holes"/"4 PL")
             mult_match = pat.MULTIPLIER.search(text[:match.start()])
+            if not mult_match:
+                mult_match = pat.MULTIPLIER_TEXT.search(text[:match.start()])
             multiplier = int(mult_match.group(1)) if mult_match else 1
 
             is_through = bool(pat.THROUGH_HOLE.search(text))

@@ -424,9 +424,11 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
         holes = group_coaxial_features(features)
         holes = detect_through_holes(shape, holes)
 
-        # Matching
+        # Matching (with LLM resolver when using LLM mode)
         matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
-            annotations, holes
+            annotations, holes,
+            pdf_path=str(pdf_path) if use_llm else None,
+            use_llm_resolver=use_llm,
         )
 
         # Evaluate extraction

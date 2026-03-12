@@ -39,7 +39,7 @@ def resolve_ambiguous_matches(
         # Build candidates JSON
         candidates = []
         for hole in candidate_holes:
-            candidates.append({
+            cand = {
                 "feature_id": hole.id,
                 "primary_diameter_mm": hole.primary_diameter,
                 "total_depth_mm": hole.total_depth,
@@ -48,7 +48,10 @@ def resolve_ambiguous_matches(
                 "is_through_hole": hole.is_through_hole,
                 "hole_type": hole.hole_type,
                 "num_features": len(hole.features),
-            })
+            }
+            if hole.secondary_diameter:
+                cand["secondary_diameter_mm"] = hole.secondary_diameter
+            candidates.append(cand)
 
         prompt = DISAMBIGUATE_PROMPT.format(
             annotation_text=ann.raw_text,

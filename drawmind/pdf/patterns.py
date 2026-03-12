@@ -67,9 +67,9 @@ DEPTH_TEXT = re.compile(
     re.IGNORECASE
 )
 
-# Through-hole indicator
+# Through-hole indicator (THRU ALL is ASME standard for "through entire part")
 THROUGH_HOLE = re.compile(
-    r'\b(THRU|through|durchgehend|durchgangsloch|durchgangsbohrung)\b',
+    r'\b(THRU\s*ALL|THRU|through|durchgehend|durchgangsloch|durchgangsbohrung)\b',
     re.IGNORECASE
 )
 
@@ -127,12 +127,13 @@ TOLERANCE_ASYMMETRIC = re.compile(
 # === Multiplier Pattern ===
 
 # Count prefix: 4x, 4X, 4×, "4 holes", "4 Bohrungen"
+# Trailing space is optional to support "4xM8" (European style, no space)
 MULTIPLIER = re.compile(
-    r'(\d+)\s*[xX\u00d7]\s',
+    r'(\d+)\s*[xX\u00d7]\s?',
 )
 
 MULTIPLIER_TEXT = re.compile(
-    r'(\d+)\s*(?:holes?|Bohrungen?|Gewinde|tapped)',
+    r'(\d+)\s*(?:holes?|Bohrungen?|Gewinde|tapped|PLACES?|PL)\b',
     re.IGNORECASE
 )
 
