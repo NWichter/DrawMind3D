@@ -1,0 +1,34 @@
+{
+  "test_case": "CTC-05",
+  "source": "nist",
+  "unit_system": "inch",
+  "description": "Inch part with precision bore, hole patterns, and geometric tolerances",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 12.7,
+      "count": 12,
+      "is_through": false,
+      "description": "Ø.500 holes"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 19.05,
+      "count": 10,
+      "is_through": false,
+      "description": "Ø.750 holes"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 254.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø10.000 ±.001 precision bore"
+    }
+  ],
+  "total_unique_annotations": 3,
+  "total_individual_holes": 23
+}

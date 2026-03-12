@@ -1,0 +1,26 @@
+{
+  "test_case": "FTC-11",
+  "source": "nist",
+  "unit_system": "metric",
+  "description": "Torus part with inner and outer major diameters, minor radii, and web thickness",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 32.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø32 ±0.3 AVG (I.D.) inner torus major diameter"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 63.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø63 ±0.5 AVG (O.D.) outer torus major diameter"
+    }
+  ],
+  "total_unique_annotations": 2,
+  "total_individual_holes": 2
+}

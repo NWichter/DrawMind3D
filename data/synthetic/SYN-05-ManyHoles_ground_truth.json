@@ -1,0 +1,110 @@
+{
+  "test_case": "SYN-05-ManyHoles",
+  "source": "synthetic",
+  "unit_system": "metric",
+  "description": "Plate with many holes of different sizes for stress-testing",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 4.0,
+      "count": 6,
+      "is_through": true,
+      "description": "Hole 1"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 4.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 2"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 4.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 3"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 4.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 4"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 4.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 5"
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 4.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 6"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "diameter_mm": 8.0,
+      "count": 3,
+      "is_through": true,
+      "description": "Hole 7"
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "diameter_mm": 8.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 8"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "diameter_mm": 8.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 9"
+    },
+    {
+      "id": "gt_10",
+      "type": "diameter",
+      "diameter_mm": 16.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 10"
+    },
+    {
+      "id": "gt_11",
+      "type": "thread",
+      "diameter_mm": 3.3,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 11",
+      "thread": "M4",
+      "drill_diameter_mm": 3.3
+    },
+    {
+      "id": "gt_12",
+      "type": "thread",
+      "diameter_mm": 5.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 12",
+      "thread": "M6",
+      "drill_diameter_mm": 5.0
+    }
+  ],
+  "total_unique_annotations": 12,
+  "total_individual_holes": 19
+}

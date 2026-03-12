@@ -1,0 +1,82 @@
+{
+  "test_case": "FTC-08",
+  "source": "nist",
+  "unit_system": "inch",
+  "description": "PCB manifold block with mounting holes, datum features, and square cutout",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 6.045,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.238 +.005/-.001 Datum Feature B"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 6.045,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.238 +.005/-.001 Datum Feature C"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 5.41,
+      "count": 10,
+      "is_through": false,
+      "description": "10X Ø.213 +.005/-.001 PCB mounting holes"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 6.35,
+      "count": 2,
+      "is_through": false,
+      "description": "2X Ø.250 +.006/-.001 Datum Feature G"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 5.791,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.228 +.005/-.001 Datum Feature H"
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 6.147,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.242 +.005/-.001 Datum Feature J"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "diameter_mm": 5.791,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.228 +.005/-.001 Datum Feature K"
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "diameter_mm": 6.147,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.242 +.005/-.001 Datum Feature L"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "diameter_mm": 6.045,
+      "count": 2,
+      "is_through": false,
+      "description": "2X Ø.238 +.005/-.001 other main mounting holes"
+    }
+  ],
+  "total_unique_annotations": 9,
+  "total_individual_holes": 20
+}

@@ -1,0 +1,54 @@
+{
+  "test_case": "SYN-03-InchPart",
+  "source": "synthetic",
+  "unit_system": "inch",
+  "description": "Inch-dimensioned part with clearance and tapped holes",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 6.35,
+      "count": 2,
+      "is_through": true,
+      "description": "Hole 1"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 6.35,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 2"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 8.731,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 3"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 11.1125,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 4",
+      "depth_mm": 12.7
+    },
+    {
+      "id": "gt_05",
+      "type": "thread",
+      "diameter_mm": 4.2,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 5",
+      "thread": "M5",
+      "drill_diameter_mm": 4.2,
+      "depth_mm": 10
+    }
+  ],
+  "total_unique_annotations": 5,
+  "total_individual_holes": 6
+}

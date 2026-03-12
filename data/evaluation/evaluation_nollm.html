@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>DrawMind3D Evaluation</title>
+<style>
+body { background: #0f1117; color: #e0e0e0; font-family: -apple-system, system-ui, sans-serif; padding: 20px; }
+h1 { color: #60a5fa; }
+h2 { color: #888; margin-top: 30px; }
+table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #2a2d3a; }
+th { color: #888; font-size: 0.8rem; text-transform: uppercase; }
+.good { color: #4ade80; }
+.mid { color: #facc15; }
+.low { color: #f87171; }
+.chart-container { margin: 20px 0; }
+</style></head><body>
+<h1>DrawMind3D - Evaluation Report</h1>
+<p>Mode: <strong>Regex + OCR only</strong></p>
+
+<h2>Annotation Extraction</h2>
+<table>
+<tr><th>Test Case</th><th>Extracted</th><th>Ground Truth</th><th>TP</th><th>FP</th><th>FN</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+<tr>
+<td><strong>FTC-07</strong></td>
+<td>12</td><td>11</td>
+<td>11</td><td>1</td><td>0</td>
+<td>91.7%</td><td>100.0%</td>
+<td class="good"><strong>95.7%</strong></td>
+</tr>
+<tr>
+<td><strong>FTC-09</strong></td>
+<td>1</td><td>15</td>
+<td>1</td><td>0</td><td>14</td>
+<td>100.0%</td><td>6.7%</td>
+<td class="low"><strong>12.5%</strong></td>
+</tr>
+<tr>
+<td><strong>SYN-01-SimpleBlock</strong></td>
+<td>8</td><td>6</td>
+<td>6</td><td>2</td><td>0</td>
+<td>75.0%</td><td>100.0%</td>
+<td class="good"><strong>85.7%</strong></td>
+</tr>
+<tr>
+<td><strong>SYN-02-ThreadedPlate</strong></td>
+<td>9</td><td>7</td>
+<td>7</td><td>2</td><td>0</td>
+<td>77.8%</td><td>100.0%</td>
+<td class="good"><strong>87.5%</strong></td>
+</tr>
+<tr>
+<td><strong>SYN-03-InchPart</strong></td>
+<td>7</td><td>5</td>
+<td>5</td><td>2</td><td>0</td>
+<td>71.4%</td><td>100.0%</td>
+<td class="good"><strong>83.3%</strong></td>
+</tr>
+<tr>
+<td><strong>SYN-04-MixedFeatures</strong></td>
+<td>13</td><td>9</td>
+<td>9</td><td>4</td><td>0</td>
+<td>69.2%</td><td>100.0%</td>
+<td class="good"><strong>81.8%</strong></td>
+</tr>
+<tr>
+<td><strong>SYN-05-ManyHoles</strong></td>
+<td>12</td><td>12</td>
+<td>12</td><td>0</td><td>0</td>
+<td>100.0%</td><td>100.0%</td>
+<td class="good"><strong>100.0%</strong></td>
+</tr>
+</table>
+<h2>Linking Accuracy</h2>
+<table>
+<tr><th>Test Case</th><th>Total Links</th><th>Correct</th><th>Accuracy</th><th>Avg Confidence</th></tr>
+<tr>
+<td><strong>FTC-07</strong></td>
+<td>19</td><td>19</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">83.2%</td>
+</tr>
+<tr>
+<td><strong>FTC-09</strong></td>
+<td>2</td><td>2</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">87.0%</td>
+</tr>
+<tr>
+<td><strong>SYN-01-SimpleBlock</strong></td>
+<td>6</td><td>6</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">90.8%</td>
+</tr>
+<tr>
+<td><strong>SYN-02-ThreadedPlate</strong></td>
+<td>7</td><td>7</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">96.1%</td>
+</tr>
+<tr>
+<td><strong>SYN-03-InchPart</strong></td>
+<td>5</td><td>5</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">93.7%</td>
+</tr>
+<tr>
+<td><strong>SYN-04-MixedFeatures</strong></td>
+<td>8</td><td>8</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">91.1%</td>
+</tr>
+<tr>
+<td><strong>SYN-05-ManyHoles</strong></td>
+<td>12</td><td>12</td>
+<td class="good"><strong>100.0%</strong></td>
+<td class="good">93.7%</td>
+</tr>
+</table>
+<div class="chart-container">
+<img src="evaluation_chart_nollm.svg" width="800" alt="Evaluation Chart">
+</div>
+</body></html>

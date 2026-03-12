@@ -1,0 +1,42 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Conda
+.conda/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data (large files)
+data/nist/
+data/output/
+*.step
+*.stp
+*.stl
+*.glb
+*.gltf
+
+# Keep samples
+!data/samples/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temp
+tmp/
+temp/
+*.tmp

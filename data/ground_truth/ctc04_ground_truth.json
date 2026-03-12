@@ -1,0 +1,52 @@
+{
+  "test_case": "CTC-04",
+  "source": "nist",
+  "unit_system": "metric",
+  "description": "Metric part with threaded holes, counterbored holes, countersunk holes, and bolt patterns",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 8.0,
+      "count": 6,
+      "is_through": false,
+      "description": "6X Ø6.65 ±0.12 (clearance holes)"
+    },
+    {
+      "id": "gt_02",
+      "type": "thread",
+      "diameter_mm": 12.0,
+      "count": 4,
+      "is_through": false,
+      "description": "4X M12x1.75-6H threaded holes",
+      "thread": "M12",
+      "drill_diameter_mm": 10.25
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 14.0,
+      "count": 30,
+      "is_through": false,
+      "description": "30X Ø14 ±0.1 holes"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 20.0,
+      "count": 4,
+      "is_through": false,
+      "description": "4X Ø20 ±0.2 counterbored holes"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 50.0,
+      "count": 3,
+      "is_through": false,
+      "description": "Ø50 features"
+    }
+  ],
+  "total_unique_annotations": 5,
+  "total_individual_holes": 47
+}

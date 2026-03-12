@@ -1,0 +1,85 @@
+{
+  "test_case": "FTC-06",
+  "source": "nist",
+  "unit_system": "inch",
+  "description": "Manifold block with counterbored holes, spherical diameter features, and tapered surfaces",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 31.75,
+      "count": 2,
+      "is_through": false,
+      "description": "2X SØ1.250 spherical diameter"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 14.275,
+      "count": 2,
+      "is_through": false,
+      "description": "2X Ø.562 gland holes"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 20.625,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.812 counterbore",
+      "depth_mm": 14.224
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 10.541,
+      "count": 4,
+      "is_through": false,
+      "description": "4X Ø.415 counterbored holes"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 15.875,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.625 counterbore",
+      "depth_mm": 12.7
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 7.137,
+      "count": 4,
+      "is_through": true,
+      "description": "4X Ø.281 through holes"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "diameter_mm": 10.16,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.40 counterbore",
+      "depth_mm": 7.874
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "diameter_mm": 6.35,
+      "count": 2,
+      "is_through": false,
+      "description": "Ø.250 holes"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "diameter_mm": 25.4,
+      "count": 2,
+      "is_through": false,
+      "description": "(Ø1.000) reference diameter"
+    }
+  ],
+  "total_unique_annotations": 9,
+  "total_individual_holes": 19
+}
