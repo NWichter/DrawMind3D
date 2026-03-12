@@ -52,6 +52,14 @@ DIAMETER_DECIMAL_TOL = re.compile(
     r'[+]\s*[.\d]+\s*/?\s*[-\u2013]\s*[.\d]+)',  # +upper/-lower
 )
 
+# Bare decimal dimension with multiplier prefix (no symbol, no tolerance)
+# Captures inch values like "4X .500", "2X .750 THRU" where the multiplier
+# strongly implies a hole callout even without a diameter symbol
+DIAMETER_BARE_WITH_MULT = re.compile(
+    r'(\d+)\s*[xX\u00d7]\s+'              # multiplier prefix: "4X "
+    + _NUM,                                 # decimal value: ".500", "0.750"
+)
+
 # === Depth Patterns ===
 
 # Depth with symbol: ↧15, ⌴15
@@ -173,7 +181,7 @@ HOLE_CALLOUT_COMBINED = re.compile(
 # All patterns grouped by annotation type
 ALL_PATTERNS = {
     "thread": [THREAD_METRIC, THREAD_UNIFIED],
-    "diameter": [DIAMETER_SYMBOL, DIAMETER_TEXT, DIAMETER_DECIMAL_TOL],
+    "diameter": [DIAMETER_SYMBOL, DIAMETER_TEXT, DIAMETER_DECIMAL_TOL, DIAMETER_BARE_WITH_MULT],
     "depth": [DEPTH_SYMBOL, DEPTH_TEXT],
     "through": [THROUGH_HOLE],
     "counterbore": [COUNTERBORE_SYMBOL, COUNTERBORE_TEXT],

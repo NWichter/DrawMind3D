@@ -7,7 +7,7 @@
     {
       "id": "gt_01",
       "type": "diameter",
-      "diameter_mm": 8.0,
+      "diameter_mm": 6.65,
       "count": 6,
       "is_through": false,
       "description": "6X Ø6.65 ±0.12 (clearance holes)"

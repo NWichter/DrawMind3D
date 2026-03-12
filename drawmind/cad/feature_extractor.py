@@ -8,7 +8,7 @@ import numpy as np
 from OCP.TopExp import TopExp_Explorer
 from OCP.TopAbs import TopAbs_FACE, TopAbs_REVERSED
 from OCP.BRepAdaptor import BRepAdaptor_Surface
-from OCP.GeomAbs import GeomAbs_Cylinder, GeomAbs_Cone, GeomAbs_Sphere
+from OCP.GeomAbs import GeomAbs_Cylinder, GeomAbs_Cone, GeomAbs_Sphere, GeomAbs_Torus
 from OCP.TopoDS import TopoDS, TopoDS_Shape
 from OCP.GProp import GProp_GProps
 from OCP.BRepGProp import BRepGProp
@@ -163,6 +163,50 @@ def extract_cylindrical_faces(shape: TopoDS_Shape) -> list[CylindricalFeature]:
                 estimated_depth=round(estimated_depth, 4),
                 surface_area=round(area, 4),
             ))
+
+        elif surf_type == GeomAbs_Torus:
+            # Toroidal faces → torus inner/outer bore
+            is_concave = face.Orientation() == TopAbs_REVERSED
+            if not is_concave:
+                face_id += 1
+                explorer.Next()
+                continue
+
+            torus = adaptor.Torus()
+            axis = torus.Axis()
+            location = axis.Location()
+            direction = axis.Direction()
+            major_r = torus.MajorRadius()
+            minor_r = torus.MinorRadius()
+
+            # Inner bore diameter = (major - minor) * 2
+            inner_diameter = (major_r - minor_r) * 2
+            # Outer diameter = (major + minor) * 2
+            # Use inner diameter as the primary feature (the bore)
+            if inner_diameter > 0.1:  # Skip degenerate tori
+                props = GProp_GProps()
+                BRepGProp.SurfaceProperties_s(face, props)
+                area = props.Mass()
+
+                feat_counter += 1
+                features.append(CylindricalFeature(
+                    id=f"feat_{feat_counter:03d}",
+                    face_ids=[face_id],
+                    radius=round(inner_diameter / 2, 4),
+                    diameter=round(inner_diameter, 4),
+                    center=(
+                        round(location.X(), 4),
+                        round(location.Y(), 4),
+                        round(location.Z(), 4),
+                    ),
+                    axis_direction=(
+                        round(direction.X(), 6),
+                        round(direction.Y(), 6),
+                        round(direction.Z(), 6),
+                    ),
+                    estimated_depth=round(minor_r * 2, 4),  # Torus cross-section
+                    surface_area=round(area, 4),
+                ))
 
         face_id += 1
         explorer.Next()

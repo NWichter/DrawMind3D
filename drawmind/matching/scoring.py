@@ -7,16 +7,16 @@ from drawmind.cad.thread_table import match_thread_to_diameter, get_thread_diame
 from drawmind.config import DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM
 
 # Diameter ratio beyond which a match is implausible (e.g., ann=100mm vs feat=9mm)
-MAX_DIAMETER_RATIO = 3.0
+MAX_DIAMETER_RATIO = 2.5
 
 
 # Scoring weights (diameter is the strongest signal, count rarely informative)
-WEIGHT_DIAMETER = 0.43
-WEIGHT_DEPTH = 0.20
-WEIGHT_TYPE_COMPAT = 0.18
-WEIGHT_COUNT = 0.05
-WEIGHT_UNIQUENESS = 0.09
-WEIGHT_SPATIAL = 0.05  # Spatial position correlation (kept low — projection heuristic is noisy)
+WEIGHT_DIAMETER = 0.45
+WEIGHT_DEPTH = 0.18
+WEIGHT_TYPE_COMPAT = 0.22
+WEIGHT_COUNT = 0.08
+WEIGHT_UNIQUENESS = 0.04
+WEIGHT_SPATIAL = 0.03  # Spatial position correlation (kept low — projection heuristic is noisy)
 
 # Neutral score for missing data: "no evidence for or against"
 # Must be high enough that matches with partial data can still pass confidence threshold
@@ -232,10 +232,18 @@ def _score_type_compatibility(annotation: PDFAnnotation, hole: HoleGroup) -> flo
         return 0.3
 
     elif ann_type == AnnotationType.COUNTERBORE:
-        return 1.0 if hole.hole_type == "counterbore" else 0.2
+        if hole.hole_type == "counterbore":
+            return 1.0
+        elif hole.secondary_diameter:
+            return 0.5  # Has stepped geometry, might be counterbore
+        return 0.05  # Simple hole — very unlikely to be counterbore target
 
     elif ann_type == AnnotationType.COUNTERSINK:
-        return 1.0 if hole.hole_type == "countersink" else 0.2
+        if hole.hole_type == "countersink":
+            return 1.0
+        elif hole.hole_type == "counterbore":
+            return 0.4  # Similar stepped geometry
+        return 0.05  # Simple hole — very unlikely to be countersink target
 
     elif ann_type in (AnnotationType.DIAMETER, AnnotationType.HOLE_CALLOUT):
         return 1.0  # Diameter callout is fully type-compatible with any hole

@@ -294,6 +294,34 @@ def _parse_individual_patterns(
         ))
         return results
 
+    # Bare decimal with multiplier (e.g., "4X .500") — inch drawings only
+    # This must come BEFORE regular diameter patterns to capture the multiplier
+    if unit_system == "inch":
+        match = pat.DIAMETER_BARE_WITH_MULT.search(text)
+        if match:
+            multiplier_val = int(match.group(1))
+            raw_value = float(match.group(2).replace(",", "."))
+
+            # Skip tiny values (tolerance zones, not diameters)
+            if raw_value >= 0.1 and raw_value <= _MAX_HOLE_DIAMETER_INCH:
+                counter += 1
+                converted = _convert_value(raw_value, unit_system)
+                parsed = {"value": converted, "original_inch": raw_value}
+                is_through = bool(pat.THROUGH_HOLE.search(text))
+
+                results.append(PDFAnnotation(
+                    id=f"ann_{counter:03d}",
+                    raw_text=text,
+                    annotation_type=AnnotationType.DIAMETER,
+                    parsed=parsed,
+                    bbox=bbox,
+                    source=source,
+                    multiplier=multiplier_val,
+                    is_through=is_through,
+                    unit_system=unit_system,
+                ))
+                return results
+
     # Diameter patterns (including decimal tolerance pattern for FTC drawings)
     for dp in [pat.DIAMETER_SYMBOL, pat.DIAMETER_TEXT, pat.DIAMETER_DECIMAL_TOL]:
         match = dp.search(text)

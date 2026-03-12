@@ -274,11 +274,13 @@ def evaluate_linking(
             link_details.append({"correct": False, "reason": "invalid diameter"})
             continue
 
-        # Get the 3D feature diameter
+        # Get the 3D feature diameter (check both primary and secondary)
         if isinstance(feature_ref, dict):
             feature_diameter = feature_ref.get("primary_diameter_mm", 0)
+            feature_secondary = feature_ref.get("secondary_diameter_mm")
         else:
             feature_diameter = 0
+            feature_secondary = None
 
         # Check if the annotation diameter matches a ground truth annotation
         # Use thread-aware matching when both have thread info
@@ -307,8 +309,18 @@ def evaluate_linking(
 
         # Check if the 3D feature diameter is compatible with the ground truth
         # For threads, use drill_diameter_mm (physical hole size) for 3D comparison
+        # Check BOTH primary and secondary diameter — counterbore annotations
+        # reference the outer (secondary) diameter
         gt_feature_diameter = gt_match.get("drill_diameter_mm", gt_match["diameter_mm"])
         is_correct = abs(feature_diameter - gt_feature_diameter) <= diameter_tolerance_mm
+        if not is_correct and feature_secondary:
+            is_correct = abs(feature_secondary - gt_feature_diameter) <= diameter_tolerance_mm
+        # Also check against the GT annotation diameter (not just drill diameter)
+        if not is_correct:
+            gt_ann_diameter = gt_match["diameter_mm"]
+            is_correct = abs(feature_diameter - gt_ann_diameter) <= diameter_tolerance_mm
+            if not is_correct and feature_secondary:
+                is_correct = abs(feature_secondary - gt_ann_diameter) <= diameter_tolerance_mm
         if is_correct:
             correct_links += 1
 

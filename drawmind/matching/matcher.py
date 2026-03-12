@@ -15,7 +15,8 @@ from drawmind.models import (
 )
 from drawmind.matching.scoring import compute_match_score
 from drawmind.matching.llm_resolver import resolve_ambiguous_matches
-from drawmind.config import MATCH_CONFIDENCE_THRESHOLD, LLM_REVIEW_THRESHOLD
+from drawmind.config import MATCH_CONFIDENCE_THRESHOLD, LLM_REVIEW_THRESHOLD, DIAMETER_TOLERANCE_MM
+from drawmind.cad.thread_table import match_thread_to_diameter
 
 logger = logging.getLogger(__name__)
 
@@ -58,11 +59,30 @@ def match_annotations_to_features(
     if not hole_annotations or not holes:
         return [], hole_annotations, holes
 
+    # Post-filter: remove Vision LLM annotations that are likely false positives
+    # (part dimensions extracted as diameters). Filter only low-confidence vision
+    # annotations that have no matching 3D feature within tolerance.
+    if holes:
+        hole_annotations = _filter_vision_false_positives(hole_annotations, holes)
+
     # Expand multiplier annotations into virtual copies for unified Hungarian
     # e.g., "4X Ø8" becomes 4 entries so Hungarian can optimally assign each
+    # CAP: don't create more copies than matching features exist in the 3D model
+    # to prevent the Hungarian algorithm from force-assigning extras to wrong holes
     expanded_annotations = []
     for ann in hole_annotations:
         count = max(ann.multiplier, 1)
+        if count > 1:
+            # Count how many 3D features could plausibly match this annotation
+            ann_d = _get_annotation_diameter_for_cap(ann)
+            if ann_d is not None and ann_d > 0:
+                matching_features = sum(
+                    1 for h in holes
+                    if abs(h.primary_diameter - ann_d) < DIAMETER_TOLERANCE_MM * 2
+                    or (h.secondary_diameter and abs(h.secondary_diameter - ann_d) < DIAMETER_TOLERANCE_MM * 2)
+                )
+                if matching_features > 0:
+                    count = min(count, matching_features)
         for _ in range(count):
             expanded_annotations.append(ann)
 
@@ -218,3 +238,89 @@ def _create_match_result(
             "multiplier": annotation.multiplier,
         },
     )
+
+
+def _filter_vision_false_positives(
+    annotations: list[PDFAnnotation],
+    holes: list[HoleGroup],
+) -> list[PDFAnnotation]:
+    """Remove likely false-positive Vision LLM annotations.
+
+    Vision LLM sometimes extracts overall part dimensions as diameter annotations.
+    Filter out annotations from vision source that:
+    - Have low confidence (< 0.9)
+    - Have type DIAMETER (not thread, counterbore, etc.)
+    - Have no matching 3D feature within wide tolerance
+    """
+    if not holes:
+        return annotations
+
+    # Collect all hole diameters (primary and secondary)
+    hole_diameters = set()
+    for h in holes:
+        hole_diameters.add(round(h.primary_diameter, 1))
+        if h.secondary_diameter:
+            hole_diameters.add(round(h.secondary_diameter, 1))
+
+    wide_tolerance = DIAMETER_TOLERANCE_MM * 3  # 1.5mm wide tolerance
+
+    filtered = []
+    for ann in annotations:
+        # Only filter vision-sourced DIAMETER annotations with lower confidence
+        if (ann.source == "vision"
+            and ann.confidence < 0.9
+            and ann.annotation_type == AnnotationType.DIAMETER
+            and ann.multiplier <= 1):
+
+            ann_d = ann.parsed.get("value")
+            if ann_d is not None:
+                try:
+                    ann_d = float(ann_d)
+                except (ValueError, TypeError):
+                    filtered.append(ann)
+                    continue
+
+                # Check if any hole diameter is close
+                has_match = any(
+                    abs(ann_d - hd) < wide_tolerance
+                    for hd in hole_diameters
+                )
+                if not has_match:
+                    logger.debug(
+                        f"Filtered vision FP: {ann.raw_text} "
+                        f"(d={ann_d:.1f}mm, no matching 3D feature)"
+                    )
+                    continue  # Skip this annotation
+
+        filtered.append(ann)
+
+    if len(filtered) < len(annotations):
+        logger.info(
+            f"Filtered {len(annotations) - len(filtered)} vision false positives"
+        )
+    return filtered
+
+
+def _get_annotation_diameter_for_cap(annotation: PDFAnnotation) -> float | None:
+    """Get the expected physical diameter for multiplier capping.
+
+    For threads, returns the drill diameter (physical hole size).
+    For regular diameters, returns the value directly.
+    """
+    parsed = annotation.parsed
+    if annotation.annotation_type == AnnotationType.THREAD:
+        thread_spec = parsed.get("thread_spec", "")
+        # Try to get drill diameter from thread table
+        if thread_spec:
+            from drawmind.cad.thread_table import get_thread_diameters
+            diameters = get_thread_diameters(thread_spec.split("x")[0].split("X")[0].strip())
+            if diameters:
+                return diameters.get("drill_d", diameters.get("minor_d"))
+        return parsed.get("nominal_diameter")
+    elif annotation.annotation_type in (AnnotationType.DIAMETER, AnnotationType.HOLE_CALLOUT):
+        v = parsed.get("value")
+        return float(v) if v is not None else None
+    elif annotation.annotation_type in (AnnotationType.COUNTERBORE, AnnotationType.COUNTERSINK):
+        v = parsed.get("diameter")
+        return float(v) if v is not None else None
+    return None
