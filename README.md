@@ -38,7 +38,7 @@ STEP Model ──► OCP (OpenCASCADE) ──► Cylindrical Features ───�
 2. **Annotation Parsing** — Regex-based classification of thread callouts (`M10x1.5-6H`), diameters (`Ø5.5`), depths, tolerances, counterbores/countersinks. Automatic inch↔mm conversion
 3. **Vision LLM Enhancement** (optional) — Gemini Flash analyzes each PDF page as an image to detect annotations missed by regex (critical for vector-drawn PDFs where text extraction fails)
 4. **3D Feature Extraction** — STEP file loaded via OCP (OpenCASCADE), cylindrical faces extracted, grouped into coaxial hole features, through-holes detected via ray casting
-5. **Multi-Factor Matching** — Hungarian Algorithm for optimal annotation-to-hole assignment, using weighted scoring (diameter 50%, type 20%, depth 15%, uniqueness 10%, count 5%)
+5. **Multi-Factor Matching** — Hungarian Algorithm for optimal annotation-to-hole assignment, using weighted scoring (diameter 45%, type 20%, depth 20%, uniqueness 10%, count 5%)
 6. **Structured Output** — JSON with match results, confidence scores, scoring breakdown and evidence traces
 
 ### LLM Strategy (via OpenRouter)
@@ -80,23 +80,23 @@ Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases and **5 synthe
 
 | Category | Cases | Precision | Recall | F1 | Linking | Confidence |
 |----------|-------|-----------|--------|-----|---------|------------|
-| CTC (Combinational) | 5 | 49.4% | 50.7% | 48.8% | 59.0% | 77.0% |
-| FTC (Fully-Toleranced) | 6 | 69.3% | 98.9% | 79.9% | 77.4% | 80.5% |
-| Synthetic | 5 | 85.0% | 92.1% | 88.0% | 90.8% | 94.5% |
-| **Overall (16 cases)** | **16** | **68.0%** | **81.7%** | **72.7%** | **75.8%** | **83.8%** |
+| CTC (Combinational) | 5 | 47.7% | 50.7% | 48.3% | 60.2% | 76.0% |
+| FTC (Fully-Toleranced) | 6 | 74.4% | 98.5% | 82.9% | 75.5% | 77.7% |
+| Synthetic | 5 | 79.2% | 81.5% | 79.7% | 94.9% | 92.8% |
+| **Overall (16 cases)** | **16** | **67.6%** | **78.2%** | **71.1%** | **76.8%** | **81.9%** |
 
-**Top performers:** FTC-08 (100% F1, 100% Linking), SYN-05 (100% F1, 100% Linking), FTC-09 (88.2% F1)
+**Top performers:** FTC-08 (100% F1, 100% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-07 (90.9% F1, 100% Linking)
 
 ### Without LLM (Regex + OCR only)
 
 | Category | F1 | Linking | Note |
 |----------|----|---------|------|
 | CTC | 0.0% | 0.0% | Vector-drawn PDFs, no extractable text |
-| FTC | 18.0% | 16.7% | Only FTC-07 has extractable text |
-| Synthetic | 82.7% | 93.3% | Some annotations are image-based |
-| **Overall** | **32.6%** | **41.7%** | |
+| FTC | 22.5% | 33.3% | Only FTC-07, FTC-09, FTC-10 have extractable text |
+| Synthetic | 76.3% | 100.0% | Pure regex extraction, no vision needed |
+| **Overall** | **32.3%** | **50.0%** | |
 
-**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 32.6% to 72.7%. Post-vision unit correction detects inch drawings automatically.
+**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 32.3% to 71.1%. Thread-aware matching ensures correct evaluation of threaded features (M6, M8, M10).
 
 Evaluation charts: [`data/evaluation/presentation/`](data/evaluation/presentation/)
 

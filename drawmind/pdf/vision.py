@@ -104,6 +104,16 @@ def analyze_page_with_vision(
             if ann_type is None:
                 continue
 
+            # Skip low-confidence extractions (LLM admits uncertainty)
+            conf = item.get("confidence", 0.7)
+            if conf < 0.4:
+                logger.debug(f"Vision LLM: skipping low-confidence ({conf}): {item.get('text', '')}")
+                continue
+
+            # Skip tolerance-only annotations (not standalone hole callouts)
+            if ann_type == AnnotationType.TOLERANCE:
+                continue
+
             # Get the raw parsed data from LLM
             raw_parsed = item.get("parsed", {})
 

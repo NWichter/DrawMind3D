@@ -25,7 +25,8 @@ class Viewer3D {
 
         // Camera
         const rect = this.canvas.parentElement.getBoundingClientRect();
-        const aspect = rect.width / 450;
+        const height = rect.height || 450;
+        const aspect = rect.width / height;
         this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 10000);
         this.camera.position.set(100, 100, 100);
 
@@ -34,23 +35,38 @@ class Viewer3D {
             canvas: this.canvas,
             antialias: true,
         });
-        this.renderer.setSize(rect.width, 450);
+        this.renderer.setSize(rect.width, height);
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.renderer.toneMappingExposure = 1.2;
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         // Controls
         this.controls = new THREE.OrbitControls(this.camera, this.canvas);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
 
+        // Generate a simple studio environment map for metallic reflections
+        this._envMap = this._generateEnvMap();
+        this.scene.environment = this._envMap;
+
         // Hemisphere light (sky/ground) for natural ambient
         const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0d1117, 0.8);
         this.scene.add(hemiLight);
 
-        // Main directional light (key light)
+        // Main directional light (key light) with shadows
         const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
         dirLight1.position.set(150, 250, 150);
+        dirLight1.castShadow = true;
+        dirLight1.shadow.mapSize.width = 1024;
+        dirLight1.shadow.mapSize.height = 1024;
+        dirLight1.shadow.camera.near = 1;
+        dirLight1.shadow.camera.far = 1000;
+        dirLight1.shadow.camera.left = -200;
+        dirLight1.shadow.camera.right = 200;
+        dirLight1.shadow.camera.top = 200;
+        dirLight1.shadow.camera.bottom = -200;
         this.scene.add(dirLight1);
 
         // Fill light (softer, from opposite side)
@@ -65,7 +81,12 @@ class Viewer3D {
 
         // Grid helper
         const grid = new THREE.GridHelper(200, 20, 0x2a2d3a, 0x1f2230);
+        grid.receiveShadow = true;
         this.scene.add(grid);
+
+        // Camera animation target for smooth transitions
+        this._cameraTarget = null;
+        this._cameraGoal = null;
 
         // Animate
         this._animate();
@@ -74,8 +95,53 @@ class Viewer3D {
         window.addEventListener('resize', () => this._onResize());
     }
 
+    /** Generate a procedural environment map for metallic reflections. */
+    _generateEnvMap() {
+        const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
+        pmremGenerator.compileEquirectangularShader();
+
+        // Create a simple gradient scene as environment
+        const envScene = new THREE.Scene();
+        const envColors = [0x1a1d27, 0x2a3040, 0x3a4a5a, 0x5a6a7a, 0x8a9aaa];
+        envColors.forEach((color, i) => {
+            const geo = new THREE.SphereGeometry(500, 8, 4);
+            const mat = new THREE.MeshBasicMaterial({
+                color, side: THREE.BackSide, opacity: 0.3 + i * 0.15, transparent: true,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.rotation.y = i * 1.2;
+            envScene.add(mesh);
+        });
+        // Add bright spot for specular highlight
+        const spotGeo = new THREE.PlaneGeometry(200, 200);
+        const spotMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+        const spot = new THREE.Mesh(spotGeo, spotMat);
+        spot.position.set(0, 300, 200);
+        spot.lookAt(0, 0, 0);
+        envScene.add(spot);
+
+        const envMap = pmremGenerator.fromScene(envScene, 0.04).texture;
+        pmremGenerator.dispose();
+        return envMap;
+    }
+
     _animate() {
         requestAnimationFrame(() => this._animate());
+
+        // Smooth camera animation
+        if (this._cameraGoal) {
+            this.camera.position.lerp(this._cameraGoal, 0.08);
+            if (this.camera.position.distanceTo(this._cameraGoal) < 0.1) {
+                this._cameraGoal = null;
+            }
+        }
+        if (this._cameraTarget) {
+            this.controls.target.lerp(this._cameraTarget, 0.08);
+            if (this.controls.target.distanceTo(this._cameraTarget) < 0.1) {
+                this._cameraTarget = null;
+            }
+        }
+
         this.controls.update();
 
         // Pulse selected marker
@@ -89,9 +155,10 @@ class Viewer3D {
 
     _onResize() {
         const rect = this.canvas.parentElement.getBoundingClientRect();
-        this.camera.aspect = rect.width / 450;
+        const height = rect.height || 450;
+        this.camera.aspect = rect.width / height;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(rect.width, 450);
+        this.renderer.setSize(rect.width, height);
     }
 
     async loadModel(url) {
@@ -105,15 +172,9 @@ class Viewer3D {
                     // Apply PBR metallic material for machined-metal look
                     this.model.traverse((child) => {
                         if (child.isMesh) {
-                            child.material = new THREE.MeshPhysicalMaterial({
-                                color: 0xb0bec5,
-                                metalness: 0.6,
-                                roughness: 0.35,
-                                clearcoat: 0.1,
-                                clearcoatRoughness: 0.4,
-                                side: THREE.DoubleSide,
-                                envMapIntensity: 0.5,
-                            });
+                            child.material = this._createMaterial();
+                            child.castShadow = true;
+                            child.receiveShadow = true;
 
                             // Add edge lines for CAD wireframe look
                             this._addEdges(child);
@@ -138,15 +199,10 @@ class Viewer3D {
         loader.load(
             url,
             (geometry) => {
-                const material = new THREE.MeshPhysicalMaterial({
-                    color: 0xb0bec5,
-                    metalness: 0.6,
-                    roughness: 0.35,
-                    clearcoat: 0.1,
-                    clearcoatRoughness: 0.4,
-                    side: THREE.DoubleSide,
-                });
+                const material = this._createMaterial();
                 this.model = new THREE.Mesh(geometry, material);
+                this.model.castShadow = true;
+                this.model.receiveShadow = true;
                 this._addEdges(this.model);
                 this.scene.add(this.model);
                 this._fitCamera();
@@ -155,6 +211,20 @@ class Viewer3D {
             undefined,
             reject
         );
+    }
+
+    /** Shared PBR material for machined metal look. */
+    _createMaterial() {
+        return new THREE.MeshPhysicalMaterial({
+            color: 0xb0bec5,
+            metalness: 0.6,
+            roughness: 0.35,
+            clearcoat: 0.1,
+            clearcoatRoughness: 0.4,
+            side: THREE.DoubleSide,
+            envMap: this._envMap,
+            envMapIntensity: 0.5,
+        });
     }
 
     _addEdges(mesh) {
@@ -166,9 +236,7 @@ class Viewer3D {
             opacity: 0.5,
         });
         const lines = new THREE.LineSegments(edges, lineMat);
-        lines.position.copy(mesh.position);
-        lines.rotation.copy(mesh.rotation);
-        lines.scale.copy(mesh.scale);
+        // Lines are added as children — they inherit parent transforms automatically
         mesh.add(lines);
     }
 
@@ -241,10 +309,14 @@ class Viewer3D {
             // Ring torus for hole markers (better than sphere for cylindrical features)
             const radius = Math.max(hole.primary_diameter * 0.4, 1.5);
             const geometry = new THREE.TorusGeometry(radius, radius * 0.2, 12, 32);
-            const material = new THREE.MeshBasicMaterial({
+            const material = new THREE.MeshStandardMaterial({
                 color: color,
                 transparent: true,
                 opacity: isMatched ? 0.85 : 0.4,
+                emissive: color,
+                emissiveIntensity: isMatched ? 0.3 : 0.1,
+                metalness: 0.2,
+                roughness: 0.5,
             });
             const marker = new THREE.Mesh(geometry, material);
             marker.position.set(center[0], center[1], center[2]);
@@ -275,7 +347,16 @@ class Viewer3D {
     }
 
     clearModel() {
+        // Dispose GPU resources to prevent memory leaks
+        const dispose = (obj) => {
+            if (obj.geometry) obj.geometry.dispose();
+            if (obj.material) {
+                if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                else obj.material.dispose();
+            }
+        };
         if (this.model) {
+            this.model.traverse(dispose);
             this.scene.remove(this.model);
             this.model = null;
         }
@@ -283,7 +364,10 @@ class Viewer3D {
             this.scene.remove(this.edgeLines);
             this.edgeLines = null;
         }
-        this.markers.forEach(m => this.scene.remove(m));
+        this.markers.forEach(m => {
+            dispose(m);
+            this.scene.remove(m);
+        });
         this.markers = [];
         this.selectedMarker = null;
         this._matchColors = {};
@@ -313,8 +397,8 @@ class Viewer3D {
             );
             const newPos = target.clone().add(offset);
 
-            this.camera.position.lerp(newPos, 0.3);
-            this.controls.target.lerp(target, 0.3);
+            this._cameraGoal = newPos;
+            this._cameraTarget = target;
         }
     }
 }

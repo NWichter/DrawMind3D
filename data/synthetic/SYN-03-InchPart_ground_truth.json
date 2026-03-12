@@ -2,7 +2,7 @@
   "test_case": "SYN-03-InchPart",
   "source": "synthetic",
   "unit_system": "inch",
-  "description": "Inch-dimensioned part with clearance and tapped holes",
+  "description": "Inch-dimensioned part with bilateral tolerances",
   "expected_annotations": [
     {
       "id": "gt_01",

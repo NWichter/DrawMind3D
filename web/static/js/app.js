@@ -29,9 +29,21 @@ class DrawMindApp {
             if (match.feature_id) {
                 this.viewer3d.highlightFeature(match.feature_id);
             }
-            // Highlight in PDF viewer
+            // Navigate to correct PDF page and highlight annotation
             if (match.annotation_id) {
-                this.pdfViewer.highlightAnnotation(match.annotation_id);
+                const ann = this.data?.annotations?.find(a => a.id === match.annotation_id);
+                if (ann && ann.bbox && this.pdfViewer.pdfDoc) {
+                    const annPage = (ann.bbox.page || 0) + 1;
+                    if (annPage !== this.pdfViewer.currentPage) {
+                        this.pdfViewer.renderPage(annPage).then(() => {
+                            this.pdfViewer.highlightAnnotation(match.annotation_id);
+                        });
+                    } else {
+                        this.pdfViewer.highlightAnnotation(match.annotation_id);
+                    }
+                } else {
+                    this.pdfViewer.highlightAnnotation(match.annotation_id);
+                }
             }
         };
     }
@@ -259,13 +271,14 @@ function renderEvalTable(mode, filter = 'all') {
 
         const f1Class = f1 >= 0.8 ? 'confidence-high' : f1 >= 0.5 ? 'confidence-mid' : 'confidence-low';
         const lClass = link >= 0.8 ? 'confidence-high' : link >= 0.5 ? 'confidence-mid' : 'confidence-low';
-        let tag;
-        if (r.test_case.startsWith('CTC')) tag = '<span style="color:#f59e0b;font-size:0.7rem;margin-left:6px">CTC</span>';
-        else if (r.test_case.startsWith('FTC')) tag = '<span style="color:#fb923c;font-size:0.7rem;margin-left:6px">FTC</span>';
-        else tag = '<span style="color:#a78bfa;font-size:0.7rem;margin-left:6px">SYN</span>';
+        let catClass;
+        if (r.test_case.startsWith('CTC')) catClass = 'ctc';
+        else if (r.test_case.startsWith('FTC')) catClass = 'ftc';
+        else catClass = 'syn';
 
         html += `<tr>
-            <td><a href="#" class="eval-tc-link" data-tc-id="${r.test_case}"><strong>${r.test_case}</strong></a>${tag}</td>
+            <td><a href="#" class="eval-tc-link" data-tc-id="${r.test_case}"><strong>${r.test_case}</strong></a>
+                <span class="category-tag ${catClass}">${catClass}</span></td>
             <td>${(p*100).toFixed(1)}%</td>
             <td>${(rc*100).toFixed(1)}%</td>
             <td class="${f1Class}"><strong>${(f1*100).toFixed(1)}%</strong></td>
@@ -275,7 +288,7 @@ function renderEvalTable(mode, filter = 'all') {
     }
 
     const n = data.length;
-    html += `<tr style="border-top:2px solid #2a2d3a">
+    html += `<tr class="avg-row">
         <td><strong>Average</strong></td>
         <td><strong>${(totP/n*100).toFixed(1)}%</strong></td>
         <td><strong>${(totR/n*100).toFixed(1)}%</strong></td>
@@ -332,14 +345,14 @@ function renderTestCasesTable(filter) {
         const f1Class = evalLlm ? (evalLlm.f1 >= 0.8 ? 'confidence-high' : evalLlm.f1 >= 0.5 ? 'confidence-mid' : 'confidence-low') : '';
         const lClass = evalLlm ? (evalLlm.linking_accuracy >= 0.8 ? 'confidence-high' : evalLlm.linking_accuracy >= 0.5 ? 'confidence-mid' : 'confidence-low') : '';
 
-        let tag;
-        if (tc.category === 'CTC') tag = '<span style="color:#f59e0b;font-size:0.7rem;">CTC</span>';
-        else if (tc.category === 'FTC') tag = '<span style="color:#fb923c;font-size:0.7rem;">FTC</span>';
-        else tag = '<span style="color:#a78bfa;font-size:0.7rem;">SYN</span>';
+        let catClass;
+        if (tc.category === 'CTC') catClass = 'ctc';
+        else if (tc.category === 'FTC') catClass = 'ftc';
+        else catClass = 'syn';
 
         html += `<tr class="tc-row" data-tc-id="${tc.id}">
             <td><strong>${tc.id}</strong></td>
-            <td>${tag}</td>
+            <td><span class="category-tag ${catClass}">${tc.category}</span></td>
             <td>${tc.has_pdf ? '&#10003;' : '&#10007;'}</td>
             <td>${tc.has_step ? '&#10003;' : '&#10007;'}</td>
             <td class="${f1Class}"><strong>${f1}</strong></td>

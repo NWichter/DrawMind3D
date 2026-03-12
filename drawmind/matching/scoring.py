@@ -8,15 +8,16 @@ from drawmind.config import DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM
 
 
 # Scoring weights (diameter is the strongest signal, count rarely informative)
-WEIGHT_DIAMETER = 0.50
-WEIGHT_DEPTH = 0.15
+WEIGHT_DIAMETER = 0.45
+WEIGHT_DEPTH = 0.20
 WEIGHT_TYPE_COMPAT = 0.20
 WEIGHT_COUNT = 0.05
 WEIGHT_UNIQUENESS = 0.10
 WEIGHT_SPATIAL = 0.0  # Disabled — projection heuristic too noisy
 
-# Neutral score for missing data: "no evidence against" rather than "half wrong"
-NEUTRAL_SCORE = 0.7
+# Neutral score for missing data: "no evidence for or against"
+# Lower than 0.7 to avoid artificially inflating scores when data is missing
+NEUTRAL_SCORE = 0.55
 
 
 def compute_match_score(
@@ -102,31 +103,39 @@ def _score_depth(annotation: PDFAnnotation, hole: HoleGroup) -> float:
     """Score based on depth match."""
     # Check if annotation is through-hole
     if annotation.is_through:
-        return 1.0 if hole.is_through_hole else 0.2
+        return 1.0 if hole.is_through_hole else 0.15
 
     # Check associated depth annotations
     ann_depth = _get_annotation_depth(annotation)
     if ann_depth is None:
-        return NEUTRAL_SCORE  # No evidence against
+        # Missing depth is less informative for through-holes (common to omit depth)
+        if hole.is_through_hole:
+            return 0.6  # Likely through, just no annotation for it
+        return NEUTRAL_SCORE
 
     if hole.is_through_hole and not annotation.is_through:
-        return 0.3  # Slight mismatch: hole is through but annotation has specific depth
+        return 0.2  # Mismatch: hole is through but annotation specifies depth
+
+    # Adaptive tolerance: tighter for simple holes, looser for stepped holes
+    tolerance = DEPTH_TOLERANCE_MM
+    if hole.hole_type in ("counterbore", "countersink", "stepped"):
+        tolerance = DEPTH_TOLERANCE_MM * 1.5
 
     # Check against total depth first
     diff = abs(ann_depth - hole.total_depth)
-    if diff <= 1.0:
+    if diff <= 0.5:
         return 1.0
-    elif diff <= DEPTH_TOLERANCE_MM:
-        return 1.0 - (diff / DEPTH_TOLERANCE_MM)
+    elif diff <= tolerance:
+        return 1.0 - (diff / tolerance) * 0.5
 
     # Also check against individual feature depths (for stepped/counterbore holes
     # the annotation depth may refer to one segment, not the total)
     for feat in hole.features:
         feat_diff = abs(ann_depth - feat.estimated_depth)
-        if feat_diff <= 1.0:
-            return 0.9  # Slightly lower than total-depth match
-        elif feat_diff <= DEPTH_TOLERANCE_MM:
-            return 0.8 * (1.0 - feat_diff / DEPTH_TOLERANCE_MM)
+        if feat_diff <= 0.5:
+            return 0.9
+        elif feat_diff <= tolerance:
+            return 0.85 * (1.0 - feat_diff / tolerance)
 
     return 0.0
 

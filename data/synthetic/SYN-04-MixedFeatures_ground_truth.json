@@ -2,39 +2,47 @@
   "test_case": "SYN-04-MixedFeatures",
   "source": "synthetic",
   "unit_system": "metric",
-  "description": "Complex part with counterbores, countersinks, and threads",
+  "description": "Complex part with counterbores, countersinks, threads, and tolerance classes",
   "expected_annotations": [
     {
       "id": "gt_01",
-      "type": "diameter",
+      "type": "counterbore",
       "diameter_mm": 6.0,
       "count": 4,
       "is_through": true,
-      "description": "Hole 1"
+      "description": "Hole 1",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
     },
     {
       "id": "gt_02",
-      "type": "diameter",
+      "type": "counterbore",
       "diameter_mm": 6.0,
       "count": 1,
       "is_through": true,
-      "description": "Hole 2"
+      "description": "Hole 2",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
     },
     {
       "id": "gt_03",
-      "type": "diameter",
+      "type": "counterbore",
       "diameter_mm": 6.0,
       "count": 1,
       "is_through": true,
-      "description": "Hole 3"
+      "description": "Hole 3",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
     },
     {
       "id": "gt_04",
-      "type": "diameter",
+      "type": "counterbore",
       "diameter_mm": 6.0,
       "count": 1,
       "is_through": true,
-      "description": "Hole 4"
+      "description": "Hole 4",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
     },
     {
       "id": "gt_05",
@@ -77,14 +85,12 @@
     },
     {
       "id": "gt_09",
-      "type": "thread",
-      "diameter_mm": 8.5,
+      "type": "countersink",
+      "diameter_mm": 5.0,
       "count": 1,
-      "is_through": false,
+      "is_through": true,
       "description": "Hole 9",
-      "thread": "M10",
-      "drill_diameter_mm": 8.5,
-      "depth_mm": 20
+      "countersink_angle": 90
     }
   ],
   "total_unique_annotations": 9,

@@ -2,7 +2,7 @@
   "test_case": "SYN-02-ThreadedPlate",
   "source": "synthetic",
   "unit_system": "metric",
-  "description": "Plate with metric threaded holes M6, M8, M10",
+  "description": "Plate with metric threaded holes M6, M8, M10 with tolerance classes",
   "expected_annotations": [
     {
       "id": "gt_01",

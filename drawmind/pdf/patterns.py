@@ -43,6 +43,15 @@ DIAMETER_TEXT = re.compile(
     re.IGNORECASE
 )
 
+# Decimal dimension with bilateral tolerance (no symbol, common in FTC drawings)
+# e.g., "0.234 +/-.008", ".500 +.003/-.001"
+DIAMETER_DECIMAL_TOL = re.compile(
+    r'(?:^|(?<=\s))'                       # start or after whitespace
+    + _NUM +                                # decimal value
+    r'\s*(?:[\u00b1][.\d]+|'               # ±tol
+    r'[+]\s*[.\d]+\s*/?\s*[-\u2013]\s*[.\d]+)',  # +upper/-lower
+)
+
 # === Depth Patterns ===
 
 # Depth with symbol: ↧15, ⌴15
@@ -144,7 +153,7 @@ SURFACE_ROUGHNESS = re.compile(
 )
 
 # === Combined hole callout (common in drawings) ===
-# e.g., "⌀8.5 ↧15" or "M10x1.5 THRU" or "⌀10H7 ↧20" or "2X ⌀.250 +.003/-.001"
+# e.g., "⌀8.5 ↧15" or "M10x1.5 THRU" or "⌀10H7 ↧20" or "2X ⌀.250 +.003/-.001 THRU"
 HOLE_CALLOUT_COMBINED = re.compile(
     r'(?:(\d+)\s*[xX\u00d7]\s+)?'       # optional multiplier
     r'(?:M(\d+(?:[.,]\d+)?)'             # thread designation
@@ -154,6 +163,7 @@ HOLE_CALLOUT_COMBINED = re.compile(
     r'(?:\s*[-\u2013]?\s*'               # optional dash/en-dash separator
     r'(\d[A-Za-z]\d?[A-Za-z]?'           # thread tolerance (6H, 6g, 4H5H)
     r'|[A-Z]\d{1,2}))?'                  # or fit tolerance (H7, G6)
+    r'(?:\s+[+\u00b1][\d.]+(?:\s*/?\s*[-\u2013]\s*[\d.]+)?)?' # optional bilateral tolerance (skip over)
     r'(?:\s*(?:[\u21a7\u2334]|depth)\s*' + _NUM + r')?' # optional depth
     r'(?:\s*(THRU))?',                    # optional through
     re.IGNORECASE
@@ -162,7 +172,7 @@ HOLE_CALLOUT_COMBINED = re.compile(
 # All patterns grouped by annotation type
 ALL_PATTERNS = {
     "thread": [THREAD_METRIC, THREAD_UNIFIED],
-    "diameter": [DIAMETER_SYMBOL, DIAMETER_TEXT],
+    "diameter": [DIAMETER_SYMBOL, DIAMETER_TEXT, DIAMETER_DECIMAL_TOL],
     "depth": [DEPTH_SYMBOL, DEPTH_TEXT],
     "through": [THROUGH_HOLE],
     "counterbore": [COUNTERBORE_SYMBOL, COUNTERBORE_TEXT],

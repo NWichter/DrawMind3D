@@ -167,9 +167,17 @@ def _extract_page_native(page: fitz.Page, page_num: int) -> list[dict]:
 
 
 def _extract_page_ocr(page: fitz.Page, page_num: int) -> list[dict]:
-    """Extract text from a page using OCR (for scanned pages)."""
-    texts = []
+    """Extract text from a page using OCR.
 
+    Tries Tesseract first (better for engineering drawings with sparse text),
+    then falls back to PyMuPDF's built-in OCR.
+    """
+    # Try Tesseract first (PSM 11 = sparse text, better for drawings)
+    texts = _extract_page_tesseract(page, page_num)
+    if texts:
+        return texts
+
+    # Fallback: PyMuPDF built-in OCR
     try:
         tp = page.get_textpage_ocr(flags=0, dpi=300)
         text_dict = page.get_text("dict", textpage=tp)
@@ -203,10 +211,63 @@ def _extract_page_ocr(page: fitz.Page, page_num: int) -> list[dict]:
                 })
 
     except Exception:
-        # OCR not available, return empty
         pass
 
     return texts
+
+
+def _extract_page_tesseract(page: fitz.Page, page_num: int) -> list[dict]:
+    """Extract text from a page using Tesseract OCR (sparse text mode).
+
+    Returns empty list if Tesseract is not available.
+    """
+    try:
+        import pytesseract
+        from PIL import Image
+        import io
+    except ImportError:
+        return []
+
+    from drawmind.config import OCR_DPI, OCR_CONFIDENCE_THRESHOLD
+
+    try:
+        pix = page.get_pixmap(dpi=OCR_DPI)
+        img_bytes = pix.tobytes("png")
+        img = Image.open(io.BytesIO(img_bytes))
+
+        data = pytesseract.image_to_data(
+            img,
+            output_type=pytesseract.Output.DICT,
+            config="--psm 11 --oem 3",
+        )
+
+        scale = 72.0 / OCR_DPI
+        texts = []
+
+        for i in range(len(data["text"])):
+            text = data["text"][i].strip()
+            conf = int(data["conf"][i])
+
+            if text and conf > OCR_CONFIDENCE_THRESHOLD:
+                texts.append({
+                    "text": text,
+                    "bbox": {
+                        "x0": data["left"][i] * scale,
+                        "y0": data["top"][i] * scale,
+                        "x1": (data["left"][i] + data["width"][i]) * scale,
+                        "y1": (data["top"][i] + data["height"][i]) * scale,
+                    },
+                    "font": "",
+                    "size": 0,
+                    "page": page_num,
+                    "source": "ocr_tesseract",
+                    "confidence": conf / 100.0,
+                })
+
+        return texts
+
+    except Exception:
+        return []
 
 
 def get_page_as_image(pdf_path: str | Path, page_num: int = 0, dpi: int = 300) -> bytes:
@@ -238,7 +299,18 @@ def detect_unit_system(pdf_path: str | Path) -> str:
         full_text += page.get_text()
     doc.close()
 
-    # 1. Explicit inch declarations
+    # 1. Explicit metric declarations (strongest signal)
+    metric_patterns = [
+        r'UNITS?\s*:\s*(?:MM|MILLIMETERS?)',
+        r'ALL\s+DIMENSIONS\s+(?:IN\s+)?(?:MM|MILLIMETERS?)',
+        r'DIMENSIONS\s+(?:ARE\s+)?IN\s+(?:MM|MILLIMETERS?)',
+        r'MILLIMETERS?\s+UNLESS',
+    ]
+    for pat_str in metric_patterns:
+        if re.search(pat_str, full_text, re.IGNORECASE):
+            return "metric"
+
+    # 2. Explicit inch declarations
     inch_patterns = [
         r'UNITS?\s*:\s*INCH',
         r'DIMENSIONING\s+IN\s+INCH',
@@ -246,20 +318,31 @@ def detect_unit_system(pdf_path: str | Path) -> str:
         r'DIMENSIONS\s+ARE\s+IN\s+INCH',
         r'INCH(?:ES)?\s+UNLESS',
     ]
-    for pat in inch_patterns:
-        if re.search(pat, full_text, re.IGNORECASE):
+    for pat_str in inch_patterns:
+        if re.search(pat_str, full_text, re.IGNORECASE):
             return "inch"
-
-    # 2. Implicit inch detection via dimension value patterns
-    # Inch drawings commonly use .XXX format (e.g., Ø.438, .250 THRU)
-    # Metric drawings use whole numbers or X.X (e.g., Ø10.0, M8x1.25)
-    inch_dim_pattern = re.compile(r'[\u00d8\u2300]?\s*\.(\d{2,4})\b')  # .438, .250, .0625
-    inch_vals = inch_dim_pattern.findall(full_text)
 
     # UNC/UNEF thread specs are exclusively imperial
     unc_pattern = re.compile(r'\d+/\d+-\d+\s*(?:UNC|UNF|UNEF)', re.IGNORECASE)
     if unc_pattern.search(full_text):
         return "inch"
+
+    # 3. Implicit inch detection via dimension value patterns
+    # Inch drawings commonly use .XXX format (e.g., Ø.438, .250 THRU)
+    # Only count values preceded by a diameter symbol or at start of dimension —
+    # NOT values inside tolerances (+.025/-.010)
+    inch_dim_pattern = re.compile(
+        r'(?:^|[\u00d8\u2300\u2205\s])\.(\d{2,4})\b'  # .438, .250 (preceded by Ø or whitespace)
+    )
+    # Exclude values that are part of tolerance expressions
+    tol_value_pattern = re.compile(r'[+\-]\s*\.?\d')
+    inch_vals = []
+    for m in inch_dim_pattern.finditer(full_text):
+        # Check if preceded by + or - (tolerance, not dimension)
+        prefix_start = max(0, m.start() - 3)
+        prefix = full_text[prefix_start:m.start()]
+        if not re.search(r'[+\-]', prefix):
+            inch_vals.append(m.group(1))
 
     # If we find >=2 decimal-inch style dimensions, classify as inch
     if len(inch_vals) >= 2:

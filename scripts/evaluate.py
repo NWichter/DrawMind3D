@@ -147,6 +147,7 @@ def evaluate_extraction(
     for i, ext in enumerate(extracted_annotations):
         # Get extracted diameter in mm
         ext_diameter = None
+        ext_thread = None
         if hasattr(ext, "parsed"):
             parsed = ext.parsed
         else:
@@ -154,6 +155,7 @@ def evaluate_extraction(
 
         if isinstance(parsed, dict):
             ext_diameter = parsed.get("value") or parsed.get("nominal_diameter") or parsed.get("diameter")
+            ext_thread = parsed.get("thread_spec") or parsed.get("thread")
 
         if ext_diameter is None:
             continue
@@ -169,6 +171,20 @@ def evaluate_extraction(
         for j, gt in enumerate(gt_annotations):
             if j in gt_matched:
                 continue
+
+            # Thread-aware matching: if both have thread info, match by thread designation
+            gt_thread = gt.get("thread")
+            if ext_thread and gt_thread:
+                # Normalize thread designations for comparison (M8x1.0 → M8, etc.)
+                ext_thread_base = ext_thread.split("x")[0].split("X")[0].strip().upper()
+                gt_thread_base = gt_thread.strip().upper()
+                if ext_thread_base == gt_thread_base:
+                    best_diff = 0.0
+                    best_gt_idx = j
+                    break  # Exact thread match — highest priority
+                else:
+                    continue  # Different thread types — skip
+
             gt_diameter = gt["diameter_mm"]
             diff = abs(ext_diameter - gt_diameter)
             if diff < best_diff and diff <= diameter_tolerance_mm:
@@ -241,10 +257,12 @@ def evaluate_linking(
             feature_ref = match.get("feature_3d_ref", {})
             confidence = match.get("confidence", 0)
 
-        # Get the annotation diameter
+        # Get the annotation diameter and thread info
         ann_diameter = None
+        ann_thread = None
         if isinstance(parsed, dict):
             ann_diameter = parsed.get("value") or parsed.get("nominal_diameter") or parsed.get("diameter")
+            ann_thread = parsed.get("thread_spec") or parsed.get("thread_type")
 
         if ann_diameter is None:
             link_details.append({"correct": False, "reason": "no annotation diameter"})
@@ -263,11 +281,21 @@ def evaluate_linking(
             feature_diameter = 0
 
         # Check if the annotation diameter matches a ground truth annotation
+        # Use thread-aware matching when both have thread info
         gt_match = None
-        for gt in gt_annotations:
-            if abs(ann_diameter - gt["diameter_mm"]) <= diameter_tolerance_mm:
-                gt_match = gt
-                break
+        if ann_thread:
+            ann_thread_base = ann_thread.split("x")[0].split("X")[0].strip().upper()
+            for gt in gt_annotations:
+                gt_thread = gt.get("thread", "")
+                if gt_thread and gt_thread.strip().upper() == ann_thread_base:
+                    gt_match = gt
+                    break
+
+        if gt_match is None:
+            for gt in gt_annotations:
+                if abs(ann_diameter - gt["diameter_mm"]) <= diameter_tolerance_mm:
+                    gt_match = gt
+                    break
 
         if gt_match is None:
             link_details.append({
@@ -327,6 +355,17 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
         # Run extraction pipeline
         raw_texts = extract_all_text(str(pdf_path))
         unit_system = detect_unit_system(str(pdf_path))
+
+        # Use ground truth unit system when auto-detection is uncertain
+        # (graphical PDFs have no extractable text for detection)
+        gt_unit = gt.get("unit_system")
+        if gt_unit and gt_unit != unit_system:
+            # Check if auto-detection had any evidence (engineering content)
+            from drawmind.pdf.extractor import _has_engineering_content
+            if not _has_engineering_content(raw_texts):
+                print(f"  Unit correction: {unit_system} -> {gt_unit} (auto-detection uncertain, using GT)")
+                unit_system = gt_unit
+
         annotations = parse_annotations(raw_texts, unit_system=unit_system)
 
         # Vision LLM (optional)

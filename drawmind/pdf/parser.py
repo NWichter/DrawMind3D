@@ -112,9 +112,14 @@ def _parse_combined_callout(
     if thread_d:
         # Thread callout — thread designations are always metric (M10 = 10mm)
         counter += 1
+        nom_d = float(thread_d.replace(",", "."))
+        thread_spec = f"M{thread_d.replace(',', '.')}"
+        if thread_pitch:
+            thread_spec += f"x{thread_pitch.replace(',', '.')}"
         parsed = {
-            "nominal_diameter": float(thread_d.replace(",", ".")),
+            "nominal_diameter": nom_d,
             "thread_type": "metric",
+            "thread_spec": thread_spec,
             "standard": "ISO_metric",
         }
         if thread_pitch:
@@ -192,9 +197,14 @@ def _parse_individual_patterns(
     match = pat.THREAD_METRIC.search(text)
     if match:
         counter += 1
+        nom_d = float(match.group(1).replace(",", "."))
+        thread_spec = f"M{match.group(1).replace(',', '.')}"
+        if match.group(2):
+            thread_spec += f"x{match.group(2).replace(',', '.')}"
         parsed = {
-            "nominal_diameter": float(match.group(1).replace(",", ".")),
+            "nominal_diameter": nom_d,
             "thread_type": "metric",
+            "thread_spec": thread_spec,
             "standard": "ISO_metric",
         }
         if match.group(2):

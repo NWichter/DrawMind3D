@@ -1,16 +1,17 @@
 /**
- * PDF.js Viewer with annotation overlay.
+ * PDF.js Viewer with annotation overlay and match-color sync.
  */
 
 class PDFViewer {
     constructor(canvasId, overlayId) {
         this.canvas = document.getElementById(canvasId);
-        this.overlay = document.getElementById(overlayId);
+        this.overlay = overlayId ? document.getElementById(overlayId) : null;
         this.ctx = this.canvas.getContext('2d');
         this.pdfDoc = null;
         this.currentPage = 1;
         this.scale = 1.0;
         this.annotations = [];
+        this.matches = [];
         this.selectedAnnotationId = null;
 
         // Configure PDF.js worker
@@ -49,7 +50,6 @@ class PDFViewer {
     }
 
     _updatePageNav() {
-        // Find page nav controls near this canvas (if any)
         const container = this.canvas.closest('.viewer-panel') || this.canvas.parentElement;
         const pageInfo = container.querySelector('.pdf-page-info');
         if (pageInfo && this.pdfDoc) {
@@ -59,7 +59,6 @@ class PDFViewer {
         const nextBtn = container.querySelector('.pdf-next-btn');
         if (prevBtn) prevBtn.disabled = this.currentPage <= 1;
         if (nextBtn) nextBtn.disabled = !this.pdfDoc || this.currentPage >= this.pdfDoc.numPages;
-        // Hide nav if single page
         const nav = container.querySelector('.pdf-page-nav');
         if (nav && this.pdfDoc) {
             nav.style.display = this.pdfDoc.numPages > 1 ? 'flex' : 'none';
@@ -73,7 +72,6 @@ class PDFViewer {
         const container = this.canvas.parentElement;
         const containerWidth = container.clientWidth;
 
-        // Calculate scale to fit container width
         const viewport = page.getViewport({ scale: 1 });
         this.scale = (containerWidth - 20) / viewport.width;
         const scaledViewport = page.getViewport({ scale: this.scale });
@@ -81,7 +79,6 @@ class PDFViewer {
         this.canvas.width = scaledViewport.width;
         this.canvas.height = scaledViewport.height;
 
-        // Update overlay size
         if (this.overlay) {
             this.overlay.style.width = scaledViewport.width + 'px';
             this.overlay.style.height = scaledViewport.height + 'px';
@@ -105,39 +102,37 @@ class PDFViewer {
 
     _renderAnnotationOverlays() {
         if (!this.overlay) return;
-        // Clear existing overlays
         while (this.overlay.firstChild) {
             this.overlay.removeChild(this.overlay.firstChild);
         }
 
         if (!this.annotations.length) return;
 
-        // Build match lookup
+        // Build match lookup: annotation_id → {match, matchIndex}
+        // matchIndex is the position in the matches array (same as table row & 3D marker)
         const matchByAnnotationId = {};
-        this.matches.forEach(m => {
-            matchByAnnotationId[m.annotation_id] = m;
+        this.matches.forEach((m, idx) => {
+            matchByAnnotationId[m.annotation_id] = { match: m, idx };
         });
 
-        // Color palette for matched pairs
-        const colors = [
+        // Use shared palette from MATCH_PALETTE (defined in annotations.js)
+        const palette = typeof MATCH_PALETTE !== 'undefined' ? MATCH_PALETTE : [
             '#60a5fa', '#4ade80', '#facc15', '#f87171',
             '#a78bfa', '#fb923c', '#2dd4bf', '#f472b6',
         ];
 
-        this.annotations.forEach((ann, index) => {
+        this.annotations.forEach((ann) => {
             const bbox = ann.bbox;
             if (!bbox || bbox.page !== this.currentPage - 1) return;
 
-            const match = matchByAnnotationId[ann.id];
-            const color = match ? colors[index % colors.length] : '#666';
+            const matchInfo = matchByAnnotationId[ann.id];
+            const color = matchInfo ? palette[matchInfo.idx % palette.length] : '#555';
 
-            // Scale bbox to current rendering
             const x = bbox.x0 * this.scale;
             const y = bbox.y0 * this.scale;
             const w = (bbox.x1 - bbox.x0) * this.scale;
             const h = (bbox.y1 - bbox.y0) * this.scale;
 
-            // Draw rectangle
             const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             rect.setAttribute('x', x - 2);
             rect.setAttribute('y', y - 2);
@@ -145,8 +140,8 @@ class PDFViewer {
             rect.setAttribute('height', h + 4);
             rect.setAttribute('fill', color + '25');
             rect.setAttribute('stroke', color);
-            rect.setAttribute('stroke-width', '1.5');
-            rect.setAttribute('rx', '2');
+            rect.setAttribute('stroke-width', matchInfo ? '2' : '1');
+            rect.setAttribute('rx', '3');
             rect.classList.add('annotation-rect');
             rect.dataset.annotationId = ann.id;
 
@@ -154,9 +149,13 @@ class PDFViewer {
                 rect.classList.add('active');
             }
 
-            // Tooltip
+            // Tooltip with match info
             const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-            title.textContent = `${ann.raw_text} (${ann.annotation_type})`;
+            if (matchInfo) {
+                title.textContent = `${ann.raw_text} → ${matchInfo.match.feature_id} (${(matchInfo.match.confidence * 100).toFixed(0)}%)`;
+            } else {
+                title.textContent = `${ann.raw_text} (${ann.annotation_type}) — unmatched`;
+            }
             rect.appendChild(title);
 
             // Click handler
@@ -176,7 +175,7 @@ class PDFViewer {
         this.selectedAnnotationId = annotationId;
         this._renderAnnotationOverlays();
 
-        // Scroll annotation into view
+        if (!this.overlay) return;
         const rect = this.overlay.querySelector(`[data-annotation-id="${annotationId}"]`);
         if (rect) {
             rect.scrollIntoView({ behavior: 'smooth', block: 'center' });
