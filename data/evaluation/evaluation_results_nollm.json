@@ -40,12 +40,12 @@
     "extraction": {
       "true_positives": 0,
       "false_positives": 0,
-      "false_negatives": 10,
+      "false_negatives": 7,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
       "total_extracted": 0,
-      "total_ground_truth": 10,
+      "total_ground_truth": 7,
       "match_details": [],
       "missed_annotations": [
         "\u00c3\u02dc12 \u00c2\u00b10.05",
@@ -54,10 +54,7 @@
         "\u00c3\u02dc36 holes",
         "\u00c3\u02dc40 \u00c2\u00b10.15",
         "\u00c3\u02dc50 holes",
-        "2X \u00c3\u02dc52 \u00c2\u00b10.15",
-        "\u00c3\u02dc85 outer feature",
-        "2X \u00c3\u02dc100 \u00c2\u00b10.15 outer feature",
-        "\u00c3\u02dc120 outer feature"
+        "2X \u00c3\u02dc52 \u00c2\u00b10.15"
       ]
     },
     "linking": {
@@ -174,12 +171,12 @@
     "extraction": {
       "true_positives": 0,
       "false_positives": 0,
-      "false_negatives": 9,
+      "false_negatives": 8,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0,
       "total_extracted": 0,
-      "total_ground_truth": 9,
+      "total_ground_truth": 8,
       "match_details": [],
       "missed_annotations": [
         "2X S\u00c3\u02dc1.250 spherical diameter",
@@ -189,8 +186,7 @@
         "\u00c3\u02dc.625 counterbore",
         "4X \u00c3\u02dc.281 through holes",
         "\u00c3\u02dc.40 counterbore",
-        "\u00c3\u02dc.250 holes",
-        "(\u00c3\u02dc1.000) reference diameter"
+        "\u00c3\u02dc.250 holes"
       ]
     },
     "linking": {
@@ -680,22 +676,19 @@
     "extraction": {
       "true_positives": 0,
       "false_positives": 0,
-      "false_negatives": 2,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0.0,
+      "false_negatives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
       "total_extracted": 0,
-      "total_ground_truth": 2,
+      "total_ground_truth": 0,
       "match_details": [],
-      "missed_annotations": [
-        "\u00c3\u02dc32 \u00c2\u00b10.3 AVG (I.D.) inner torus major diameter",
-        "\u00c3\u02dc63 \u00c2\u00b10.5 AVG (O.D.) outer torus major diameter"
-      ]
+      "missed_annotations": []
     },
     "linking": {
       "correct_links": 0,
       "total_links": 0,
-      "linking_accuracy": 0.0,
+      "linking_accuracy": 1.0,
       "link_details": []
     },
     "annotations_found": 0,

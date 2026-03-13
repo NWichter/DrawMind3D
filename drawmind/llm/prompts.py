@@ -8,13 +8,19 @@ SYSTEM_ENGINEERING = (
 )
 
 VISION_EXTRACT_PROMPT = """\
-Analyze this engineering/technical drawing page. Extract ALL hole-related annotations you can find.
+Analyze this engineering/technical drawing page. Extract ONLY hole-related annotations (drilled holes, threaded holes, counterbored holes, countersunk holes).
 
-CRITICAL DISTINCTIONS:
-- **Diameter callouts** (hole sizes): ⌀.250, 4X ⌀.250 +.003/-.001, ⌀8.5 — these specify actual hole diameters
-- **GD&T tolerance zones**: ⌀.015, ⌀.020 followed by datum references (A, B, C) in feature control frames — these are geometric tolerance values, NOT hole diameters. Do NOT include GD&T tolerance zones.
-- **Part dimensions**: 2.500, 1.750, 4.000 standing alone as overall sizes (length, width, height) — these are NOT hole diameters. Do NOT include overall part envelope dimensions.
-- **Leader lines**: Follow leader lines from annotation text to the feature they reference. The same hole may be shown in multiple views.
+CRITICAL: ONLY extract annotations for HOLES (cylindrical cavities drilled INTO the part). Do NOT extract:
+- **Overall part dimensions** (length, width, height, outer diameters of shafts/bosses)
+- **GD&T tolerance zones**: ⌀.015, ⌀.020 in feature control frames — NOT hole diameters
+- **Edge chamfers and fillets**: C1, R2, 0.5x45° — NOT holes
+- **Surface roughness symbols**: Ra, Rz values
+- **Reference dimensions** in parentheses: (Ø1.000) — NOT functional hole callouts
+- **Torus/ring dimensions**: I.D., O.D., major/minor diameter of rings — NOT drilled holes
+- **Slot dimensions**: rectangular cutout dimensions
+- **Angular dimensions**: 90°, 45° standalone angle callouts
+
+A hole callout typically has a leader line pointing to a circular feature (hole) in the part. Look for the ⌀ or Ø symbol, thread designations (M8, 1/4-20 UNC), or explicit "HOLE" / "DRILL" text.
 
 Extract these annotation types:
 1. **Thread callouts**

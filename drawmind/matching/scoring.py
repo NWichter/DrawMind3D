@@ -86,9 +86,14 @@ def compute_match_score(
     # (Vision LLM annotations carry their detection confidence)
     source_conf = annotation.confidence
     if source_conf < 1.0:
-        # Gentle blend: 85% matching score + 15% source confidence
-        # (previous 70/30 was too aggressive, pushing correct matches below threshold)
-        total = total * 0.85 + source_conf * 0.15
+        # Adaptive blend: weight source confidence less when matching signals
+        # are strong (diameter match is the strongest indicator)
+        if scores["diameter"] >= 0.8:
+            # Strong diameter match — trust the match more, source less
+            total = total * 0.92 + source_conf * 0.08
+        else:
+            # Weaker match — source confidence matters more
+            total = total * 0.82 + source_conf * 0.18
     scores["source_confidence"] = source_conf
 
     return {"total_score": round(total, 4), "breakdown": scores}

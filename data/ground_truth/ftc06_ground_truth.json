@@ -77,9 +77,11 @@
       "diameter_mm": 25.4,
       "count": 2,
       "is_through": false,
-      "description": "(Ø1.000) reference diameter"
+      "description": "(Ø1.000) reference diameter",
+      "optional": true,
+      "reason_optional": "Reference dimension in parentheses, not a functional hole callout"
     }
   ],
-  "total_unique_annotations": 9,
-  "total_individual_holes": 19
+  "total_unique_annotations": 8,
+  "total_individual_holes": 17
 }

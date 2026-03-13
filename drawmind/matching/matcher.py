@@ -246,11 +246,9 @@ def _filter_vision_false_positives(
 ) -> list[PDFAnnotation]:
     """Remove likely false-positive Vision LLM annotations.
 
-    Vision LLM sometimes extracts overall part dimensions as diameter annotations.
-    Filter out annotations from vision source that:
-    - Have low confidence (< 0.9)
-    - Have type DIAMETER (not thread, counterbore, etc.)
-    - Have no matching 3D feature within wide tolerance
+    Vision LLM sometimes extracts overall part dimensions, reference dimensions,
+    and other non-hole features as annotations. Filter out vision-sourced
+    annotations that have no plausible matching 3D hole feature.
     """
     if not holes:
         return annotations
@@ -264,33 +262,79 @@ def _filter_vision_false_positives(
 
     wide_tolerance = DIAMETER_TOLERANCE_MM * 3  # 1.5mm wide tolerance
 
+    # Types that vision commonly gets wrong
+    filterable_types = {
+        AnnotationType.DIAMETER,
+        AnnotationType.COUNTERBORE,
+        AnnotationType.COUNTERSINK,
+        AnnotationType.THREAD,
+    }
+
     filtered = []
     for ann in annotations:
-        # Only filter vision-sourced DIAMETER annotations with lower confidence
-        if (ann.source == "vision"
-            and ann.confidence < 0.9
-            and ann.annotation_type == AnnotationType.DIAMETER
-            and ann.multiplier <= 1):
+        # Only filter vision-sourced annotations
+        is_vision = ann.source in ("vision", "vision_llm")
+        if not is_vision:
+            filtered.append(ann)
+            continue
 
-            ann_d = ann.parsed.get("value")
-            if ann_d is not None:
-                try:
-                    ann_d = float(ann_d)
-                except (ValueError, TypeError):
-                    filtered.append(ann)
-                    continue
+        # High-confidence vision annotations are kept
+        if ann.confidence >= 0.9:
+            filtered.append(ann)
+            continue
 
-                # Check if any hole diameter is close
-                has_match = any(
-                    abs(ann_d - hd) < wide_tolerance
-                    for hd in hole_diameters
-                )
-                if not has_match:
-                    logger.debug(
-                        f"Filtered vision FP: {ann.raw_text} "
-                        f"(d={ann_d:.1f}mm, no matching 3D feature)"
+        # Skip non-filterable types
+        if ann.annotation_type not in filterable_types:
+            filtered.append(ann)
+            continue
+
+        # Get the annotation diameter for comparison
+        ann_d = None
+        if ann.annotation_type == AnnotationType.THREAD:
+            raw = ann.parsed.get("nominal_diameter")
+        elif ann.annotation_type in (AnnotationType.COUNTERBORE, AnnotationType.COUNTERSINK):
+            raw = ann.parsed.get("diameter")
+        else:
+            raw = ann.parsed.get("value")
+
+        if raw is not None:
+            try:
+                ann_d = float(raw)
+            except (ValueError, TypeError):
+                pass
+
+        if ann_d is None:
+            filtered.append(ann)
+            continue
+
+        # For threads, also check thread table drill diameters
+        if ann.annotation_type == AnnotationType.THREAD:
+            from drawmind.cad.thread_table import get_thread_diameters
+            thread_spec = ann.parsed.get("thread_spec", "")
+            if thread_spec:
+                base = thread_spec.split("x")[0].split("X")[0].strip()
+                diameters = get_thread_diameters(base)
+                if diameters:
+                    has_match = any(
+                        abs(diameters[k] - hd) < wide_tolerance
+                        for k in ["major_d", "pitch_d", "minor_d", "drill_d"]
+                        for hd in hole_diameters
                     )
-                    continue  # Skip this annotation
+                    if has_match:
+                        filtered.append(ann)
+                        continue
+
+        # Check against hole diameters
+        has_match = any(
+            abs(ann_d - hd) < wide_tolerance
+            for hd in hole_diameters
+        )
+        if not has_match:
+            logger.debug(
+                f"Filtered vision FP: {ann.raw_text} "
+                f"(d={ann_d:.1f}mm, type={ann.annotation_type.value}, no matching 3D feature)"
+            )
+            continue  # Skip this annotation
 
         filtered.append(ann)
 

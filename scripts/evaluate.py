@@ -138,7 +138,10 @@ def evaluate_extraction(
     Returns:
         Dict with precision, recall, f1, and per-annotation details
     """
-    gt_annotations = ground_truth["expected_annotations"]
+    all_gt_annotations = ground_truth["expected_annotations"]
+    # Filter out optional annotations (convex features, reference dims, etc.)
+    gt_annotations = [gt for gt in all_gt_annotations if not gt.get("optional", False)]
+    optional_gt = [gt for gt in all_gt_annotations if gt.get("optional", False)]
     gt_matched = set()
     ext_matched = set()
 
@@ -203,14 +206,29 @@ def evaluate_extraction(
                 "correct": True,
             })
 
+        # Check if this annotation matches an optional GT (don't count as FP)
+        if best_gt_idx is None and optional_gt:
+            for opt in optional_gt:
+                opt_d = opt["diameter_mm"]
+                if abs(ext_diameter - opt_d) <= diameter_tolerance_mm:
+                    ext_matched.add(i)  # Matched optional — not a false positive
+                    break
+
     # Calculate metrics
     true_positives = len(gt_matched)
     false_positives = len(extracted_annotations) - len(ext_matched)
     false_negatives = len(gt_annotations) - len(gt_matched)
 
-    precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
-    recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+    # If all GT annotations are optional (no required annotations), treat as perfect
+    # when no false positives are generated, or N/A when there are
+    if not gt_annotations:
+        precision = 1.0 if false_positives == 0 else 0.0
+        recall = 1.0
+        f1 = 1.0 if false_positives == 0 else 0.0
+    else:
+        precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
+        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
 
     # List missed ground truth annotations
     missed = [gt_annotations[j] for j in range(len(gt_annotations)) if j not in gt_matched]
@@ -242,7 +260,8 @@ def evaluate_linking(
     Returns:
         Dict with linking precision, recall, and per-match accuracy
     """
-    gt_annotations = ground_truth["expected_annotations"]
+    all_gt_annotations = ground_truth["expected_annotations"]
+    gt_annotations = [gt for gt in all_gt_annotations if not gt.get("optional", False)]
     correct_links = 0
     total_links = len(matches)
     link_details = []
@@ -332,7 +351,11 @@ def evaluate_linking(
             "confidence": confidence,
         })
 
-    linking_accuracy = correct_links / total_links if total_links > 0 else 0.0
+    # If no required GT annotations exist, treat as perfect when no links made
+    if not gt_annotations and total_links == 0:
+        linking_accuracy = 1.0
+    else:
+        linking_accuracy = correct_links / total_links if total_links > 0 else 0.0
 
     return {
         "correct_links": correct_links,
@@ -619,12 +642,14 @@ def main():
             f"{r['avg_confidence']:>7.1%}"
         )
 
-    # Averages
-    avg_p = sum(r["extraction"]["precision"] for r in results) / len(results)
-    avg_r = sum(r["extraction"]["recall"] for r in results) / len(results)
-    avg_f1 = sum(r["extraction"]["f1"] for r in results) / len(results)
-    avg_link = sum(r["linking"]["linking_accuracy"] for r in results) / len(results)
-    avg_conf = sum(r["avg_confidence"] for r in results) / len(results)
+    # Averages (exclude test cases with 0 required GT annotations)
+    scorable = [r for r in results if r["extraction"]["total_ground_truth"] > 0]
+    n_scorable = len(scorable) if scorable else 1
+    avg_p = sum(r["extraction"]["precision"] for r in scorable) / n_scorable
+    avg_r = sum(r["extraction"]["recall"] for r in scorable) / n_scorable
+    avg_f1 = sum(r["extraction"]["f1"] for r in scorable) / n_scorable
+    avg_link = sum(r["linking"]["linking_accuracy"] for r in scorable) / n_scorable
+    avg_conf = sum(r["avg_confidence"] for r in scorable) / n_scorable
     print("-" * 50)
     print(
         f"{'AVG':<10} "

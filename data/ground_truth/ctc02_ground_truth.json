@@ -66,7 +66,9 @@
       "diameter_mm": 85.0,
       "count": 1,
       "is_through": false,
-      "description": "Ø85 outer feature"
+      "description": "Ø85 outer feature",
+      "optional": true,
+      "reason_optional": "Convex outer feature, not a drilled hole"
     },
     {
       "id": "gt_09",
@@ -74,7 +76,9 @@
       "diameter_mm": 100.0,
       "count": 2,
       "is_through": false,
-      "description": "2X Ø100 ±0.15 outer feature"
+      "description": "2X Ø100 ±0.15 outer feature",
+      "optional": true,
+      "reason_optional": "Convex outer feature, not a drilled hole"
     },
     {
       "id": "gt_10",
@@ -82,9 +86,11 @@
       "diameter_mm": 120.0,
       "count": 1,
       "is_through": false,
-      "description": "Ø120 outer feature"
+      "description": "Ø120 outer feature",
+      "optional": true,
+      "reason_optional": "Convex outer feature, not a drilled hole"
     }
   ],
-  "total_unique_annotations": 10,
-  "total_individual_holes": 48
+  "total_unique_annotations": 7,
+  "total_individual_holes": 44
 }

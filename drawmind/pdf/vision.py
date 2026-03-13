@@ -175,13 +175,28 @@ def analyze_page_with_vision(
 
         # Merge: add vision annotations that don't overlap with existing ones
         # Track which existing annotations have been "consumed" by a vision
-        # duplicate, so separate callouts with the same diameter are preserved
+        # duplicate, so separate callouts with the same diameter are preserved.
+        # When a vision annotation overlaps with an existing regex annotation,
+        # enhance the existing one with any additional data from vision
+        # (e.g., multiplier, depth, through-hole info).
         merged = list(existing_annotations)
         consumed: set[int] = set()
         for v_ann in vision_deduped:
             overlap_idx = _find_overlap_idx(v_ann, existing_annotations, consumed)
             if overlap_idx is not None:
                 consumed.add(overlap_idx)  # This existing ann is "used up"
+                # Enhance existing annotation with vision data
+                ex = merged[overlap_idx]
+                # If vision found a multiplier that regex missed, adopt it
+                if v_ann.multiplier > 1 and ex.multiplier <= 1:
+                    ex.multiplier = v_ann.multiplier
+                # If vision found through-hole info that regex missed
+                if v_ann.is_through and not ex.is_through:
+                    ex.is_through = True
+                # If vision found depth info that regex missed
+                v_depth = v_ann.parsed.get("depth")
+                if v_depth is not None and "depth" not in ex.parsed:
+                    ex.parsed["depth"] = v_depth
             else:
                 merged.append(v_ann)
 

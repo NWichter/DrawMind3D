@@ -10,7 +10,9 @@
       "diameter_mm": 32.0,
       "count": 1,
       "is_through": false,
-      "description": "Ø32 ±0.3 AVG (I.D.) inner torus major diameter"
+      "description": "Ø32 ±0.3 AVG (I.D.) inner torus major diameter",
+      "optional": true,
+      "reason_optional": "Torus inner major diameter, not a drilled hole"
     },
     {
       "id": "gt_02",
@@ -18,9 +20,11 @@
       "diameter_mm": 63.0,
       "count": 1,
       "is_through": false,
-      "description": "Ø63 ±0.5 AVG (O.D.) outer torus major diameter"
+      "description": "Ø63 ±0.5 AVG (O.D.) outer torus major diameter",
+      "optional": true,
+      "reason_optional": "Torus outer major diameter, not a drilled hole"
     }
   ],
-  "total_unique_annotations": 2,
-  "total_individual_holes": 2
+  "total_unique_annotations": 0,
+  "total_individual_holes": 0
 }

@@ -334,8 +334,6 @@ def detect_unit_system(pdf_path: str | Path) -> str:
     inch_dim_pattern = re.compile(
         r'(?:^|[\u00d8\u2300\u2205\s])\.(\d{2,4})\b'  # .438, .250 (preceded by Ø or whitespace)
     )
-    # Exclude values that are part of tolerance expressions
-    tol_value_pattern = re.compile(r'[+\-]\s*\.?\d')
     inch_vals = []
     for m in inch_dim_pattern.finditer(full_text):
         # Check if preceded by + or - (tolerance, not dimension)
@@ -347,6 +345,23 @@ def detect_unit_system(pdf_path: str | Path) -> str:
     # If we find >=2 decimal-inch style dimensions, classify as inch
     if len(inch_vals) >= 2:
         return "inch"
+
+    # 4. Heuristic: if most dimension values are small (< 2.0) and none > 25,
+    # it's likely an inch drawing where the text was poorly extracted
+    dim_pattern = re.compile(r'(\d{1,3}\.?\d{0,4})')
+    all_dims = []
+    for m in dim_pattern.finditer(full_text):
+        try:
+            v = float(m.group(1))
+            if 0.05 < v < 200:  # Filter out noise
+                all_dims.append(v)
+        except ValueError:
+            pass
+    if len(all_dims) >= 3:
+        small_count = sum(1 for d in all_dims if d < 2.0)
+        large_count = sum(1 for d in all_dims if d > 25.0)
+        if small_count > len(all_dims) * 0.6 and large_count == 0:
+            return "inch"
 
     return "metric"
 
