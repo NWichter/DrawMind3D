@@ -39,3 +39,9 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+
+# Claude Code
+.claude/
+
+# Large STEP/CAD test data (not needed in repo)
+data/nist_sms_testbed/
