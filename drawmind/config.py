@@ -20,7 +20,8 @@ OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/ap
 USE_VISION_LLM = bool(OPENROUTER_API_KEY)
 VISION_MODEL = os.getenv("VISION_MODEL", "google/gemini-2.5-flash")
 TEXT_MODEL = os.getenv("TEXT_MODEL", "anthropic/claude-haiku-4-5-20251001")
-DISAMBIGUATE_MODEL = os.getenv("DISAMBIGUATE_MODEL", "anthropic/claude-sonnet-4")
+# Disambiguation uses the same cheap vision model — text-only context is sufficient
+DISAMBIGUATE_MODEL = os.getenv("DISAMBIGUATE_MODEL", "google/gemini-2.5-flash")
 
 # Matching thresholds
 MATCH_CONFIDENCE_THRESHOLD = 0.6

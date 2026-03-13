@@ -78,7 +78,7 @@ def analyze_page_with_vision(
         return existing_annotations
 
     try:
-        img_bytes = get_page_as_image(pdf_path, page_num, dpi=200)
+        img_bytes = get_page_as_image(pdf_path, page_num, dpi=150)
         page_w, page_h = get_page_dimensions(pdf_path, page_num)
 
         result = client.complete_json(

@@ -95,6 +95,27 @@ Return JSON with:
 - "confidence": your confidence 0.0-1.0
 - "reasoning": brief explanation of your choice"""
 
+DISAMBIGUATE_BATCH_PROMPT = """\
+Match each annotation to its best 3D CAD feature. For threads, the 3D hole \
+diameter is the drill/tap hole, NOT the nominal thread diameter. \
+For example, M8 thread has a ~6.8mm drill hole; 1/4-20 UNC has a ~5.1mm drill hole.
+
+**Annotations to match:**
+{annotations_json}
+
+**Available 3D features (holes):**
+{candidates_json}
+
+For EACH annotation, return the best matching feature. Consider:
+1. Diameter match (primary key — for threads use drill diameter, not nominal)
+2. Depth / through-hole compatibility
+3. Hole type (simple, counterbore, countersink)
+
+Return a JSON array with one object per annotation:
+[{{"annotation_id": "...", "feature_id": "...", "confidence": 0.0-1.0, "reasoning": "brief"}}]
+
+If no feature matches well, set confidence below 0.3. Do NOT force bad matches."""
+
 PARSE_ANNOTATION_PROMPT = """\
 Parse this engineering annotation text into structured data:
 
