@@ -92,7 +92,7 @@ class MatchResult(BaseModel):
 class PipelineOutput(BaseModel):
     """Complete pipeline output."""
     metadata: dict = Field(default_factory=dict)
-    features: list[MatchResult] = Field(default_factory=list)
+    features: list[dict] = Field(default_factory=list)
     unmatched_annotations: list[dict] = Field(default_factory=list)
     unmatched_features: list[dict] = Field(default_factory=list)
     summary: dict = Field(default_factory=dict)

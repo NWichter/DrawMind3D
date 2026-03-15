@@ -81,3 +81,81 @@ class TestMatcher:
         )
         assert len(matches) == 0
         assert len(unmatched_ann) == 1
+
+    def test_diameter_ratio_rejection(self, sample_thread_annotation):
+        """M10 (10mm) should NOT match a 50mm hole (ratio > 2.5x)."""
+        feat = CylindricalFeature(
+            id="feat_big", face_ids=[1], radius=25.0, diameter=50.0,
+            center=(0, 0, 0), axis_direction=(0, 0, 1),
+            estimated_depth=10.0, surface_area=100.0,
+        )
+        hole = HoleGroup(
+            id="hole_big", features=[feat], primary_diameter=50.0,
+            total_depth=10.0, center=(0, 0, 0), axis_direction=(0, 0, 1),
+        )
+        matches, _, _ = match_annotations_to_features(
+            [sample_thread_annotation], [hole]
+        )
+        assert len(matches) == 0
+
+    def test_confidence_above_threshold(self, sample_thread_annotation, sample_hole_group):
+        """All matches must have confidence >= MATCH_CONFIDENCE_THRESHOLD."""
+        from drawmind.config import MATCH_CONFIDENCE_THRESHOLD
+        matches, _, _ = match_annotations_to_features(
+            [sample_thread_annotation], [sample_hole_group]
+        )
+        for m in matches:
+            assert m.confidence >= MATCH_CONFIDENCE_THRESHOLD
+
+
+class TestScoringEdgeCases:
+    """Test edge cases in scoring."""
+
+    def test_external_tolerance_penalized(self):
+        """External tolerance class (lowercase letter) should score low."""
+        ann = PDFAnnotation(
+            id="ann_ext", raw_text="Ø10 h7",
+            annotation_type=AnnotationType.DIAMETER,
+            parsed={"value": 10.0, "tolerance_class": "h7"},
+            bbox=BoundingBox(x0=0, y0=0, x1=50, y1=15, page=0),
+        )
+        feat = CylindricalFeature(
+            id="feat_ext", face_ids=[1], radius=5.0, diameter=10.0,
+            center=(0, 0, 0), axis_direction=(0, 0, 1),
+            estimated_depth=10.0, surface_area=100.0,
+        )
+        hole = HoleGroup(
+            id="hole_ext", features=[feat], primary_diameter=10.0,
+            total_depth=10.0, center=(0, 0, 0), axis_direction=(0, 0, 1),
+        )
+        score = compute_match_score(ann, hole, [hole], [ann])
+        # External tolerance = shaft, not a hole → low type_compatibility
+        assert score["breakdown"]["type_compatibility"] <= 0.2
+
+    def test_counterbore_type_match(self):
+        """Counterbore annotation should score high on counterbore hole."""
+        ann = PDFAnnotation(
+            id="ann_cb", raw_text="⌳Ø18 ↧8",
+            annotation_type=AnnotationType.COUNTERBORE,
+            parsed={"diameter": 18.0, "depth": 8.0},
+            bbox=BoundingBox(x0=0, y0=0, x1=50, y1=15, page=0),
+        )
+        feat1 = CylindricalFeature(
+            id="feat_cb1", face_ids=[1], radius=5.0, diameter=10.0,
+            center=(0, 0, 0), axis_direction=(0, 0, 1),
+            estimated_depth=15.0, surface_area=100.0,
+        )
+        feat2 = CylindricalFeature(
+            id="feat_cb2", face_ids=[2], radius=9.0, diameter=18.0,
+            center=(0, 0, 0), axis_direction=(0, 0, 1),
+            estimated_depth=8.0, surface_area=200.0,
+        )
+        hole = HoleGroup(
+            id="hole_cb", features=[feat1, feat2], primary_diameter=10.0,
+            secondary_diameter=18.0, total_depth=23.0,
+            center=(0, 0, 0), axis_direction=(0, 0, 1),
+            hole_type="counterbore",
+        )
+        score = compute_match_score(ann, hole, [hole], [ann])
+        assert score["breakdown"]["type_compatibility"] == 1.0
+        assert score["breakdown"]["diameter"] > 0.9
