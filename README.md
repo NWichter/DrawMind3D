@@ -38,7 +38,7 @@ STEP Model ──► OCP (OpenCASCADE) ──► Cylindrical Features ───�
 2. **Annotation Parsing** — Regex-based classification of thread callouts (`M10x1.5-6H`), diameters (`Ø5.5`), depths, tolerances, counterbores/countersinks. Automatic inch↔mm conversion
 3. **Vision LLM Enhancement** (optional) — Gemini Flash analyzes each PDF page as an image to detect annotations missed by regex (critical for vector-drawn PDFs where text extraction fails)
 4. **3D Feature Extraction** — STEP file loaded via OCP (OpenCASCADE), cylindrical faces extracted, grouped into coaxial hole features, through-holes detected via ray casting
-5. **Multi-Factor Matching** — Hungarian Algorithm for optimal annotation-to-hole assignment, using weighted scoring (diameter 45%, type 20%, depth 20%, uniqueness 10%, count 5%)
+5. **Multi-Factor Matching** — Hungarian Algorithm for optimal annotation-to-hole assignment, using weighted scoring (diameter 45%, type 22%, depth 18%, count 8%, uniqueness 4%, spatial 3%)
 6. **Structured Output** — JSON with match results, confidence scores, scoring breakdown and evidence traces
 
 ### LLM Strategy (via OpenRouter)
@@ -46,8 +46,8 @@ STEP Model ──► OCP (OpenCASCADE) ──► Cylindrical Features ───�
 | Task | Model | Purpose |
 |------|-------|---------|
 | PDF page vision analysis | Gemini 2.5 Flash | Detect annotations in drawing images |
-| Ambiguous match resolution | Claude Sonnet | Reasoning about spatial context |
-| Text parsing edge cases | Claude Haiku | Cheap text classification |
+| Ambiguous match resolution | Gemini Flash | Batch disambiguation of unmatched annotations |
+| Unit system detection | Gemini Flash | Fallback when PDF text is insufficient |
 | Core pipeline | Regex + rules | Works fully without any LLM |
 
 All LLM calls go through [OpenRouter](https://openrouter.ai) — single API key for any model.
@@ -70,33 +70,34 @@ The `examples/` folder contains ready-to-use test cases. Each subfolder has a `d
 |--------|--------|-------------|
 | CTC-01 … CTC-05 | NIST | Combinational tolerancing cases (metric and inch) |
 | FTC-06 … FTC-11 | NIST | Fully-toleranced industrial cases |
+| D2MI-904 … D2MI-908 | NIST | Design-to-Manufacturing (inch, machined housings) |
 | SYN-01 … SYN-05 | Synthetic | Parametric test parts with known ground truth |
 
 ## Evaluation Results
 
-Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases and **5 synthetic** test cases with ground truth labels.
+Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases, **5 NIST D2MI** machined housings, and **5 synthetic** test cases with ground truth labels.
 
 ### With Vision LLM (Gemini Flash)
 
 | Category | Cases | Precision | Recall | F1 | Linking | Confidence |
 |----------|-------|-----------|--------|-----|---------|------------|
-| CTC (Combinational) | 5 | 46.7% | 50.7% | 47.5% | 64.0% | 79.7% |
-| FTC (Fully-Toleranced) | 6 | 70.1% | 98.1% | 79.7% | 77.0% | 81.1% |
-| Synthetic | 5 | 78.7% | 92.1% | 84.8% | 94.9% | 92.0% |
-| **Overall (16 cases)** | **16** | **65.4%** | **81.4%** | **71.2%** | **79.9%** | **84.1%** |
+| CTC (Combinational) | 5 | 61.7% | 54.1% | 55.2% | 86.0% | 85.3% |
+| FTC (Fully-Toleranced) | 6 | 73.3% | 93.0% | 79.2% | 93.0% | 84.9% |
+| Synthetic | 5 | 79.0% | 94.3% | 84.9% | 97.1% | 93.4% |
+| **Overall (16 cases)** | **16** | **74.6%** | **79.1%** | **74.6%** | **93.0%** | **88.4%** |
 
-**Top performers:** FTC-08 (94.7% F1, 95.2% Linking), SYN-05 (100% F1, 100% Linking), FTC-09 (90.9% F1, 94.4% Linking)
+**Top performers:** SYN-05 (100% F1, 100% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-08 (87.5% F1, 100% Linking), FTC-10 (87.5% F1, 100% Linking)
 
 ### Without LLM (Regex + OCR only)
 
 | Category | F1 | Linking | Note |
 |----------|----|---------|------|
 | CTC | 0.0% | 0.0% | Vector-drawn PDFs, no extractable text |
-| FTC | 23.3% | 55.4% | Only FTC-07, FTC-09, FTC-10 have extractable text |
+| FTC | 24.0% | 56.0% | Only FTC-07, FTC-09, FTC-10 have extractable text |
 | Synthetic | 81.6% | 100.0% | Pure regex extraction, no vision needed |
-| **Overall** | **34.2%** | **47.8%** | |
+| **Overall** | **36.5%** | **53.3%** | |
 
-**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 34.2% to 71.2%. Multi-factor scoring with secondary diameter support and UTS thread matching ensures accurate linking of complex features.
+**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 36.5% to 74.6% and linking accuracy from 53.3% to 93.0%. Vision-based unit detection ensures correct inch→mm conversion even when PDF text extraction fails.
 
 Evaluation charts: [`data/evaluation/presentation/`](data/evaluation/presentation/)
 
@@ -112,7 +113,7 @@ Evaluation charts: [`data/evaluation/presentation/`](data/evaluation/presentatio
 | SYN-04 | 9 | Counterbores, countersinks and threads combined |
 | SYN-05 | 12 | Stress test with 12 unique holes |
 
-**NIST PMI** — 11 industrial test cases from the [NIST MBE PMI](https://www.nist.gov/ctl/smart-connected-systems-division/smart-connected-manufacturing-systems-group/mbe-pmi-0) benchmark suite. Ground truth in [`data/ground_truth/`](data/ground_truth/).
+**NIST PMI** — 11 industrial test cases from the [NIST MBE PMI](https://www.nist.gov/ctl/smart-connected-systems-division/smart-connected-manufacturing-systems-group/mbe-pmi-0) benchmark suite, plus 5 [NIST D2MI](https://www.nist.gov/ctl/smart-connected-systems-division/smart-connected-manufacturing-systems-group/enabling-digital-0) machined housing parts (inch drawings). Ground truth in [`data/ground_truth/`](data/ground_truth/).
 
 ## Setup
 
@@ -181,6 +182,7 @@ DrawMind3D/
 ├── examples/                 # Ready-to-use test cases (PDF + STEP)
 │   ├── CTC-01/ … CTC-05/    # NIST combinational tolerancing
 │   ├── FTC-06/ … FTC-11/    # NIST fully-toleranced
+│   ├── D2MI-904/ … D2MI-908/ # NIST design-to-manufacturing (inch)
 │   └── SYN-01/ … SYN-05/    # Synthetic test parts
 ├── drawmind/                 # Main Python package
 │   ├── models.py             # Pydantic data models
