@@ -4,23 +4,12 @@ from __future__ import annotations
 
 from drawmind.models import PDFAnnotation, AnnotationType, CylindricalFeature, HoleGroup
 from drawmind.cad.thread_table import match_thread_to_diameter, get_thread_diameters, get_clearance_hole_diameter
-from drawmind.config import DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM
-
-# Diameter ratio beyond which a match is implausible (e.g., ann=100mm vs feat=9mm)
-MAX_DIAMETER_RATIO = 2.5
-
-
-# Scoring weights (diameter is the strongest signal, count rarely informative)
-WEIGHT_DIAMETER = 0.45
-WEIGHT_DEPTH = 0.18
-WEIGHT_TYPE_COMPAT = 0.22
-WEIGHT_COUNT = 0.08
-WEIGHT_UNIQUENESS = 0.04
-WEIGHT_SPATIAL = 0.03  # Spatial position correlation (kept low — projection heuristic is noisy)
-
-# Neutral score for missing data: "no evidence for or against"
-# Must be high enough that matches with partial data can still pass confidence threshold
-NEUTRAL_SCORE = 0.50
+from drawmind.config import (
+    DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM,
+    WEIGHT_DIAMETER, WEIGHT_DEPTH, WEIGHT_TYPE_COMPAT,
+    WEIGHT_COUNT, WEIGHT_UNIQUENESS, WEIGHT_SPATIAL,
+    NEUTRAL_SCORE, MAX_DIAMETER_RATIO,
+)
 
 
 def compute_match_score(
@@ -86,14 +75,12 @@ def compute_match_score(
     # (Vision LLM annotations carry their detection confidence)
     source_conf = annotation.confidence
     if source_conf < 1.0:
-        # Adaptive blend: weight source confidence less when matching signals
-        # are strong (diameter match is the strongest indicator)
-        if scores["diameter"] >= 0.8:
-            # Strong diameter match — trust the match more, source less
-            total = total * 0.92 + source_conf * 0.08
-        else:
-            # Weaker match — source confidence matters more
-            total = total * 0.82 + source_conf * 0.18
+        # Blend source confidence into total score
+        total = total * 0.92 + source_conf * 0.08
+        # Mild penalty for weak matches from uncertain sources
+        # Only applied when diameter match is weak AND source confidence is low
+        if scores["diameter"] < 0.8 and source_conf < 0.7:
+            total *= (0.85 + 0.15 * source_conf)
     scores["source_confidence"] = source_conf
 
     return {"total_score": round(total, 4), "breakdown": scores}
@@ -178,7 +165,7 @@ def _score_depth(annotation: PDFAnnotation, hole: HoleGroup) -> float:
         return 0.2  # Mismatch: hole is through but annotation specifies depth
 
     # Adaptive tolerance: tighter for simple holes, looser for stepped holes
-    tolerance = DEPTH_TOLERANCE_MM
+    tolerance = max(DEPTH_TOLERANCE_MM, 0.01)
     if hole.hole_type in ("counterbore", "countersink", "stepped"):
         tolerance = DEPTH_TOLERANCE_MM * 1.5
 
@@ -386,7 +373,11 @@ def _format_thread_spec(annotation: PDFAnnotation) -> str:
 
 
 def _safe_float(val) -> float | None:
-    """Convert a value to float safely (handles strings from LLM responses)."""
+    """Convert a value to float safely (handles strings and lists from LLM responses)."""
+    if val is None:
+        return None
+    if isinstance(val, list):
+        val = val[0] if val else None
     if val is None:
         return None
     try:

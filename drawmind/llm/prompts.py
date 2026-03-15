@@ -32,6 +32,7 @@ Extract these annotation types:
    - Metric: Ø20, ⌀8.5
    - Inch: ⌀.250, .438 DIA, Ø.500 — decimal values often start with decimal point (no leading zero)
    - Values with bilateral tolerances: .234 +.003/-.001, .500 ±.002
+   - **Decimal tolerance ranges**: .182 - .192, .245 - .255 — these ARE hole diameters (min-max limits), parse the midpoint as the value (e.g., .187 for .182-.192)
    - Must be actual hole sizes, NOT GD&T tolerances or overall part dimensions
 3. **Depth callouts** (↧15, depth .425, .500 DEEP, .750 DP)
 4. **Through-hole indicators** (THRU, through, THRU ALL)
@@ -61,7 +62,7 @@ For each annotation found, return a JSON array with:
 - "parsed": structured data:
   - Metric threads: {{"nominal_diameter": 10, "pitch": 1.5, "tolerance_class": "6H", "depth": 15.0, "through": false}}
   - Inch threads: {{"nominal_diameter": 0.25, "pitch": 0.05, "thread_spec": "1/4-20 UNC", "through": true}}
-  - Diameters: {{"value": 0.250, "depth": 0.500, "through": false}}
+  - Diameters: {{"value": 0.250, "depth": 0.500, "through": false}} (for ranges like .182-.192, use midpoint: {{"value": 0.187, "min": 0.182, "max": 0.192}})
   - Through-holes: {{"through": true}}
   - Counterbores: {{"diameter": 0.438, "depth": 0.250}}
   - Countersinks: {{"diameter": 0.500, "angle": 82}}

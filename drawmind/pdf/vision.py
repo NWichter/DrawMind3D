@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from pathlib import Path
 
 from drawmind.models import PDFAnnotation, AnnotationType, BoundingBox
@@ -112,6 +113,17 @@ def analyze_page_with_vision(
 
             # Skip tolerance-only annotations (not standalone hole callouts)
             if ann_type == AnnotationType.TOLERANCE:
+                continue
+
+            # Skip taper/ratio annotations (e.g., "1.00 : 2.00", "1:3")
+            text = item.get("text", "")
+            if re.search(r'\d+\.?\d*\s*:\s*\d+\.?\d*', text) and not re.search(r'[Øø⌀MmXx#]', text):
+                logger.debug(f"Vision LLM: skipping taper/ratio: {text}")
+                continue
+
+            # Skip radius annotations (e.g., "4X R.032")
+            if re.search(r'\bR\s*\.?\d', text, re.IGNORECASE) and not re.search(r'[Øø⌀]', text):
+                logger.debug(f"Vision LLM: skipping radius: {text}")
                 continue
 
             # Get the raw parsed data from LLM
@@ -256,6 +268,17 @@ def _deduplicate_vision_batch(
         is_dup = False
         for i, ex in enumerate(kept):
             ex_dia = _get_ann_diameter(ex)
+
+            # Exact text match on same page = definite duplicate
+            if (ann.raw_text.strip() == ex.raw_text.strip()
+                    and ann.bbox.page == ex.bbox.page
+                    and ann.annotation_type == ex.annotation_type):
+                is_dup = True
+                if ann.confidence > ex.confidence:
+                    kept[i] = ann
+                break
+
+            # Same type + diameter + proximity = likely duplicate
             if (
                 ann.annotation_type == ex.annotation_type
                 and ann.bbox.page == ex.bbox.page

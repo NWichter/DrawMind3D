@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "pdf_file": "drawing.pdf",
+    "step_file": "model.stp",
+    "timestamp": "2026-03-14T21:42:53.353790+00:00",
+    "pipeline_version": "0.1.0",
+    "llm_enhanced": true
+  },
+  "features": [
+    {
+      "id": "match_001",
+      "annotation_id": "ann_002",
+      "feature_id": "hole_001",
+      "annotation_text": "Ø.139 - .142",
+      "parsed_interpretation": {
+        "value": 3.5687,
+        "min": 0.139,
+        "max": 0.142,
+        "original_inch_value": 0.1405,
+        "leader_target": {
+          "x": 587.8300170898438,
+          "y": 370.4200134277344
+        }
+      },
+      "feature_3d_ref": {
+        "hole_group_id": "hole_001",
+        "face_ids": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "primary_diameter_mm": 3.5687,
+        "secondary_diameter_mm": 4.2037,
+        "center": [
+          0.0,
+          0.0,
+          2.159
+        ],
+        "axis_direction": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "total_depth_mm": 26.5992,
+        "is_through_hole": true,
+        "hole_type": "countersink"
+      },
+      "confidence": 0.8816,
+      "scoring_breakdown": {
+        "diameter": 1.0,
+        "depth": 0.6,
+        "type_compatibility": 1.0,
+        "count_agreement": 0.5,
+        "uniqueness": 1.0,
+        "spatial": 0.5,
+        "source_confidence": 0.98
+      },
+      "evidence": {
+        "bbox": {
+          "x0": 500.616,
+          "y0": 389.664,
+          "x1": 593.64,
+          "y1": 399.168,
+          "page": 0
+        },
+        "source": "vision_llm",
+        "multiplier": 1
+      }
+    }
+  ],
+  "unmatched_annotations": [
+    {
+      "annotation_id": "ann_001",
+      "text": "Ø.164 - .167",
+      "type": "diameter",
+      "parsed": {
+        "value": 4.2037,
+        "min": 0.164,
+        "max": 0.167,
+        "original_inch_value": 0.1655,
+        "leader_target": {
+          "x": 587.8300170898438,
+          "y": 365.9200134277344
+        }
+      },
+      "bbox": {
+        "x0": 386.784,
+        "y0": 389.664,
+        "x1": 479.80800000000005,
+        "y1": 399.168,
+        "page": 0
+      }
+    },
+    {
+      "annotation_id": "ann_003",
+      "text": "Ø.156 - .166",
+      "type": "diameter",
+      "parsed": {
+        "value": 4.0894,
+        "min": 0.156,
+        "max": 0.166,
+        "original_inch_value": 0.161,
+        "leader_target": {
+          "x": 1084.6500244140625,
+          "y": 397.05999755859375
+        }
+      },
+      "bbox": {
+        "x0": 953.4960000000001,
+        "y0": 389.664,
+        "x1": 1046.52,
+        "y1": 399.168,
+        "page": 0
+      }
+    },
+    {
+      "annotation_id": "ann_004",
+      "text": "Ø.214 - .224",
+      "type": "diameter",
+      "parsed": {
+        "value": 5.5626,
+        "min": 0.214,
+        "max": 0.224,
+        "original_inch_value": 0.219,
+        "leader_target": {
+          "x": 367.2099914550781,
+          "y": 479.1099853515625
+        }
+      },
+      "bbox": {
+        "x0": 353.736,
+        "y0": 462.52799999999996,
+        "x1": 446.76,
+        "y1": 472.03200000000004,
+        "page": 0
+      }
+    }
+  ],
+  "unmatched_features": [],
+  "summary": {
+    "total_annotations_found": 4,
+    "total_3d_holes": 1,
+    "matched": 1,
+    "unmatched_annotations": 3,
+    "unmatched_holes": 0,
+    "avg_confidence": 0.882
+  }
+}

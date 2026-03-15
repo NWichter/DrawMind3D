@@ -6,18 +6,10 @@ import re
 
 from drawmind.models import PDFAnnotation, AnnotationType, BoundingBox
 from drawmind.pdf import patterns as pat
+from drawmind.config import MAX_HOLE_DIAMETER_MM, MAX_HOLE_DIAMETER_INCH, GDT_MAX_INCH_VALUE
 
 # Inch-to-mm conversion factor
 INCH_TO_MM = 25.4
-
-# GD&T tolerance values preceded by replacement char (\ufffd) are typically
-# very small (< 0.1" / < 2.5mm). Real hole diameters are larger.
-_GDT_MAX_INCH_VALUE = 0.1  # Values below this with \ufffd are likely GD&T, not diameters
-
-# Maximum plausible hole diameter — values larger than this without a diameter
-# symbol or thread designation are likely overall part dimensions, not holes
-_MAX_HOLE_DIAMETER_MM = 100.0
-_MAX_HOLE_DIAMETER_INCH = 4.0
 
 
 def parse_annotations(
@@ -87,7 +79,7 @@ def _is_gdt_false_positive(text: str, value: float, unit_system: str) -> bool:
         return False
 
     # Check if value is very small (likely GD&T tolerance, not a hole diameter)
-    threshold = _GDT_MAX_INCH_VALUE if unit_system == "inch" else _GDT_MAX_INCH_VALUE * INCH_TO_MM
+    threshold = GDT_MAX_INCH_VALUE if unit_system == "inch" else GDT_MAX_INCH_VALUE * INCH_TO_MM
     if value < threshold:
         # Diameter callouts typically have a multiplier (4X) or bilateral tolerance (+.003/-.001)
         has_multiplier = bool(pat.MULTIPLIER.search(text))
@@ -303,7 +295,7 @@ def _parse_individual_patterns(
             raw_value = float(match.group(2).replace(",", "."))
 
             # Skip tiny values (tolerance zones, not diameters)
-            if raw_value >= 0.1 and raw_value <= _MAX_HOLE_DIAMETER_INCH:
+            if raw_value >= 0.1 and raw_value <= MAX_HOLE_DIAMETER_INCH:
                 counter += 1
                 converted = _convert_value(raw_value, unit_system)
                 parsed = {"value": converted, "original_inch": raw_value}
@@ -340,7 +332,7 @@ def _parse_individual_patterns(
 
             # Skip implausibly large values (overall part dimensions, not holes)
             if dp is pat.DIAMETER_DECIMAL_TOL:
-                max_d = _MAX_HOLE_DIAMETER_INCH if unit_system == "inch" else _MAX_HOLE_DIAMETER_MM
+                max_d = MAX_HOLE_DIAMETER_INCH if unit_system == "inch" else MAX_HOLE_DIAMETER_MM
                 if raw_value > max_d:
                     continue
 

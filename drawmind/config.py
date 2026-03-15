@@ -31,6 +31,30 @@ DEPTH_TOLERANCE_MM = 2.0
 COAXIAL_ANGLE_TOLERANCE_DEG = 5.0
 COAXIAL_DISTANCE_TOLERANCE_MM = 0.5
 
+# Scoring weights (diameter is the strongest signal for mechanical features)
+WEIGHT_DIAMETER = 0.45
+WEIGHT_DEPTH = 0.18
+WEIGHT_TYPE_COMPAT = 0.22
+WEIGHT_COUNT = 0.08
+WEIGHT_UNIQUENESS = 0.04
+WEIGHT_SPATIAL = 0.03
+
+# Scoring parameters
+NEUTRAL_SCORE = 0.50  # Score for missing data: "no evidence for or against"
+MAX_DIAMETER_RATIO = 2.5  # Reject matches beyond this diameter ratio
+
+# Vision false-positive filter
+VISION_FP_CONFIDENCE_THRESHOLD = 0.75  # Vision annotations below this are checked against 3D
+VISION_FP_DIAMETER_TOLERANCE_FACTOR = 2.5  # Multiplier on DIAMETER_TOLERANCE_MM for FP filter
+
+# Depth association (PDF proximity for linking depth annotations to holes)
+DEPTH_ASSOCIATION_DISTANCE_PTS = 150  # Max distance in PDF points
+
+# Parser limits
+MAX_HOLE_DIAMETER_MM = 100.0
+MAX_HOLE_DIAMETER_INCH = 4.0
+GDT_MAX_INCH_VALUE = 0.1
+
 # PDF extraction
 OCR_DPI = 300
 OCR_CONFIDENCE_THRESHOLD = 30

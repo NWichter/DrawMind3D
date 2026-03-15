@@ -1,6 +1,7 @@
 """FastAPI web application for DrawMind3D."""
 
 import os
+import time
 import uuid
 import shutil
 import logging
@@ -29,8 +30,23 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="DrawMind3D", version="0.1.0")
 
-# Store job data in memory (for hackathon simplicity)
+# Store job data in memory with TTL cleanup
+MAX_JOBS = 50
+JOB_TTL_SECONDS = 3600  # 1 hour
 jobs: dict = {}
+
+
+def _cleanup_old_jobs():
+    """Remove expired jobs to prevent memory leaks."""
+    if len(jobs) <= MAX_JOBS:
+        return
+    now = time.time()
+    expired = [jid for jid, j in jobs.items() if now - j.get("created_at", 0) > JOB_TTL_SECONDS]
+    for jid in expired:
+        job_dir = jobs[jid].get("dir")
+        if job_dir and Path(job_dir).exists():
+            shutil.rmtree(job_dir, ignore_errors=True)
+        del jobs[jid]
 
 # Serve static files
 STATIC_DIR = Path(__file__).parent / "static"
@@ -48,6 +64,7 @@ async def upload_files(
     step: UploadFile = File(...),
 ):
     """Upload PDF drawing and STEP model files."""
+    _cleanup_old_jobs()
     job_id = str(uuid.uuid4())[:8]
     job_dir = TEMP_DIR / job_id
     job_dir.mkdir(parents=True, exist_ok=True)
@@ -68,6 +85,7 @@ async def upload_files(
         "step_name": step.filename,
         "status": "uploaded",
         "dir": str(job_dir),
+        "created_at": time.time(),
     }
 
     return {"job_id": job_id, "status": "uploaded"}

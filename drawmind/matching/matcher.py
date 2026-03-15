@@ -15,7 +15,11 @@ from drawmind.models import (
 )
 from drawmind.matching.scoring import compute_match_score
 from drawmind.matching.llm_resolver import resolve_ambiguous_matches
-from drawmind.config import MATCH_CONFIDENCE_THRESHOLD, LLM_REVIEW_THRESHOLD, DIAMETER_TOLERANCE_MM
+from drawmind.config import (
+    MATCH_CONFIDENCE_THRESHOLD, LLM_REVIEW_THRESHOLD, DIAMETER_TOLERANCE_MM,
+    VISION_FP_CONFIDENCE_THRESHOLD, VISION_FP_DIAMETER_TOLERANCE_FACTOR,
+    DEPTH_ASSOCIATION_DISTANCE_PTS,
+)
 from drawmind.cad.thread_table import match_thread_to_diameter
 
 logger = logging.getLogger(__name__)
@@ -83,6 +87,11 @@ def match_annotations_to_features(
                 )
                 if matching_features > 0:
                     count = min(count, matching_features)
+                else:
+                    logger.warning(
+                        f"Annotation '{ann.raw_text}' has multiplier {ann.multiplier} "
+                        f"but no matching 3D features (d={ann_d:.1f}mm)"
+                    )
         for _ in range(count):
             expanded_annotations.append(ann)
 
@@ -151,6 +160,13 @@ def match_annotations_to_features(
             )
             for llm_match in llm_results:
                 if llm_match.confidence >= MATCH_CONFIDENCE_THRESHOLD:
+                    # Prevent duplicate hole assignments from LLM resolver
+                    if llm_match.feature_id in matched_holes:
+                        logger.debug(
+                            f"LLM resolver skipped duplicate hole assignment: "
+                            f"{llm_match.annotation_text} -> {llm_match.feature_id}"
+                        )
+                        continue
                     results.append(llm_match)
                     matched_annotations.add(llm_match.annotation_id)
                     matched_holes.add(llm_match.feature_id)
@@ -196,7 +212,7 @@ def _associate_depths(
                 best_dist = dist
                 best_hole_ann = hole_ann
 
-        if best_hole_ann and best_dist < 150:  # Within 150 points (covers horizontal layouts)
+        if best_hole_ann and best_dist < DEPTH_ASSOCIATION_DISTANCE_PTS:
             if depth_ann.id not in best_hole_ann.associated_annotations:
                 best_hole_ann.associated_annotations.append(depth_ann.id)
             # Transfer depth info
@@ -260,7 +276,7 @@ def _filter_vision_false_positives(
         if h.secondary_diameter:
             hole_diameters.add(round(h.secondary_diameter, 1))
 
-    wide_tolerance = DIAMETER_TOLERANCE_MM * 3  # 1.5mm wide tolerance
+    wide_tolerance = DIAMETER_TOLERANCE_MM * VISION_FP_DIAMETER_TOLERANCE_FACTOR
 
     # Types that vision commonly gets wrong
     filterable_types = {
@@ -279,7 +295,7 @@ def _filter_vision_false_positives(
             continue
 
         # High-confidence vision annotations are kept
-        if ann.confidence >= 0.9:
+        if ann.confidence >= VISION_FP_CONFIDENCE_THRESHOLD:
             filtered.append(ann)
             continue
 
@@ -363,8 +379,22 @@ def _get_annotation_diameter_for_cap(annotation: PDFAnnotation) -> float | None:
         return parsed.get("nominal_diameter")
     elif annotation.annotation_type in (AnnotationType.DIAMETER, AnnotationType.HOLE_CALLOUT):
         v = parsed.get("value")
-        return float(v) if v is not None else None
+        return _safe_float(v)
     elif annotation.annotation_type in (AnnotationType.COUNTERBORE, AnnotationType.COUNTERSINK):
         v = parsed.get("diameter")
-        return float(v) if v is not None else None
+        return _safe_float(v)
     return None
+
+
+def _safe_float(val) -> float | None:
+    """Convert a value to float safely, handling lists from LLM responses."""
+    if val is None:
+        return None
+    if isinstance(val, list):
+        val = val[0] if val else None
+    if val is None:
+        return None
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return None

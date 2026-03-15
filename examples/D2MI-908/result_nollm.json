@@ -1,0 +1,105 @@
+{
+  "metadata": {
+    "pdf_file": "drawing.pdf",
+    "step_file": "model.stp",
+    "timestamp": "2026-03-14T21:23:12.996206+00:00",
+    "pipeline_version": "0.1.0",
+    "llm_enhanced": false
+  },
+  "features": [],
+  "unmatched_annotations": [],
+  "unmatched_features": [
+    {
+      "hole_group_id": "hole_001",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 8.4328,
+      "center": [
+        4.27,
+        4.27,
+        -4.2672
+      ],
+      "hole_type": "counterbore",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_002",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 8.4328,
+      "center": [
+        88.77,
+        65.27,
+        -4.2672
+      ],
+      "hole_type": "counterbore",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_003",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 8.4328,
+      "center": [
+        98.27,
+        4.27,
+        -4.2672
+      ],
+      "hole_type": "counterbore",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_004",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 8.4328,
+      "center": [
+        13.77,
+        65.27,
+        -4.2672
+      ],
+      "hole_type": "counterbore",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_005",
+      "primary_diameter_mm": 4.7625,
+      "total_depth_mm": 7.7808,
+      "center": [
+        63.5,
+        63.1952,
+        2.54
+      ],
+      "hole_type": "countersink",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_006",
+      "primary_diameter_mm": 3.81,
+      "total_depth_mm": 7.4946,
+      "center": [
+        60.325,
+        6.35,
+        2.54
+      ],
+      "hole_type": "countersink",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_007",
+      "primary_diameter_mm": 6.858,
+      "total_depth_mm": 0.1905,
+      "center": [
+        63.4113,
+        40.4998,
+        -0.0
+      ],
+      "hole_type": "simple",
+      "is_through_hole": false
+    }
+  ],
+  "summary": {
+    "total_annotations_found": 0,
+    "total_3d_holes": 7,
+    "matched": 0,
+    "unmatched_annotations": 0,
+    "unmatched_holes": 7,
+    "avg_confidence": 0.0
+  }
+}

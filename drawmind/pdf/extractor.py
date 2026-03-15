@@ -363,7 +363,48 @@ def detect_unit_system(pdf_path: str | Path) -> str:
         if small_count > len(all_dims) * 0.6 and large_count == 0:
             return "inch"
 
+    # 5. Fallback: use Vision LLM to detect unit system from drawing image
+    try:
+        from drawmind.config import USE_VISION_LLM
+        if USE_VISION_LLM:
+            unit = _detect_unit_system_vision(pdf_path)
+            if unit:
+                return unit
+    except Exception:
+        pass
+
     return "metric"
+
+
+def _detect_unit_system_vision(pdf_path: str | Path) -> str | None:
+    """Use Vision LLM to detect unit system from drawing title block."""
+    try:
+        from drawmind.llm.client import get_llm_client
+        client = get_llm_client()
+        if not client.available:
+            return None
+
+        img_bytes = get_page_as_image(pdf_path, page_num=0, dpi=100)
+        result = client.complete_json(
+            'Look at this technical drawing. What unit system is used? '
+            'Check the title block, notes, or dimension format. '
+            'Inch drawings use values like .250, .438, 1/4-20 UNC. '
+            'Metric drawings use values like 10.0, M8, Ø20. '
+            'Return JSON: {"unit_system": "inch" or "metric", "evidence": "brief reason"}',
+            images=[img_bytes],
+        )
+
+        if isinstance(result, dict):
+            unit = result.get("unit_system", "").lower()
+            if unit in ("inch", "metric"):
+                import logging
+                logging.getLogger(__name__).info(
+                    f"Vision LLM detected unit system: {unit} ({result.get('evidence', '')})"
+                )
+                return unit
+    except Exception:
+        pass
+    return None
 
 
 def get_page_dimensions(pdf_path: str | Path, page_num: int = 0) -> tuple[float, float]:

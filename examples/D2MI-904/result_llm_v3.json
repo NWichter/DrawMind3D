@@ -1,0 +1,339 @@
+{
+  "metadata": {
+    "pdf_file": "drawing.pdf",
+    "step_file": "model.stp",
+    "timestamp": "2026-03-14T21:36:38.700999+00:00",
+    "pipeline_version": "0.1.0",
+    "llm_enhanced": true
+  },
+  "features": [
+    {
+      "id": "match_001",
+      "annotation_id": "ann_003",
+      "feature_id": "hole_007",
+      "annotation_text": "Ø.182 - .192 ↧.250 ± .010",
+      "parsed_interpretation": {
+        "value": 4.7498,
+        "min": 0.182,
+        "max": 0.192,
+        "depth": 6.35,
+        "original_inch_depth": 0.25,
+        "original_inch_value": 0.187,
+        "leader_target": {
+          "x": 614.8400268554688,
+          "y": 494.7300109863281
+        }
+      },
+      "feature_3d_ref": {
+        "hole_group_id": "hole_007",
+        "face_ids": [
+          95,
+          96,
+          111,
+          112
+        ],
+        "primary_diameter_mm": 4.7625,
+        "secondary_diameter_mm": 6.35,
+        "center": [
+          63.5,
+          63.1952,
+          2.54
+        ],
+        "axis_direction": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "total_depth_mm": 6.35,
+        "is_through_hole": false,
+        "hole_type": "counterbore"
+      },
+      "confidence": 0.9352,
+      "scoring_breakdown": {
+        "diameter": 1.0,
+        "depth": 1.0,
+        "type_compatibility": 1.0,
+        "count_agreement": 0.5,
+        "uniqueness": 0.7,
+        "spatial": 0.5,
+        "source_confidence": 0.96
+      },
+      "evidence": {
+        "bbox": {
+          "x0": 576.504,
+          "y0": 474.40799999999996,
+          "x1": 818.8560000000001,
+          "y1": 481.536,
+          "page": 1
+        },
+        "source": "vision_llm",
+        "multiplier": 1
+      }
+    },
+    {
+      "id": "match_002",
+      "annotation_id": "ann_004",
+      "feature_id": "hole_006",
+      "annotation_text": "Ø.245 - .255 ↧.100 ± .010",
+      "parsed_interpretation": {
+        "value": 6.35,
+        "min": 0.245,
+        "max": 0.255,
+        "depth": 2.54,
+        "original_inch_depth": 0.1,
+        "original_inch_value": 0.25,
+        "leader_target": {
+          "x": 614.8400268554688,
+          "y": 494.7300109863281
+        }
+      },
+      "feature_3d_ref": {
+        "hole_group_id": "hole_006",
+        "face_ids": [
+          93,
+          94,
+          109,
+          110
+        ],
+        "primary_diameter_mm": 3.81,
+        "secondary_diameter_mm": 6.35,
+        "center": [
+          60.325,
+          6.35,
+          2.54
+        ],
+        "axis_direction": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "total_depth_mm": 6.35,
+        "is_through_hole": false,
+        "hole_type": "counterbore"
+      },
+      "confidence": 0.856,
+      "scoring_breakdown": {
+        "diameter": 0.95,
+        "depth": 0.5801249999999999,
+        "type_compatibility": 1.0,
+        "count_agreement": 0.5,
+        "uniqueness": 1.0,
+        "spatial": 0.5,
+        "source_confidence": 0.96
+      },
+      "evidence": {
+        "bbox": {
+          "x0": 576.504,
+          "y0": 492.624,
+          "x1": 818.8560000000001,
+          "y1": 499.75200000000007,
+          "page": 1
+        },
+        "source": "vision_llm",
+        "multiplier": 1
+      }
+    },
+    {
+      "id": "llm_match_001",
+      "annotation_id": "ann_001",
+      "feature_id": "hole_005",
+      "annotation_text": "4X Ø.188",
+      "parsed_interpretation": {
+        "value": 4.7752,
+        "original_inch_value": 0.188,
+        "leader_target": {
+          "x": 245.36000061035156,
+          "y": 196.47998046875
+        }
+      },
+      "feature_3d_ref": {
+        "hole_group_id": "hole_005",
+        "face_ids": [
+          79
+        ],
+        "primary_diameter_mm": 6.858,
+        "secondary_diameter_mm": null,
+        "center": [
+          63.4113,
+          40.4998,
+          -0.0
+        ],
+        "axis_direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "total_depth_mm": 0.1905,
+        "is_through_hole": false,
+        "hole_type": "simple"
+      },
+      "confidence": 0.9,
+      "scoring_breakdown": {
+        "llm_resolved": true
+      },
+      "evidence": {
+        "bbox": {
+          "x0": 170.13600000000002,
+          "y0": 280.368,
+          "x1": 270.504,
+          "y1": 287.496,
+          "page": 1
+        },
+        "source": "llm_disambiguation",
+        "reasoning": "The annotation specifies a diameter of 4.7752mm. Hole_005 has a primary diameter of 6.858mm, which is a mismatch. However, the annotation has a '4X' prefix, indicating four instances of this hole. None of the provided 3D features are explicitly grouped as 4X. Given the limited options, and the fact that the annotation is a simple diameter, hole_005 is the only simple hole with a diameter that could potentially be related if there's a tolerance or a different interpretation of the 'drill/tap hole' rule for this specific case. However, the diameter mismatch is significant. Re-evaluating, the annotation is 4X Ø.188 (4.7752mm). None of the holes match this diameter. The closest is hole_005 at 6.858mm, which is a significant difference. Given the strict matching criteria, this is a poor match. Let's re-evaluate. The annotation is 4X Ø.188. There are four holes (hole_001 to hole_004) with a primary diameter of 3.251mm. This is not a match for 4.7752mm. Hole_005 has a diameter of 6.858mm. There are no features that match 4.7752mm. Therefore, no good match exists."
+      }
+    }
+  ],
+  "unmatched_annotations": [
+    {
+      "annotation_id": "ann_002",
+      "text": "2X Ø.370 - .380",
+      "type": "diameter",
+      "parsed": {
+        "value": 9.525,
+        "min": 0.37,
+        "max": 0.38,
+        "original_inch_value": 0.375,
+        "leader_target": {
+          "x": 544.6099853515625,
+          "y": 469.1099853515625
+        }
+      },
+      "bbox": {
+        "x0": 433.296,
+        "y0": 474.40799999999996,
+        "x1": 582.6239999999999,
+        "y1": 481.536,
+        "page": 1
+      }
+    },
+    {
+      "annotation_id": "ann_005",
+      "text": "Ø.145 - .155 ↧.100 ± .010",
+      "type": "diameter",
+      "parsed": {
+        "value": 3.81,
+        "min": 0.145,
+        "max": 0.155,
+        "depth": 2.54,
+        "original_inch_depth": 0.1,
+        "original_inch_value": 0.15,
+        "leader_target": {
+          "x": 484.0299987792969,
+          "y": 297.5299987792969
+        }
+      },
+      "bbox": {
+        "x0": 479.80800000000005,
+        "y0": 296.20799999999997,
+        "x1": 722.16,
+        "y1": 303.336,
+        "page": 1
+      }
+    },
+    {
+      "annotation_id": "ann_006",
+      "text": "Ø.245 - .255 ↧.125 ± .010",
+      "type": "diameter",
+      "parsed": {
+        "value": 6.35,
+        "min": 0.245,
+        "max": 0.255,
+        "depth": 3.175,
+        "original_inch_depth": 0.125,
+        "original_inch_value": 0.25,
+        "leader_target": {
+          "x": 484.0299987792969,
+          "y": 322.32000732421875
+        }
+      },
+      "bbox": {
+        "x0": 479.80800000000005,
+        "y0": 314.42400000000004,
+        "x1": 722.16,
+        "y1": 321.552,
+        "page": 1
+      }
+    },
+    {
+      "annotation_id": "ann_007",
+      "text": "4X Ø.215 - .225",
+      "type": "diameter",
+      "parsed": {
+        "value": 5.588,
+        "min": 0.215,
+        "max": 0.225,
+        "original_inch_value": 0.22,
+        "leader_target": {
+          "x": 629.0399780273438,
+          "y": 438.6600036621094
+        }
+      },
+      "bbox": {
+        "x0": 612.0,
+        "y0": 466.48799999999994,
+        "x1": 783.36,
+        "y1": 474.40799999999996,
+        "page": 2
+      }
+    }
+  ],
+  "unmatched_features": [
+    {
+      "hole_group_id": "hole_001",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 6.8072,
+      "center": [
+        98.27,
+        4.27,
+        -4.2672
+      ],
+      "hole_type": "simple",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_002",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 6.8072,
+      "center": [
+        88.77,
+        65.27,
+        -4.2672
+      ],
+      "hole_type": "simple",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_003",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 6.8072,
+      "center": [
+        4.27,
+        4.27,
+        -4.2672
+      ],
+      "hole_type": "simple",
+      "is_through_hole": false
+    },
+    {
+      "hole_group_id": "hole_004",
+      "primary_diameter_mm": 3.2512,
+      "total_depth_mm": 6.8072,
+      "center": [
+        13.77,
+        65.27,
+        -4.2672
+      ],
+      "hole_type": "simple",
+      "is_through_hole": false
+    }
+  ],
+  "summary": {
+    "total_annotations_found": 7,
+    "total_3d_holes": 7,
+    "matched": 3,
+    "unmatched_annotations": 4,
+    "unmatched_holes": 4,
+    "avg_confidence": 0.897
+  }
+}
