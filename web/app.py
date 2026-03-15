@@ -11,7 +11,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 
-from drawmind.config import TEMP_DIR
+from drawmind.config import TEMP_DIR, LLM_REVIEW_THRESHOLD, MATCH_CONFIDENCE_THRESHOLD
 from drawmind.pdf.extractor import extract_all_text, detect_unit_system
 from drawmind.pdf.parser import parse_annotations
 from drawmind.cad.step_reader import load_step
@@ -170,10 +170,14 @@ async def analyze(job_id: str, use_llm: bool = True):
         job["annotations"] = [a.model_dump() for a in annotations]
         job["holes"] = [h.model_dump() for h in holes]
         job["matches"] = [m.model_dump() for m in matches]
+        high_conf = sum(1 for m in matches if m.confidence >= LLM_REVIEW_THRESHOLD)
+        needs_review = sum(1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD)
         job["summary"] = {
             "annotations_found": len(annotations),
             "holes_found": len(holes),
             "matched": len(matches),
+            "high_confidence": high_conf,
+            "needs_review": needs_review,
             "unmatched_annotations": len(unmatched_ann),
             "unmatched_holes": len(unmatched_holes),
             "avg_confidence": (

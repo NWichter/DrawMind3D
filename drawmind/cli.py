@@ -20,7 +20,7 @@ from drawmind.cad.feature_extractor import (
 )
 from drawmind.matching.matcher import match_annotations_to_features
 from drawmind.output.writer import write_output
-from drawmind.config import USE_VISION_LLM
+from drawmind.config import USE_VISION_LLM, LLM_REVIEW_THRESHOLD, MATCH_CONFIDENCE_THRESHOLD
 
 
 def main():
@@ -163,6 +163,9 @@ def main():
     logger.info(f"Output written to: {output_path}")
 
     # Print summary
+    high_conf = sum(1 for m in matches if m.confidence >= LLM_REVIEW_THRESHOLD)
+    needs_review = sum(1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD)
+
     print("\n" + "=" * 50)
     print("DrawMind3D - Results")
     print("=" * 50)
@@ -172,6 +175,13 @@ def main():
     if matches:
         avg_conf = sum(m.confidence for m in matches) / len(matches)
         print(f"Avg confidence:    {avg_conf:.1%}")
+        print(f"  High confidence: {high_conf}")
+        if needs_review:
+            print(f"  Needs review:    {needs_review}")
+    if unmatched_ann:
+        print(f"Unmatched annot:   {len(unmatched_ann)} (no matching 3D feature)")
+    if unmatched_holes:
+        print(f"Unmatched holes:   {len(unmatched_holes)} (no matching annotation)")
     print(f"Output:            {output_path}")
     print("=" * 50)
 
