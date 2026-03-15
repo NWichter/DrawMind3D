@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,33 +31,36 @@ LIGHT_GREEN = "#86efac"
 
 def _apply_dark_theme():
     """Apply dark theme matching the web UI."""
-    plt.rcParams.update({
-        "figure.facecolor": DARK_BG,
-        "axes.facecolor": DARK_BG,
-        "axes.edgecolor": DARK_GRID,
-        "axes.labelcolor": DARK_MUTED,
-        "xtick.color": DARK_MUTED,
-        "ytick.color": DARK_MUTED,
-        "text.color": DARK_FG,
-        "grid.color": DARK_GRID,
-        "grid.linewidth": 0.8,
-        "font.family": "sans-serif",
-        "font.size": 11,
-    })
+    plt.rcParams.update(
+        {
+            "figure.facecolor": DARK_BG,
+            "axes.facecolor": DARK_BG,
+            "axes.edgecolor": DARK_GRID,
+            "axes.labelcolor": DARK_MUTED,
+            "xtick.color": DARK_MUTED,
+            "ytick.color": DARK_MUTED,
+            "text.color": DARK_FG,
+            "grid.color": DARK_GRID,
+            "grid.linewidth": 0.8,
+            "font.family": "sans-serif",
+            "font.size": 11,
+        }
+    )
 
 
 def short_name(name: str) -> str:
-    return (name
-            .replace("SYN-0", "S")
-            .replace("-SimpleBlock", "")
-            .replace("-ThreadedPlate", "")
-            .replace("-InchPart", "")
-            .replace("-MixedFeatures", "")
-            .replace("-ManyHoles", "")
-            .replace("CTC-0", "C")
-            .replace("FTC-0", "F")
-            .replace("FTC-", "F")
-            .replace("D2MI-", "D"))
+    return (
+        name.replace("SYN-0", "S")
+        .replace("-SimpleBlock", "")
+        .replace("-ThreadedPlate", "")
+        .replace("-InchPart", "")
+        .replace("-MixedFeatures", "")
+        .replace("-ManyHoles", "")
+        .replace("CTC-0", "C")
+        .replace("FTC-0", "F")
+        .replace("FTC-", "F")
+        .replace("D2MI-", "D")
+    )
 
 
 def load_results():
@@ -95,15 +99,35 @@ def chart_comparison_f1(nollm, llm, output_path: Path):
 
     fig_width = max(10, n * 0.9 + 2)
     fig, ax = plt.subplots(figsize=(fig_width, 5))
-    bars1 = ax.bar(x - width / 2, f1_no, width, label=f"Regex + OCR (Avg {avg_no:.0f}%)",
-                   color=BLUE, alpha=0.85, zorder=3, edgecolor="none")
-    bars2 = ax.bar(x + width / 2, f1_yes, width, label=f"+ Vision LLM (Avg {avg_yes:.0f}%)",
-                   color=GREEN, alpha=0.85, zorder=3, edgecolor="none")
+    bars1 = ax.bar(
+        x - width / 2,
+        f1_no,
+        width,
+        label=f"Regex + OCR (Avg {avg_no:.0f}%)",
+        color=BLUE,
+        alpha=0.85,
+        zorder=3,
+        edgecolor="none",
+    )
+    bars2 = ax.bar(
+        x + width / 2,
+        f1_yes,
+        width,
+        label=f"+ Vision LLM (Avg {avg_yes:.0f}%)",
+        color=GREEN,
+        alpha=0.85,
+        zorder=3,
+        edgecolor="none",
+    )
 
     # Value labels
     fontsize = 9 if n <= 9 else 7
-    ax.bar_label(bars1, fmt="%.0f%%", padding=3, fontsize=fontsize, color=LIGHT_BLUE, fontweight="bold")
-    ax.bar_label(bars2, fmt="%.0f%%", padding=3, fontsize=fontsize, color=LIGHT_GREEN, fontweight="bold")
+    ax.bar_label(
+        bars1, fmt="%.0f%%", padding=3, fontsize=fontsize, color=LIGHT_BLUE, fontweight="bold"
+    )
+    ax.bar_label(
+        bars2, fmt="%.0f%%", padding=3, fontsize=fontsize, color=LIGHT_GREEN, fontweight="bold"
+    )
 
     # Average lines
     ax.axhline(avg_no, color=BLUE, linewidth=1.2, linestyle="--", alpha=0.5, zorder=2)
@@ -145,8 +169,16 @@ def chart_metrics_overview(llm_results, output_path: Path):
     fig, ax = plt.subplots(figsize=(10, fig_height))
     for j, (name, vals, color) in enumerate(metrics):
         offset = (j - n_metrics / 2 + 0.5) * height
-        bars = ax.barh(y + offset, vals, height, label=name, color=color, alpha=0.85,
-                       zorder=3, edgecolor="none")
+        bars = ax.barh(
+            y + offset,
+            vals,
+            height,
+            label=name,
+            color=color,
+            alpha=0.85,
+            zorder=3,
+            edgecolor="none",
+        )
         fontsize = 8 if n <= 12 else 6
         ax.bar_label(bars, fmt="%.0f", padding=3, fontsize=fontsize, color=color, fontweight="bold")
 
@@ -154,7 +186,9 @@ def chart_metrics_overview(llm_results, output_path: Path):
     ax.set_yticklabels(cases, fontsize=11, fontweight="600")
     ax.set_xlabel("Score (%)")
     ax.set_xlim(0, 115)
-    ax.set_title("DrawMind3D — Full Metrics (with Vision LLM)", fontsize=16, fontweight="bold", pad=15)
+    ax.set_title(
+        "DrawMind3D — Full Metrics (with Vision LLM)", fontsize=16, fontweight="bold", pad=15
+    )
     ax.legend(loc="lower right", fontsize=10, framealpha=0.3, ncol=2)
     ax.grid(axis="x", alpha=0.4, zorder=1)
     ax.set_axisbelow(True)
@@ -170,9 +204,13 @@ def chart_llm_impact_highlight(nollm, llm, output_path: Path):
     _apply_dark_theme()
     items = []
     for rn, rl in zip(nollm, llm):
-        items.append((short_name(rn["test_case"]),
-                       rn["extraction"]["f1"] * 100,
-                       rl["extraction"]["f1"] * 100))
+        items.append(
+            (
+                short_name(rn["test_case"]),
+                rn["extraction"]["f1"] * 100,
+                rl["extraction"]["f1"] * 100,
+            )
+        )
     avg_no = np.mean([r["extraction"]["f1"] for r in nollm]) * 100
     avg_yes = np.mean([r["extraction"]["f1"] for r in llm]) * 100
     items.append(("AVG", avg_no, avg_yes))
@@ -186,10 +224,26 @@ def chart_llm_impact_highlight(nollm, llm, output_path: Path):
 
     fig_height = max(5, len(labels) * 0.45 + 1.5)
     fig, ax = plt.subplots(figsize=(9, fig_height))
-    bars1 = ax.barh(y + height / 2, vals_no, height, label="Regex/OCR", color=BLUE, alpha=0.8,
-                    zorder=3, edgecolor="none")
-    bars2 = ax.barh(y - height / 2, vals_yes, height, label="+ Vision LLM", color=GREEN, alpha=0.8,
-                    zorder=3, edgecolor="none")
+    bars1 = ax.barh(
+        y + height / 2,
+        vals_no,
+        height,
+        label="Regex/OCR",
+        color=BLUE,
+        alpha=0.8,
+        zorder=3,
+        edgecolor="none",
+    )
+    bars2 = ax.barh(
+        y - height / 2,
+        vals_yes,
+        height,
+        label="+ Vision LLM",
+        color=GREEN,
+        alpha=0.8,
+        zorder=3,
+        edgecolor="none",
+    )
 
     ax.bar_label(bars1, fmt="%.0f%%", padding=4, fontsize=9, color=LIGHT_BLUE, fontweight="bold")
     ax.bar_label(bars2, fmt="%.0f%%", padding=4, fontsize=9, color=LIGHT_GREEN, fontweight="bold")
@@ -216,14 +270,26 @@ def chart_summary_table(nollm, llm, output_path: Path):
     """Render results summary as a styled matplotlib table."""
     _apply_dark_theme()
 
-    cols = ["Test Case", "P\n(no LLM)", "R\n(no LLM)", "F1\n(no LLM)",
-            "P\n(LLM)", "R\n(LLM)", "F1\n(LLM)", "Link%", "Conf"]
+    cols = [
+        "Test Case",
+        "P\n(no LLM)",
+        "R\n(no LLM)",
+        "F1\n(no LLM)",
+        "P\n(LLM)",
+        "R\n(LLM)",
+        "F1\n(LLM)",
+        "Link%",
+        "Conf",
+    ]
 
-    def fmt(v): return f"{v:.0f}%"
+    def fmt(v):
+        return f"{v:.0f}%"
 
     def cell_color(v):
-        if v >= 85: return "#4ade80"
-        if v >= 65: return "#facc15"
+        if v >= 85:
+            return "#4ade80"
+        if v >= 65:
+            return "#facc15"
         return "#f87171"
 
     rows = []
@@ -232,12 +298,19 @@ def chart_summary_table(nollm, llm, output_path: Path):
         el = rl["extraction"]
         link = rl["linking"]["linking_accuracy"] * 100
         conf = rl["avg_confidence"] * 100
-        rows.append([
-            short_name(rn["test_case"]),
-            en["precision"] * 100, en["recall"] * 100, en["f1"] * 100,
-            el["precision"] * 100, el["recall"] * 100, el["f1"] * 100,
-            link, conf,
-        ])
+        rows.append(
+            [
+                short_name(rn["test_case"]),
+                en["precision"] * 100,
+                en["recall"] * 100,
+                en["f1"] * 100,
+                el["precision"] * 100,
+                el["recall"] * 100,
+                el["f1"] * 100,
+                link,
+                conf,
+            ]
+        )
 
     # Average row
     n = len(rows)
@@ -248,8 +321,9 @@ def chart_summary_table(nollm, llm, output_path: Path):
     ax.axis("off")
 
     cell_text = [[r[0]] + [fmt(v) for v in r[1:]] for r in rows]
-    table = ax.table(cellText=cell_text, colLabels=cols, loc="center",
-                     cellLoc="center", colLoc="center")
+    table = ax.table(
+        cellText=cell_text, colLabels=cols, loc="center", cellLoc="center", colLoc="center"
+    )
 
     table.auto_set_font_size(False)
     table.set_fontsize(10)
@@ -289,12 +363,18 @@ def chart_summary_table(nollm, llm, output_path: Path):
         subtitle = f"{nist_count} NIST Industrial Test Cases"
     else:
         subtitle = f"{nist_count} NIST Industrial + {syn_count} Synthetic Test Cases"
-    ax.set_title(f"Evaluation Results Summary\n{subtitle}",
-                 fontsize=14, fontweight="bold", pad=20, color=DARK_FG)
+    ax.set_title(
+        f"Evaluation Results Summary\n{subtitle}",
+        fontsize=14,
+        fontweight="bold",
+        pad=20,
+        color=DARK_FG,
+    )
 
     fig.tight_layout()
-    fig.savefig(output_path, format="svg", bbox_inches="tight", transparent=False,
-                facecolor=DARK_BG)
+    fig.savefig(
+        output_path, format="svg", bbox_inches="tight", transparent=False, facecolor=DARK_BG
+    )
     plt.close(fig)
 
 

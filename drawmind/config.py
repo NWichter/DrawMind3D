@@ -1,6 +1,7 @@
 """Configuration and environment variables."""
 
 import os
+import shutil as _shutil
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -65,7 +66,6 @@ OCR_CONFIDENCE_THRESHOLD = 30
 MIN_TEXT_COUNT_FOR_NATIVE = 5  # Below this, assume scanned PDF
 
 # Tesseract OCR path (auto-detect on Windows)
-import shutil as _shutil
 TESSERACT_PATH = _shutil.which("tesseract") or r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 if Path(TESSERACT_PATH).exists():
     _tess_dir = str(Path(TESSERACT_PATH).parent)

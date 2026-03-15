@@ -2,8 +2,11 @@
 
 import pytest
 from drawmind.models import (
-    PDFAnnotation, AnnotationType, BoundingBox,
-    CylindricalFeature, HoleGroup,
+    PDFAnnotation,
+    AnnotationType,
+    BoundingBox,
+    CylindricalFeature,
+    HoleGroup,
 )
 
 
@@ -94,12 +97,10 @@ def sample_hole_group():
 def sample_through_holes():
     """4 identical through-holes for testing multiplier matching."""
     holes = []
-    positions = [
-        (10, 10, 0), (10, -10, 0), (-10, 10, 0), (-10, -10, 0)
-    ]
+    positions = [(10, 10, 0), (10, -10, 0), (-10, 10, 0), (-10, -10, 0)]
     for i, pos in enumerate(positions):
         feat = CylindricalFeature(
-            id=f"feat_{i+10:03d}",
+            id=f"feat_{i + 10:03d}",
             face_ids=[20 + i],
             radius=3.594,  # M8 pitch diameter / 2
             diameter=7.188,
@@ -108,16 +109,18 @@ def sample_through_holes():
             estimated_depth=30.0,
             surface_area=678.0,
             is_through_hole=True,
-            group_id=f"hole_{i+10:03d}",
+            group_id=f"hole_{i + 10:03d}",
         )
-        holes.append(HoleGroup(
-            id=f"hole_{i+10:03d}",
-            features=[feat],
-            primary_diameter=7.188,
-            total_depth=30.0,
-            center=pos,
-            axis_direction=(0.0, 0.0, 1.0),
-            is_through_hole=True,
-            hole_type="simple",
-        ))
+        holes.append(
+            HoleGroup(
+                id=f"hole_{i + 10:03d}",
+                features=[feat],
+                primary_diameter=7.188,
+                total_depth=30.0,
+                center=pos,
+                axis_direction=(0.0, 0.0, 1.0),
+                is_through_hole=True,
+                hole_type="simple",
+            )
+        )
     return holes

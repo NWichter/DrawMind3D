@@ -28,6 +28,7 @@ class LLMClient:
     def client(self):
         if self._client is None and OPENROUTER_API_KEY:
             from openai import OpenAI
+
             self._client = OpenAI(
                 base_url=OPENROUTER_BASE_URL,
                 api_key=OPENROUTER_API_KEY,
@@ -65,8 +66,7 @@ class LLMClient:
         """
         if not self.client:
             raise RuntimeError(
-                "No OPENROUTER_API_KEY configured. "
-                "Get one at https://openrouter.ai/keys"
+                "No OPENROUTER_API_KEY configured. Get one at https://openrouter.ai/keys"
             )
 
         model = model or (VISION_MODEL if images else TEXT_MODEL)
@@ -80,10 +80,12 @@ class LLMClient:
         if images:
             for img in images:
                 b64 = base64.b64encode(img).decode()
-                content.append({
-                    "type": "image_url",
-                    "image_url": {"url": f"data:image/png;base64,{b64}"},
-                })
+                content.append(
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{b64}"},
+                    }
+                )
         content.append({"type": "text", "text": prompt})
         messages.append({"role": "user", "content": content})
 
@@ -116,7 +118,7 @@ class LLMClient:
                     logger.error(f"LLM request failed (attempt {attempt + 1}): {e}")
                     raise
 
-                delay = min(BASE_DELAY * (2 ** attempt), MAX_DELAY)
+                delay = min(BASE_DELAY * (2**attempt), MAX_DELAY)
                 logger.warning(
                     f"LLM request failed (attempt {attempt + 1}/{MAX_RETRIES}), "
                     f"retrying in {delay:.1f}s: {e}"
@@ -148,7 +150,7 @@ class LLMClient:
         text = response.strip()
 
         # Remove ```json ... ``` or ``` ... ``` blocks
-        fence_pattern = re.compile(r'^```(?:json)?\s*\n?(.*?)\n?\s*```$', re.DOTALL)
+        fence_pattern = re.compile(r"^```(?:json)?\s*\n?(.*?)\n?\s*```$", re.DOTALL)
         match = fence_pattern.match(text)
         if match:
             text = match.group(1).strip()

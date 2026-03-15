@@ -8,7 +8,7 @@ from pathlib import Path
 
 from drawmind.models import PDFAnnotation, AnnotationType, BoundingBox
 from drawmind.pdf.extractor import get_page_as_image, get_page_dimensions
-from drawmind.pdf.parser import _convert_value, _is_gdt_false_positive, INCH_TO_MM
+from drawmind.pdf.parser import _is_gdt_false_positive, INCH_TO_MM
 from drawmind.llm.client import get_llm_client
 from drawmind.llm.prompts import VISION_EXTRACT_PROMPT, SYSTEM_ENGINEERING
 from drawmind.config import VISION_MODEL, VISION_MODEL_FALLBACK, VISION_FALLBACK_MIN_ANNOTATIONS
@@ -141,12 +141,19 @@ def analyze_page_with_vision(
         )
 
         # Fallback: if very few hole annotations found, re-analyze with stronger model
-        hole_types = {AnnotationType.THREAD, AnnotationType.DIAMETER,
-                      AnnotationType.HOLE_CALLOUT, AnnotationType.COUNTERBORE,
-                      AnnotationType.COUNTERSINK}
+        hole_types = {
+            AnnotationType.THREAD,
+            AnnotationType.DIAMETER,
+            AnnotationType.HOLE_CALLOUT,
+            AnnotationType.COUNTERBORE,
+            AnnotationType.COUNTERSINK,
+        }
         hole_ann_count = sum(1 for a in merged if a.annotation_type in hole_types)
 
-        if hole_ann_count < VISION_FALLBACK_MIN_ANNOTATIONS and VISION_MODEL_FALLBACK != VISION_MODEL:
+        if (
+            hole_ann_count < VISION_FALLBACK_MIN_ANNOTATIONS
+            and VISION_MODEL_FALLBACK != VISION_MODEL
+        ):
             logger.info(
                 f"Only {hole_ann_count} hole annotations found, "
                 f"re-analyzing with stronger model ({VISION_MODEL_FALLBACK})..."
@@ -180,7 +187,9 @@ def analyze_page_with_vision(
                             merged.append(fb_ann)
                     new_from_fallback = len(merged) - len(existing_annotations) - new_count
                     if new_from_fallback > 0:
-                        logger.info(f"Fallback model found {new_from_fallback} additional annotations")
+                        logger.info(
+                            f"Fallback model found {new_from_fallback} additional annotations"
+                        )
             except Exception as fb_err:
                 logger.warning(f"Fallback vision analysis failed: {fb_err}")
 
@@ -219,17 +228,17 @@ def _process_vision_results(
         text = item.get("text", "")
 
         # Skip taper/ratio, radius, torus/ring dimensions
-        if re.search(r'\d+\.?\d*\s*:\s*\d+\.?\d*', text) and not re.search(r'[Øø⌀MmXx#]', text):
+        if re.search(r"\d+\.?\d*\s*:\s*\d+\.?\d*", text) and not re.search(r"[Øø⌀MmXx#]", text):
             continue
-        if re.search(r'\bR\s*\.?\d', text, re.IGNORECASE) and not re.search(r'[Øø⌀]', text):
+        if re.search(r"\bR\s*\.?\d", text, re.IGNORECASE) and not re.search(r"[Øø⌀]", text):
             continue
-        if re.search(r'\b(I\.?D\.?|O\.?D\.?|AVG|MAJOR|MINOR)\b', text, re.IGNORECASE):
+        if re.search(r"\b(I\.?D\.?|O\.?D\.?|AVG|MAJOR|MINOR)\b", text, re.IGNORECASE):
             continue
 
         # Skip small values without diameter symbol
         if ann_type == AnnotationType.DIAMETER:
             raw_value = _safe_float(item.get("parsed", {}).get("value"))
-            has_dia_sym = bool(re.search(r'[Øø⌀\u2300]', text))
+            has_dia_sym = bool(re.search(r"[Øø⌀\u2300]", text))
             if raw_value is not None and raw_value < 3.0 and not has_dia_sym:
                 continue
 
@@ -270,18 +279,20 @@ def _process_vision_results(
             except ValueError:
                 multiplier = 1
 
-        annotations.append(PDFAnnotation(
-            id=f"ann_{ann_counter:03d}",
-            raw_text=text,
-            annotation_type=ann_type,
-            parsed=parsed,
-            bbox=bbox,
-            confidence=conf,
-            source="vision_llm",
-            multiplier=multiplier,
-            is_through=is_through,
-            unit_system=unit_system,
-        ))
+        annotations.append(
+            PDFAnnotation(
+                id=f"ann_{ann_counter:03d}",
+                raw_text=text,
+                annotation_type=ann_type,
+                parsed=parsed,
+                bbox=bbox,
+                confidence=conf,
+                source="vision_llm",
+                multiplier=multiplier,
+                is_through=is_through,
+                unit_system=unit_system,
+            )
+        )
 
     return annotations
 
@@ -332,9 +343,11 @@ def _deduplicate_vision_batch(
             ex_dia = _get_ann_diameter(ex)
 
             # Exact text match on same page = definite duplicate
-            if (ann.raw_text.strip() == ex.raw_text.strip()
-                    and ann.bbox.page == ex.bbox.page
-                    and ann.annotation_type == ex.annotation_type):
+            if (
+                ann.raw_text.strip() == ex.raw_text.strip()
+                and ann.bbox.page == ex.bbox.page
+                and ann.annotation_type == ex.annotation_type
+            ):
                 is_dup = True
                 if ann.confidence > ex.confidence:
                     kept[i] = ann

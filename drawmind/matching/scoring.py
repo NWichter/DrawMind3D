@@ -2,13 +2,23 @@
 
 from __future__ import annotations
 
-from drawmind.models import PDFAnnotation, AnnotationType, CylindricalFeature, HoleGroup
-from drawmind.cad.thread_table import match_thread_to_diameter, get_thread_diameters, get_clearance_hole_diameter
+from drawmind.models import PDFAnnotation, AnnotationType, HoleGroup
+from drawmind.cad.thread_table import (
+    match_thread_to_diameter,
+    get_thread_diameters,
+    get_clearance_hole_diameter,
+)
 from drawmind.config import (
-    DIAMETER_TOLERANCE_MM, DEPTH_TOLERANCE_MM,
-    WEIGHT_DIAMETER, WEIGHT_DEPTH, WEIGHT_TYPE_COMPAT,
-    WEIGHT_COUNT, WEIGHT_UNIQUENESS, WEIGHT_SPATIAL,
-    NEUTRAL_SCORE, MAX_DIAMETER_RATIO,
+    DIAMETER_TOLERANCE_MM,
+    DEPTH_TOLERANCE_MM,
+    WEIGHT_DIAMETER,
+    WEIGHT_DEPTH,
+    WEIGHT_TYPE_COMPAT,
+    WEIGHT_COUNT,
+    WEIGHT_UNIQUENESS,
+    WEIGHT_SPATIAL,
+    NEUTRAL_SCORE,
+    MAX_DIAMETER_RATIO,
 )
 
 
@@ -80,7 +90,7 @@ def compute_match_score(
         # Mild penalty for weak matches from uncertain sources
         # Only applied when diameter match is weak AND source confidence is low
         if scores["diameter"] < 0.8 and source_conf < 0.7:
-            total *= (0.85 + 0.15 * source_conf)
+            total *= 0.85 + 0.15 * source_conf
     scores["source_confidence"] = source_conf
 
     return {"total_score": round(total, 4), "breakdown": scores}
@@ -218,7 +228,10 @@ def _score_type_compatibility(annotation: PDFAnnotation, hole: HoleGroup) -> flo
         diameters = get_thread_diameters(thread_spec)
         if diameters:
             for d_type in ["major", "pitch", "minor", "drill"]:
-                diff = abs(diameters[f"{d_type}_d" if d_type != "drill" else "drill_d"] - hole.primary_diameter)
+                diff = abs(
+                    diameters[f"{d_type}_d" if d_type != "drill" else "drill_d"]
+                    - hole.primary_diameter
+                )
                 if diff < DIAMETER_TOLERANCE_MM:
                     return 1.0
         return 0.3
@@ -247,9 +260,7 @@ def _score_type_compatibility(annotation: PDFAnnotation, hole: HoleGroup) -> flo
     return NEUTRAL_SCORE
 
 
-def _score_count(
-    annotation: PDFAnnotation, hole: HoleGroup, all_holes: list[HoleGroup]
-) -> float:
+def _score_count(annotation: PDFAnnotation, hole: HoleGroup, all_holes: list[HoleGroup]) -> float:
     """Score based on count agreement (e.g., '4x M8' needs 4 matching holes)."""
     if annotation.multiplier <= 1:
         return NEUTRAL_SCORE  # No count specified, no evidence against
@@ -257,8 +268,7 @@ def _score_count(
     # Count holes with similar diameter
     tolerance = DIAMETER_TOLERANCE_MM
     matching_count = sum(
-        1 for h in all_holes
-        if abs(h.primary_diameter - hole.primary_diameter) < tolerance
+        1 for h in all_holes if abs(h.primary_diameter - hole.primary_diameter) < tolerance
     )
 
     if matching_count == annotation.multiplier:
@@ -292,7 +302,9 @@ def _score_uniqueness(
 
 
 def _score_spatial(
-    annotation: PDFAnnotation, hole: HoleGroup, all_holes: list[HoleGroup],
+    annotation: PDFAnnotation,
+    hole: HoleGroup,
+    all_holes: list[HoleGroup],
     all_annotations: list[PDFAnnotation] | None = None,
 ) -> float:
     """Score based on spatial position correlation between PDF and 3D model.

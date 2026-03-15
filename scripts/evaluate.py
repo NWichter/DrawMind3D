@@ -111,12 +111,14 @@ def _build_test_cases() -> list[tuple]:
         tc_dir = EXAMPLES_DIR / f"D2MI-{part}"
         gt_file = GT_DIR / f"d2mi{part}_ground_truth.json"
         if tc_dir.exists() and gt_file.exists():
-            cases.append((
-                f"D2MI-{part}",
-                tc_dir / "drawing.pdf",
-                tc_dir / "model.stp",
-                gt_file,
-            ))
+            cases.append(
+                (
+                    f"D2MI-{part}",
+                    tc_dir / "drawing.pdf",
+                    tc_dir / "model.stp",
+                    gt_file,
+                )
+            )
 
     # Add synthetic test cases
     if SYNTH_DIR.exists():
@@ -170,7 +172,9 @@ def evaluate_extraction(
             parsed = ext.get("parsed", {})
 
         if isinstance(parsed, dict):
-            ext_diameter = parsed.get("value") or parsed.get("nominal_diameter") or parsed.get("diameter")
+            ext_diameter = (
+                parsed.get("value") or parsed.get("nominal_diameter") or parsed.get("diameter")
+            )
             ext_thread = parsed.get("thread_spec") or parsed.get("thread")
 
         if ext_diameter is None:
@@ -210,14 +214,18 @@ def evaluate_extraction(
         if best_gt_idx is not None:
             gt_matched.add(best_gt_idx)
             ext_matched.add(i)
-            match_details.append({
-                "extracted": getattr(ext, "raw_text", str(ext)),
-                "ground_truth": gt_annotations[best_gt_idx].get("text", gt_annotations[best_gt_idx].get("description", "")),
-                "ext_diameter_mm": ext_diameter,
-                "gt_diameter_mm": gt_annotations[best_gt_idx]["diameter_mm"],
-                "diff_mm": best_diff,
-                "correct": True,
-            })
+            match_details.append(
+                {
+                    "extracted": getattr(ext, "raw_text", str(ext)),
+                    "ground_truth": gt_annotations[best_gt_idx].get(
+                        "text", gt_annotations[best_gt_idx].get("description", "")
+                    ),
+                    "ext_diameter_mm": ext_diameter,
+                    "gt_diameter_mm": gt_annotations[best_gt_idx]["diameter_mm"],
+                    "diff_mm": best_diff,
+                    "correct": True,
+                }
+            )
 
         # Check if this annotation matches an optional GT (don't count as FP)
         if best_gt_idx is None and optional_gt:
@@ -239,8 +247,16 @@ def evaluate_extraction(
         recall = 1.0
         f1 = 1.0 if false_positives == 0 else 0.0
     else:
-        precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
-        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
+        precision = (
+            true_positives / (true_positives + false_positives)
+            if (true_positives + false_positives) > 0
+            else 0.0
+        )
+        recall = (
+            true_positives / (true_positives + false_negatives)
+            if (true_positives + false_negatives) > 0
+            else 0.0
+        )
         f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
 
     # List missed ground truth annotations
@@ -293,7 +309,9 @@ def evaluate_linking(
         ann_diameter = None
         ann_thread = None
         if isinstance(parsed, dict):
-            ann_diameter = parsed.get("value") or parsed.get("nominal_diameter") or parsed.get("diameter")
+            ann_diameter = (
+                parsed.get("value") or parsed.get("nominal_diameter") or parsed.get("diameter")
+            )
             ann_thread = parsed.get("thread_spec") or parsed.get("thread_type")
 
         if ann_diameter is None:
@@ -332,11 +350,13 @@ def evaluate_linking(
                     break
 
         if gt_match is None:
-            link_details.append({
-                "correct": False,
-                "reason": f"no GT for diameter {ann_diameter:.2f}mm",
-                "confidence": confidence,
-            })
+            link_details.append(
+                {
+                    "correct": False,
+                    "reason": f"no GT for diameter {ann_diameter:.2f}mm",
+                    "confidence": confidence,
+                }
+            )
             continue
 
         # Check if the 3D feature diameter is compatible with the ground truth
@@ -356,13 +376,15 @@ def evaluate_linking(
         if is_correct:
             correct_links += 1
 
-        link_details.append({
-            "correct": is_correct,
-            "ann_diameter": ann_diameter,
-            "feature_diameter": feature_diameter,
-            "gt_diameter": gt_match["diameter_mm"],
-            "confidence": confidence,
-        })
+        link_details.append(
+            {
+                "correct": is_correct,
+                "ann_diameter": ann_diameter,
+                "feature_diameter": feature_diameter,
+                "gt_diameter": gt_match["diameter_mm"],
+                "confidence": confidence,
+            }
+        )
 
     # If no required GT annotations exist, treat as perfect when no links made
     if not gt_annotations and total_links == 0:
@@ -381,6 +403,7 @@ def evaluate_linking(
 def run_evaluation(use_llm: bool = False) -> list[dict]:
     """Run full evaluation on all test cases."""
     import logging
+
     logging.basicConfig(level=logging.WARNING)
 
     results = []
@@ -393,9 +416,9 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
             print(f"  {name}: Missing input files, skipping")
             continue
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  Evaluating: {name}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         # Load ground truth
         gt = load_ground_truth(gt_path)
@@ -410,8 +433,11 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
         if gt_unit and gt_unit != unit_system:
             # Check if auto-detection had any evidence (engineering content)
             from drawmind.pdf.extractor import _has_engineering_content
+
             if not _has_engineering_content(raw_texts):
-                print(f"  Unit correction: {unit_system} -> {gt_unit} (auto-detection uncertain, using GT)")
+                print(
+                    f"  Unit correction: {unit_system} -> {gt_unit} (auto-detection uncertain, using GT)"
+                )
                 unit_system = gt_unit
 
         annotations = parse_annotations(raw_texts, unit_system=unit_system)
@@ -421,6 +447,7 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
             try:
                 import fitz
                 from drawmind.pdf.vision import analyze_page_with_vision
+
                 doc = fitz.open(str(pdf_path))
                 num_pages = len(doc)
                 doc.close()
@@ -446,7 +473,7 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
                             pass
             if diameters and sum(1 for d in diameters if d < 1.5) > len(diameters) * 0.5:
                 unit_system = "inch"
-                print(f"  Unit correction: metric -> inch (values suggest inches)")
+                print("  Unit correction: metric -> inch (values suggest inches)")
                 annotations = parse_annotations(raw_texts, unit_system="inch")
                 if use_llm:
                     try:
@@ -474,7 +501,8 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
 
         # Matching (with LLM resolver when using LLM mode)
         matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
-            annotations, holes,
+            annotations,
+            holes,
             pdf_path=str(pdf_path) if use_llm else None,
             use_llm_resolver=use_llm,
         )
@@ -483,9 +511,7 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
         extraction_eval = evaluate_extraction(annotations, gt)
         linking_eval = evaluate_linking(matches, gt, holes)
 
-        avg_confidence = (
-            sum(m.confidence for m in matches) / len(matches) if matches else 0.0
-        )
+        avg_confidence = sum(m.confidence for m in matches) / len(matches) if matches else 0.0
 
         result = {
             "test_case": name,
@@ -502,10 +528,12 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
 
         # Print extraction results
         e = extraction_eval
-        print(f"\n  Annotation Extraction:")
+        print("\n  Annotation Extraction:")
         print(f"    Extracted:    {e['total_extracted']}")
         print(f"    Ground Truth: {e['total_ground_truth']}")
-        print(f"    TP: {e['true_positives']}, FP: {e['false_positives']}, FN: {e['false_negatives']}")
+        print(
+            f"    TP: {e['true_positives']}, FP: {e['false_positives']}, FN: {e['false_negatives']}"
+        )
         print(f"    Precision:    {e['precision']:.1%}")
         print(f"    Recall:       {e['recall']:.1%}")
         print(f"    F1:           {e['f1']:.1%}")
@@ -514,11 +542,11 @@ def run_evaluation(use_llm: bool = False) -> list[dict]:
             print(f"    Missed: {', '.join(e['missed_annotations'][:5])}")
 
         # Print linking results
-        l = linking_eval
-        print(f"\n  Linking Accuracy:")
-        print(f"    Total Links:  {l['total_links']}")
-        print(f"    Correct:      {l['correct_links']}")
-        print(f"    Accuracy:     {l['linking_accuracy']:.1%}")
+        link = linking_eval
+        print("\n  Linking Accuracy:")
+        print(f"    Total Links:  {link['total_links']}")
+        print(f"    Correct:      {link['correct_links']}")
+        print(f"    Accuracy:     {link['linking_accuracy']:.1%}")
         print(f"    Avg Conf:     {avg_confidence:.1%}")
 
     return results
@@ -551,8 +579,9 @@ def _generate_single_chart(results: list[dict], output_path: Path, title_suffix:
 
     for j, (name, (vals, color)) in enumerate(metrics.items()):
         offset = (j - 2) * width
-        bars = ax.bar(x + offset, vals, width, label=name, color=color, alpha=0.85,
-                      zorder=3, edgecolor="none")
+        bars = ax.bar(
+            x + offset, vals, width, label=name, color=color, alpha=0.85, zorder=3, edgecolor="none"
+        )
         fontsize = 7 if n <= 8 else 6
         ax.bar_label(bars, fmt="%.0f", padding=2, fontsize=fontsize, color=color, fontweight="bold")
 
@@ -578,23 +607,26 @@ def _generate_single_chart(results: list[dict], output_path: Path, title_suffix:
 def generate_charts(results: list[dict], output_dir: Path):
     """Generate evaluation charts using matplotlib - all, and per-category."""
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Dark theme
-    plt.rcParams.update({
-        "figure.facecolor": "#0f1117",
-        "axes.facecolor": "#0f1117",
-        "axes.edgecolor": "#2a2d3a",
-        "axes.labelcolor": "#888",
-        "xtick.color": "#888",
-        "ytick.color": "#888",
-        "text.color": "#e0e0e0",
-        "grid.color": "#2a2d3a",
-        "font.family": "sans-serif",
-    })
+    plt.rcParams.update(
+        {
+            "figure.facecolor": "#0f1117",
+            "axes.facecolor": "#0f1117",
+            "axes.edgecolor": "#2a2d3a",
+            "axes.labelcolor": "#888",
+            "xtick.color": "#888",
+            "ytick.color": "#888",
+            "text.color": "#e0e0e0",
+            "grid.color": "#2a2d3a",
+            "font.family": "sans-serif",
+        }
+    )
 
     is_llm = results[0].get("llm_enhanced", False)
     suffix = "_llm" if is_llm else "_nollm"
@@ -640,9 +672,9 @@ def main():
         return
 
     # Print summary table
-    print(f"\n{'='*70}")
-    print(f"  SUMMARY")
-    print(f"{'='*70}")
+    print(f"\n{'=' * 70}")
+    print("  SUMMARY")
+    print(f"{'=' * 70}")
     print(f"{'Case':<10} {'P':>8} {'R':>8} {'F1':>8} {'Link%':>8} {'Conf':>8}")
     print("-" * 50)
     for r in results:
@@ -665,12 +697,7 @@ def main():
     avg_conf = sum(r["avg_confidence"] for r in scorable) / n_scorable
     print("-" * 50)
     print(
-        f"{'AVG':<10} "
-        f"{avg_p:>7.1%} "
-        f"{avg_r:>7.1%} "
-        f"{avg_f1:>7.1%} "
-        f"{avg_link:>7.1%} "
-        f"{avg_conf:>7.1%}"
+        f"{'AVG':<10} {avg_p:>7.1%} {avg_r:>7.1%} {avg_f1:>7.1%} {avg_link:>7.1%} {avg_conf:>7.1%}"
     )
 
     # Save charts

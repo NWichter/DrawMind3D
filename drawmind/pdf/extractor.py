@@ -20,15 +20,15 @@ def _has_engineering_content(texts: list[dict]) -> bool:
         return False
 
     engineering_patterns = [
-        r'M\d+',           # Thread: M10, M8
-        r'[\u2300\u00d8]\s*\d',  # Diameter: Ø10, ⌀8
-        r'\b(?:THRU|DEPTH|DEEP|CBORE|CSINK)\b',
-        r'\d+\s*[xX\u00d7]\s',  # Multiplier: 4x, 6X
-        r'[A-Z]\d{1,2}\s*/\s*[a-z]\d',  # Fit: H7/g6
+        r"M\d+",  # Thread: M10, M8
+        r"[\u2300\u00d8]\s*\d",  # Diameter: Ø10, ⌀8
+        r"\b(?:THRU|DEPTH|DEEP|CBORE|CSINK)\b",
+        r"\d+\s*[xX\u00d7]\s",  # Multiplier: 4x, 6X
+        r"[A-Z]\d{1,2}\s*/\s*[a-z]\d",  # Fit: H7/g6
     ]
 
     total_chars = sum(len(t["text"]) for t in texts)
-    replacement_chars = sum(t["text"].count('\ufffd') for t in texts)
+    replacement_chars = sum(t["text"].count("\ufffd") for t in texts)
 
     # If >30% of characters are replacement chars, text is corrupted
     if total_chars > 0 and replacement_chars / total_chars > 0.3:
@@ -113,7 +113,7 @@ def _merge_text_sources(native: list[dict], ocr: list[dict]) -> list[dict]:
                 has_overlap = True
                 break
 
-        if not has_overlap and '\ufffd' not in n_item["text"]:
+        if not has_overlap and "\ufffd" not in n_item["text"]:
             merged.append(n_item)
 
     return merged
@@ -149,19 +149,21 @@ def _extract_page_native(page: fitz.Page, page_num: int) -> list[dict]:
             font = spans_data[0].get("font", "") if spans_data else ""
             size = spans_data[0].get("size", 0) if spans_data else 0
 
-            texts.append({
-                "text": line_text,
-                "bbox": {
-                    "x0": bbox[0],
-                    "y0": bbox[1],
-                    "x1": bbox[2],
-                    "y1": bbox[3],
-                },
-                "font": font,
-                "size": size,
-                "page": page_num,
-                "source": "native",
-            })
+            texts.append(
+                {
+                    "text": line_text,
+                    "bbox": {
+                        "x0": bbox[0],
+                        "y0": bbox[1],
+                        "x1": bbox[2],
+                        "y1": bbox[3],
+                    },
+                    "font": font,
+                    "size": size,
+                    "page": page_num,
+                    "source": "native",
+                }
+            )
 
     return texts
 
@@ -196,19 +198,21 @@ def _extract_page_ocr(page: fitz.Page, page_num: int) -> list[dict]:
                     continue
 
                 bbox = line.get("bbox", (0, 0, 0, 0))
-                texts.append({
-                    "text": line_text,
-                    "bbox": {
-                        "x0": bbox[0],
-                        "y0": bbox[1],
-                        "x1": bbox[2],
-                        "y1": bbox[3],
-                    },
-                    "font": "",
-                    "size": 0,
-                    "page": page_num,
-                    "source": "ocr",
-                })
+                texts.append(
+                    {
+                        "text": line_text,
+                        "bbox": {
+                            "x0": bbox[0],
+                            "y0": bbox[1],
+                            "x1": bbox[2],
+                            "y1": bbox[3],
+                        },
+                        "font": "",
+                        "size": 0,
+                        "page": page_num,
+                        "source": "ocr",
+                    }
+                )
 
     except Exception:
         pass
@@ -249,20 +253,22 @@ def _extract_page_tesseract(page: fitz.Page, page_num: int) -> list[dict]:
             conf = int(data["conf"][i])
 
             if text and conf > OCR_CONFIDENCE_THRESHOLD:
-                texts.append({
-                    "text": text,
-                    "bbox": {
-                        "x0": data["left"][i] * scale,
-                        "y0": data["top"][i] * scale,
-                        "x1": (data["left"][i] + data["width"][i]) * scale,
-                        "y1": (data["top"][i] + data["height"][i]) * scale,
-                    },
-                    "font": "",
-                    "size": 0,
-                    "page": page_num,
-                    "source": "ocr_tesseract",
-                    "confidence": conf / 100.0,
-                })
+                texts.append(
+                    {
+                        "text": text,
+                        "bbox": {
+                            "x0": data["left"][i] * scale,
+                            "y0": data["top"][i] * scale,
+                            "x1": (data["left"][i] + data["width"][i]) * scale,
+                            "y1": (data["top"][i] + data["height"][i]) * scale,
+                        },
+                        "font": "",
+                        "size": 0,
+                        "page": page_num,
+                        "source": "ocr_tesseract",
+                        "confidence": conf / 100.0,
+                    }
+                )
 
         return texts
 
@@ -301,10 +307,10 @@ def detect_unit_system(pdf_path: str | Path) -> str:
 
     # 1. Explicit metric declarations (strongest signal)
     metric_patterns = [
-        r'UNITS?\s*:\s*(?:MM|MILLIMETERS?)',
-        r'ALL\s+DIMENSIONS\s+(?:IN\s+)?(?:MM|MILLIMETERS?)',
-        r'DIMENSIONS\s+(?:ARE\s+)?IN\s+(?:MM|MILLIMETERS?)',
-        r'MILLIMETERS?\s+UNLESS',
+        r"UNITS?\s*:\s*(?:MM|MILLIMETERS?)",
+        r"ALL\s+DIMENSIONS\s+(?:IN\s+)?(?:MM|MILLIMETERS?)",
+        r"DIMENSIONS\s+(?:ARE\s+)?IN\s+(?:MM|MILLIMETERS?)",
+        r"MILLIMETERS?\s+UNLESS",
     ]
     for pat_str in metric_patterns:
         if re.search(pat_str, full_text, re.IGNORECASE):
@@ -312,18 +318,18 @@ def detect_unit_system(pdf_path: str | Path) -> str:
 
     # 2. Explicit inch declarations
     inch_patterns = [
-        r'UNITS?\s*:\s*INCH',
-        r'DIMENSIONING\s+IN\s+INCH',
-        r'ALL\s+DIMENSIONS\s+IN\s+INCH',
-        r'DIMENSIONS\s+ARE\s+IN\s+INCH',
-        r'INCH(?:ES)?\s+UNLESS',
+        r"UNITS?\s*:\s*INCH",
+        r"DIMENSIONING\s+IN\s+INCH",
+        r"ALL\s+DIMENSIONS\s+IN\s+INCH",
+        r"DIMENSIONS\s+ARE\s+IN\s+INCH",
+        r"INCH(?:ES)?\s+UNLESS",
     ]
     for pat_str in inch_patterns:
         if re.search(pat_str, full_text, re.IGNORECASE):
             return "inch"
 
     # UNC/UNEF thread specs are exclusively imperial
-    unc_pattern = re.compile(r'\d+/\d+-\d+\s*(?:UNC|UNF|UNEF)', re.IGNORECASE)
+    unc_pattern = re.compile(r"\d+/\d+-\d+\s*(?:UNC|UNF|UNEF)", re.IGNORECASE)
     if unc_pattern.search(full_text):
         return "inch"
 
@@ -332,14 +338,14 @@ def detect_unit_system(pdf_path: str | Path) -> str:
     # Only count values preceded by a diameter symbol or at start of dimension —
     # NOT values inside tolerances (+.025/-.010)
     inch_dim_pattern = re.compile(
-        r'(?:^|[\u00d8\u2300\u2205\s])\.(\d{2,4})\b'  # .438, .250 (preceded by Ø or whitespace)
+        r"(?:^|[\u00d8\u2300\u2205\s])\.(\d{2,4})\b"  # .438, .250 (preceded by Ø or whitespace)
     )
     inch_vals = []
     for m in inch_dim_pattern.finditer(full_text):
         # Check if preceded by + or - (tolerance, not dimension)
         prefix_start = max(0, m.start() - 3)
-        prefix = full_text[prefix_start:m.start()]
-        if not re.search(r'[+\-]', prefix):
+        prefix = full_text[prefix_start : m.start()]
+        if not re.search(r"[+\-]", prefix):
             inch_vals.append(m.group(1))
 
     # If we find >=2 decimal-inch style dimensions, classify as inch
@@ -348,7 +354,7 @@ def detect_unit_system(pdf_path: str | Path) -> str:
 
     # 4. Heuristic: if most dimension values are small (< 2.0) and none > 25,
     # it's likely an inch drawing where the text was poorly extracted
-    dim_pattern = re.compile(r'(\d{1,3}\.?\d{0,4})')
+    dim_pattern = re.compile(r"(\d{1,3}\.?\d{0,4})")
     all_dims = []
     for m in dim_pattern.finditer(full_text):
         try:
@@ -366,6 +372,7 @@ def detect_unit_system(pdf_path: str | Path) -> str:
     # 5. Fallback: use Vision LLM to detect unit system from drawing image
     try:
         from drawmind.config import USE_VISION_LLM
+
         if USE_VISION_LLM:
             unit = _detect_unit_system_vision(pdf_path)
             if unit:
@@ -380,16 +387,17 @@ def _detect_unit_system_vision(pdf_path: str | Path) -> str | None:
     """Use Vision LLM to detect unit system from drawing title block."""
     try:
         from drawmind.llm.client import get_llm_client
+
         client = get_llm_client()
         if not client.available:
             return None
 
         img_bytes = get_page_as_image(pdf_path, page_num=0, dpi=100)
         result = client.complete_json(
-            'Look at this technical drawing. What unit system is used? '
-            'Check the title block, notes, or dimension format. '
-            'Inch drawings use values like .250, .438, 1/4-20 UNC. '
-            'Metric drawings use values like 10.0, M8, Ø20. '
+            "Look at this technical drawing. What unit system is used? "
+            "Check the title block, notes, or dimension format. "
+            "Inch drawings use values like .250, .438, 1/4-20 UNC. "
+            "Metric drawings use values like 10.0, M8, Ø20. "
             'Return JSON: {"unit_system": "inch" or "metric", "evidence": "brief reason"}',
             images=[img_bytes],
         )
@@ -398,6 +406,7 @@ def _detect_unit_system_vision(pdf_path: str | Path) -> str | None:
             unit = result.get("unit_system", "").lower()
             if unit in ("inch", "metric"):
                 import logging
+
                 logging.getLogger(__name__).info(
                     f"Vision LLM detected unit system: {unit} ({result.get('evidence', '')})"
                 )

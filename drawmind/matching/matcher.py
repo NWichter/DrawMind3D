@@ -11,16 +11,21 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment
 
 from drawmind.models import (
-    PDFAnnotation, AnnotationType, CylindricalFeature, HoleGroup, MatchResult,
+    PDFAnnotation,
+    AnnotationType,
+    HoleGroup,
+    MatchResult,
 )
 from drawmind.matching.scoring import compute_match_score
 from drawmind.matching.llm_resolver import resolve_ambiguous_matches
 from drawmind.config import (
-    MATCH_CONFIDENCE_THRESHOLD, LLM_REVIEW_THRESHOLD, DIAMETER_TOLERANCE_MM,
-    VISION_FP_CONFIDENCE_THRESHOLD, VISION_FP_DIAMETER_TOLERANCE_FACTOR,
+    MATCH_CONFIDENCE_THRESHOLD,
+    LLM_REVIEW_THRESHOLD,
+    DIAMETER_TOLERANCE_MM,
+    VISION_FP_CONFIDENCE_THRESHOLD,
+    VISION_FP_DIAMETER_TOLERANCE_FACTOR,
     DEPTH_ASSOCIATION_DISTANCE_PTS,
 )
-from drawmind.cad.thread_table import match_thread_to_diameter
 
 logger = logging.getLogger(__name__)
 
@@ -81,9 +86,13 @@ def match_annotations_to_features(
             ann_d = _get_annotation_diameter_for_cap(ann)
             if ann_d is not None and ann_d > 0:
                 matching_features = sum(
-                    1 for h in holes
+                    1
+                    for h in holes
                     if abs(h.primary_diameter - ann_d) < DIAMETER_TOLERANCE_MM * 2
-                    or (h.secondary_diameter and abs(h.secondary_diameter - ann_d) < DIAMETER_TOLERANCE_MM * 2)
+                    or (
+                        h.secondary_diameter
+                        and abs(h.secondary_diameter - ann_d) < DIAMETER_TOLERANCE_MM * 2
+                    )
                 )
                 if matching_features > 0:
                     count = min(count, matching_features)
@@ -155,9 +164,7 @@ def match_annotations_to_features(
     # LLM disambiguation for unmatched annotations (if enabled)
     if use_llm_resolver and unmatched_ann and unmatched_holes:
         try:
-            llm_results = resolve_ambiguous_matches(
-                unmatched_ann, unmatched_holes, pdf_path
-            )
+            llm_results = resolve_ambiguous_matches(unmatched_ann, unmatched_holes, pdf_path)
             for llm_match in llm_results:
                 if llm_match.confidence >= MATCH_CONFIDENCE_THRESHOLD:
                     # Prevent duplicate hole assignments from LLM resolver
@@ -325,6 +332,7 @@ def _filter_vision_false_positives(
         # For threads, also check thread table drill diameters
         if ann.annotation_type == AnnotationType.THREAD:
             from drawmind.cad.thread_table import get_thread_diameters
+
             thread_spec = ann.parsed.get("thread_spec", "")
             if thread_spec:
                 base = thread_spec.split("x")[0].split("X")[0].strip()
@@ -340,13 +348,14 @@ def _filter_vision_false_positives(
                         continue
 
         # Choose tolerance based on confidence (high-confidence gets looser check)
-        tol = loose_tolerance if ann.confidence >= VISION_FP_CONFIDENCE_THRESHOLD else strict_tolerance
+        tol = (
+            loose_tolerance
+            if ann.confidence >= VISION_FP_CONFIDENCE_THRESHOLD
+            else strict_tolerance
+        )
 
         # Check against hole diameters
-        has_match = any(
-            abs(ann_d - hd) < tol
-            for hd in hole_diameters
-        )
+        has_match = any(abs(ann_d - hd) < tol for hd in hole_diameters)
         if not has_match:
             logger.debug(
                 f"Filtered vision FP: {ann.raw_text} "
@@ -357,9 +366,7 @@ def _filter_vision_false_positives(
         filtered.append(ann)
 
     if len(filtered) < len(annotations):
-        logger.info(
-            f"Filtered {len(annotations) - len(filtered)} vision false positives"
-        )
+        logger.info(f"Filtered {len(annotations) - len(filtered)} vision false positives")
     return filtered
 
 
@@ -375,6 +382,7 @@ def _get_annotation_diameter_for_cap(annotation: PDFAnnotation) -> float | None:
         # Try to get drill diameter from thread table
         if thread_spec:
             from drawmind.cad.thread_table import get_thread_diameters
+
             diameters = get_thread_diameters(thread_spec.split("x")[0].split("X")[0].strip())
             if diameters:
                 return diameters.get("drill_d", diameters.get("minor_d"))

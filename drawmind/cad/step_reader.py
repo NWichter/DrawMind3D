@@ -73,7 +73,9 @@ def load_step_with_names(filepath: str | Path):
     return doc, shape_tool, labels
 
 
-def get_bounding_box(shape: TopoDS_Shape) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+def get_bounding_box(
+    shape: TopoDS_Shape,
+) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
     """Get the axis-aligned bounding box of a shape.
 
     Returns:

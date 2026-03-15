@@ -1,6 +1,5 @@
 """Tests for STEP file reading and feature extraction."""
 
-import pytest
 from drawmind.cad.thread_table import (
     get_thread_diameters,
     match_thread_to_diameter,

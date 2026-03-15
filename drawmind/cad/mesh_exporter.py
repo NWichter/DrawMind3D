@@ -15,7 +15,9 @@ from OCP.TopLoc import TopLoc_Location
 from OCP.StlAPI import StlAPI_Writer
 
 
-def export_stl(shape: TopoDS_Shape, output_path: str | Path, linear_deflection: float = 0.1) -> Path:
+def export_stl(
+    shape: TopoDS_Shape, output_path: str | Path, linear_deflection: float = 0.1
+) -> Path:
     """Export shape to STL format (simple fallback).
 
     Args:
@@ -91,9 +93,12 @@ def tessellate_shape(shape: TopoDS_Shape, linear_deflection: float = 0.1) -> dic
     return face_meshes
 
 
-def export_glb(shape: TopoDS_Shape, output_path: str | Path,
-               linear_deflection: float = 0.1,
-               highlight_face_ids: list[int] | None = None) -> Path:
+def export_glb(
+    shape: TopoDS_Shape,
+    output_path: str | Path,
+    linear_deflection: float = 0.1,
+    highlight_face_ids: list[int] | None = None,
+) -> Path:
     """Export shape to GLB (binary glTF) format for Three.js."""
     output_path = Path(output_path)
     face_meshes = tessellate_shape(shape, linear_deflection)
@@ -165,21 +170,27 @@ def _build_gltf(vertices: list[float], normals: list[float], indices: list[int])
         "scene": 0,
         "scenes": [{"nodes": [0]}],
         "nodes": [{"mesh": 0}],
-        "meshes": [{
-            "primitives": [{
-                "attributes": {"POSITION": 1},
-                "indices": 0,
-                "material": 0,
-            }]
-        }],
-        "materials": [{
-            "pbrMetallicRoughness": {
-                "baseColorFactor": [0.7, 0.75, 0.8, 1.0],
-                "metallicFactor": 0.3,
-                "roughnessFactor": 0.6,
-            },
-            "doubleSided": True,
-        }],
+        "meshes": [
+            {
+                "primitives": [
+                    {
+                        "attributes": {"POSITION": 1},
+                        "indices": 0,
+                        "material": 0,
+                    }
+                ]
+            }
+        ],
+        "materials": [
+            {
+                "pbrMetallicRoughness": {
+                    "baseColorFactor": [0.7, 0.75, 0.8, 1.0],
+                    "metallicFactor": 0.3,
+                    "roughnessFactor": 0.6,
+                },
+                "doubleSided": True,
+            }
+        ],
         "accessors": [
             {
                 "bufferView": 0,
@@ -222,18 +233,22 @@ def _build_gltf(vertices: list[float], normals: list[float], indices: list[int])
 
         total_bin += b"\x00" * norm_padding + norm_data
 
-        gltf_json["accessors"].append({
-            "bufferView": 2,
-            "componentType": 5126,
-            "count": len(normals) // 3,
-            "type": "VEC3",
-        })
-        gltf_json["bufferViews"].append({
-            "buffer": 0,
-            "byteOffset": norm_offset,
-            "byteLength": len(norm_data),
-            "target": 34962,
-        })
+        gltf_json["accessors"].append(
+            {
+                "bufferView": 2,
+                "componentType": 5126,
+                "count": len(normals) // 3,
+                "type": "VEC3",
+            }
+        )
+        gltf_json["bufferViews"].append(
+            {
+                "buffer": 0,
+                "byteOffset": norm_offset,
+                "byteLength": len(norm_data),
+                "target": 34962,
+            }
+        )
         gltf_json["meshes"][0]["primitives"][0]["attributes"]["NORMAL"] = 2
         gltf_json["buffers"][0]["byteLength"] = len(total_bin)
 

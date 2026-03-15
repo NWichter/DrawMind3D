@@ -1,14 +1,16 @@
 """Tests for JSON output generation."""
 
 import json
-import tempfile
-from pathlib import Path
 
 import pytest
 
 from drawmind.models import (
-    PDFAnnotation, AnnotationType, BoundingBox,
-    CylindricalFeature, HoleGroup, MatchResult,
+    PDFAnnotation,
+    AnnotationType,
+    BoundingBox,
+    CylindricalFeature,
+    HoleGroup,
+    MatchResult,
 )
 from drawmind.output.writer import write_output
 
@@ -33,7 +35,10 @@ def sample_match():
         },
         confidence=0.92,
         scoring_breakdown={"diameter": 0.95, "depth": 0.8, "type_compatibility": 1.0},
-        evidence={"bbox": {"x0": 100, "y0": 50, "x1": 180, "y1": 65, "page": 0}, "source": "native"},
+        evidence={
+            "bbox": {"x0": 100, "y0": 50, "x1": 180, "y1": 65, "page": 0},
+            "source": "native",
+        },
     )
 
 
@@ -51,13 +56,22 @@ def sample_unmatched_ann():
 @pytest.fixture
 def sample_unmatched_hole():
     feat = CylindricalFeature(
-        id="feat_099", face_ids=[99], radius=3.0, diameter=6.0,
-        center=(0, 0, 0), axis_direction=(0, 0, 1),
-        estimated_depth=10.0, surface_area=100.0,
+        id="feat_099",
+        face_ids=[99],
+        radius=3.0,
+        diameter=6.0,
+        center=(0, 0, 0),
+        axis_direction=(0, 0, 1),
+        estimated_depth=10.0,
+        surface_area=100.0,
     )
     return HoleGroup(
-        id="hole_099", features=[feat], primary_diameter=6.0,
-        total_depth=10.0, center=(0, 0, 0), axis_direction=(0, 0, 1),
+        id="hole_099",
+        features=[feat],
+        primary_diameter=6.0,
+        total_depth=10.0,
+        center=(0, 0, 0),
+        axis_direction=(0, 0, 1),
     )
 
 
@@ -84,7 +98,9 @@ class TestOutputWriter:
         data = json.loads(out.read_text())
         assert data["features"][0]["confidence_level"] == "review"
 
-    def test_summary_counts(self, sample_match, sample_unmatched_ann, sample_unmatched_hole, tmp_path):
+    def test_summary_counts(
+        self, sample_match, sample_unmatched_ann, sample_unmatched_hole, tmp_path
+    ):
         out = tmp_path / "result.json"
         write_output([sample_match], [sample_unmatched_ann], [sample_unmatched_hole], out)
         data = json.loads(out.read_text())
@@ -103,7 +119,9 @@ class TestOutputWriter:
         assert any("could not be matched" in w for w in warnings)
         assert any("review" in w for w in warnings)
 
-    def test_unmatched_has_reason(self, sample_match, sample_unmatched_ann, sample_unmatched_hole, tmp_path):
+    def test_unmatched_has_reason(
+        self, sample_match, sample_unmatched_ann, sample_unmatched_hole, tmp_path
+    ):
         out = tmp_path / "result.json"
         write_output([sample_match], [sample_unmatched_ann], [sample_unmatched_hole], out)
         data = json.loads(out.read_text())

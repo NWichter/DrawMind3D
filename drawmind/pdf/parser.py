@@ -12,9 +12,7 @@ from drawmind.config import MAX_HOLE_DIAMETER_MM, MAX_HOLE_DIAMETER_INCH, GDT_MA
 INCH_TO_MM = 25.4
 
 
-def parse_annotations(
-    raw_texts: list[dict], unit_system: str = "metric"
-) -> list[PDFAnnotation]:
+def parse_annotations(raw_texts: list[dict], unit_system: str = "metric") -> list[PDFAnnotation]:
     """Parse raw text spans into structured PDFAnnotation objects.
 
     Args:
@@ -74,7 +72,7 @@ def _is_gdt_false_positive(text: str, value: float, unit_system: str) -> bool:
     (e.g., Ø.015, ⌀.020) but are very small values, not actual hole diameters.
     """
     # Only applies when text starts with or contains a diameter symbol
-    has_dia_sym = bool(re.search(r'[\u2300\u00d8\u00f8\u2205\ufffd]', text))
+    has_dia_sym = bool(re.search(r"[\u2300\u00d8\u00f8\u2205\ufffd]", text))
     if not has_dia_sym:
         return False
 
@@ -83,7 +81,7 @@ def _is_gdt_false_positive(text: str, value: float, unit_system: str) -> bool:
     if value < threshold:
         # Diameter callouts typically have a multiplier (4X) or bilateral tolerance (+.003/-.001)
         has_multiplier = bool(pat.MULTIPLIER.search(text))
-        has_bilateral_tol = bool(re.search(r'[+]\s*[\d.]', text))
+        has_bilateral_tol = bool(re.search(r"[+]\s*[\d.]", text))
         if not has_multiplier and not has_bilateral_tol:
             return True
 
@@ -124,17 +122,19 @@ def _parse_combined_callout(
         if tol_class:
             parsed["tolerance_class"] = tol_class
 
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.THREAD,
-            parsed=parsed,
-            bbox=bbox,
-            source=source,
-            multiplier=multiplier,
-            is_through=is_through,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.THREAD,
+                parsed=parsed,
+                bbox=bbox,
+                source=source,
+                multiplier=multiplier,
+                is_through=is_through,
+                unit_system=unit_system,
+            )
+        )
 
     elif diameter:
         raw_value = float(diameter.replace(",", "."))
@@ -152,17 +152,19 @@ def _parse_combined_callout(
         if tol_class:
             parsed["tolerance_class"] = tol_class
 
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.DIAMETER,
-            parsed=parsed,
-            bbox=bbox,
-            source=source,
-            multiplier=multiplier,
-            is_through=is_through,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.DIAMETER,
+                parsed=parsed,
+                bbox=bbox,
+                source=source,
+                multiplier=multiplier,
+                is_through=is_through,
+                unit_system=unit_system,
+            )
+        )
 
     if depth:
         counter += 1
@@ -171,15 +173,17 @@ def _parse_combined_callout(
         depth_parsed = {"value": converted_depth}
         if unit_system == "inch":
             depth_parsed["original_inch"] = raw_depth
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.DEPTH,
-            parsed=depth_parsed,
-            bbox=bbox,
-            source=source,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.DEPTH,
+                parsed=depth_parsed,
+                bbox=bbox,
+                source=source,
+                unit_system=unit_system,
+            )
+        )
 
     return results
 
@@ -210,25 +214,27 @@ def _parse_individual_patterns(
             parsed["tolerance_class"] = match.group(3)
 
         # Check for multiplier prefix (try numeric "4X" first, then text "4 holes")
-        mult_match = pat.MULTIPLIER.search(text[:match.start()])
+        mult_match = pat.MULTIPLIER.search(text[: match.start()])
         if not mult_match:
-            mult_match = pat.MULTIPLIER_TEXT.search(text[:match.start()])
+            mult_match = pat.MULTIPLIER_TEXT.search(text[: match.start()])
         multiplier = int(mult_match.group(1)) if mult_match else 1
 
         # Check for through-hole (including THRU ALL)
         is_through = bool(pat.THROUGH_HOLE.search(text))
 
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.THREAD,
-            parsed=parsed,
-            bbox=bbox,
-            source=source,
-            multiplier=multiplier,
-            is_through=is_through,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.THREAD,
+                parsed=parsed,
+                bbox=bbox,
+                source=source,
+                multiplier=multiplier,
+                is_through=is_through,
+                unit_system=unit_system,
+            )
+        )
         return results
 
     # Thread patterns — UTS (Unified: UNC, UNF, UNEF)
@@ -236,9 +242,9 @@ def _parse_individual_patterns(
     if match:
         counter += 1
         size_str = match.group(1).strip()  # e.g., "1/4", "#10", "3/8"
-        tpi = int(match.group(2))          # threads per inch
-        series = match.group(3).upper()    # UNC, UNF, etc.
-        thread_class = match.group(4)      # e.g., "2B" (optional)
+        tpi = int(match.group(2))  # threads per inch
+        series = match.group(3).upper()  # UNC, UNF, etc.
+        thread_class = match.group(4)  # e.g., "2B" (optional)
 
         # Convert size to decimal inches then to mm
         if "/" in size_str:
@@ -267,23 +273,25 @@ def _parse_individual_patterns(
         if thread_class:
             parsed["tolerance_class"] = thread_class
 
-        mult_match = pat.MULTIPLIER.search(text[:match.start()])
+        mult_match = pat.MULTIPLIER.search(text[: match.start()])
         if not mult_match:
-            mult_match = pat.MULTIPLIER_TEXT.search(text[:match.start()])
+            mult_match = pat.MULTIPLIER_TEXT.search(text[: match.start()])
         multiplier = int(mult_match.group(1)) if mult_match else 1
         is_through = bool(pat.THROUGH_HOLE.search(text))
 
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.THREAD,
-            parsed=parsed,
-            bbox=bbox,
-            source=source,
-            multiplier=multiplier,
-            is_through=is_through,
-            unit_system="inch",
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.THREAD,
+                parsed=parsed,
+                bbox=bbox,
+                source=source,
+                multiplier=multiplier,
+                is_through=is_through,
+                unit_system="inch",
+            )
+        )
         return results
 
     # Bare decimal with multiplier (e.g., "4X .500") — inch drawings only
@@ -301,17 +309,19 @@ def _parse_individual_patterns(
                 parsed = {"value": converted, "original_inch": raw_value}
                 is_through = bool(pat.THROUGH_HOLE.search(text))
 
-                results.append(PDFAnnotation(
-                    id=f"ann_{counter:03d}",
-                    raw_text=text,
-                    annotation_type=AnnotationType.DIAMETER,
-                    parsed=parsed,
-                    bbox=bbox,
-                    source=source,
-                    multiplier=multiplier_val,
-                    is_through=is_through,
-                    unit_system=unit_system,
-                ))
+                results.append(
+                    PDFAnnotation(
+                        id=f"ann_{counter:03d}",
+                        raw_text=text,
+                        annotation_type=AnnotationType.DIAMETER,
+                        parsed=parsed,
+                        bbox=bbox,
+                        source=source,
+                        multiplier=multiplier_val,
+                        is_through=is_through,
+                        unit_system=unit_system,
+                    )
+                )
                 return results
 
     # Diameter patterns (including decimal tolerance pattern for FTC drawings)
@@ -343,29 +353,31 @@ def _parse_individual_patterns(
                 parsed["original_inch"] = raw_value
 
             # Check for tolerance class after diameter
-            tol_match = pat.TOLERANCE_CLASS.search(text[match.end():])
+            tol_match = pat.TOLERANCE_CLASS.search(text[match.end() :])
             if tol_match:
                 parsed["tolerance_class"] = tol_match.group(0)
 
             # Check for multiplier (try numeric "4X" first, then text "4 holes"/"4 PL")
-            mult_match = pat.MULTIPLIER.search(text[:match.start()])
+            mult_match = pat.MULTIPLIER.search(text[: match.start()])
             if not mult_match:
-                mult_match = pat.MULTIPLIER_TEXT.search(text[:match.start()])
+                mult_match = pat.MULTIPLIER_TEXT.search(text[: match.start()])
             multiplier = int(mult_match.group(1)) if mult_match else 1
 
             is_through = bool(pat.THROUGH_HOLE.search(text))
 
-            results.append(PDFAnnotation(
-                id=f"ann_{counter:03d}",
-                raw_text=text,
-                annotation_type=AnnotationType.DIAMETER,
-                parsed=parsed,
-                bbox=bbox,
-                source=source,
-                multiplier=multiplier,
-                is_through=is_through,
-                unit_system=unit_system,
-            ))
+            results.append(
+                PDFAnnotation(
+                    id=f"ann_{counter:03d}",
+                    raw_text=text,
+                    annotation_type=AnnotationType.DIAMETER,
+                    parsed=parsed,
+                    bbox=bbox,
+                    source=source,
+                    multiplier=multiplier,
+                    is_through=is_through,
+                    unit_system=unit_system,
+                )
+            )
             return results
 
     # Depth patterns
@@ -378,30 +390,34 @@ def _parse_individual_patterns(
             depth_parsed = {"value": converted}
             if unit_system == "inch":
                 depth_parsed["original_inch"] = raw_value
-            results.append(PDFAnnotation(
-                id=f"ann_{counter:03d}",
-                raw_text=text,
-                annotation_type=AnnotationType.DEPTH,
-                parsed=depth_parsed,
-                bbox=bbox,
-                source=source,
-                unit_system=unit_system,
-            ))
+            results.append(
+                PDFAnnotation(
+                    id=f"ann_{counter:03d}",
+                    raw_text=text,
+                    annotation_type=AnnotationType.DEPTH,
+                    parsed=depth_parsed,
+                    bbox=bbox,
+                    source=source,
+                    unit_system=unit_system,
+                )
+            )
             return results
 
     # Through-hole only
     if pat.THROUGH_HOLE.search(text):
         counter += 1
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.DEPTH,
-            parsed={"through": True},
-            bbox=bbox,
-            source=source,
-            is_through=True,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.DEPTH,
+                parsed={"through": True},
+                bbox=bbox,
+                source=source,
+                is_through=True,
+                unit_system=unit_system,
+            )
+        )
         return results
 
     # Counterbore
@@ -414,15 +430,17 @@ def _parse_individual_patterns(
             cb_parsed = {"diameter": converted}
             if unit_system == "inch":
                 cb_parsed["original_inch"] = raw_value
-            results.append(PDFAnnotation(
-                id=f"ann_{counter:03d}",
-                raw_text=text,
-                annotation_type=AnnotationType.COUNTERBORE,
-                parsed=cb_parsed,
-                bbox=bbox,
-                source=source,
-                unit_system=unit_system,
-            ))
+            results.append(
+                PDFAnnotation(
+                    id=f"ann_{counter:03d}",
+                    raw_text=text,
+                    annotation_type=AnnotationType.COUNTERBORE,
+                    parsed=cb_parsed,
+                    bbox=bbox,
+                    source=source,
+                    unit_system=unit_system,
+                )
+            )
             return results
 
     # Countersink
@@ -435,49 +453,57 @@ def _parse_individual_patterns(
             cs_parsed = {"diameter": converted}
             if unit_system == "inch":
                 cs_parsed["original_inch"] = raw_value
-            results.append(PDFAnnotation(
-                id=f"ann_{counter:03d}",
-                raw_text=text,
-                annotation_type=AnnotationType.COUNTERSINK,
-                parsed=cs_parsed,
-                bbox=bbox,
-                source=source,
-                unit_system=unit_system,
-            ))
+            results.append(
+                PDFAnnotation(
+                    id=f"ann_{counter:03d}",
+                    raw_text=text,
+                    annotation_type=AnnotationType.COUNTERSINK,
+                    parsed=cs_parsed,
+                    bbox=bbox,
+                    source=source,
+                    unit_system=unit_system,
+                )
+            )
             return results
 
     # Fit specification
     match = pat.FIT_SPEC.search(text)
     if match:
         counter += 1
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.FIT,
-            parsed={
-                "hole_tolerance": match.group(1),
-                "shaft_tolerance": match.group(2),
-            },
-            bbox=bbox,
-            source=source,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.FIT,
+                parsed={
+                    "hole_tolerance": match.group(1),
+                    "shaft_tolerance": match.group(2),
+                },
+                bbox=bbox,
+                source=source,
+                unit_system=unit_system,
+            )
+        )
         return results
 
     # Surface roughness
     match = pat.SURFACE_ROUGHNESS.search(text)
     if match:
         counter += 1
-        results.append(PDFAnnotation(
-            id=f"ann_{counter:03d}",
-            raw_text=text,
-            annotation_type=AnnotationType.SURFACE_FINISH,
-            parsed={"parameter": match.group(0).split("=")[0].split("<")[0].split(">")[0].strip(),
-                     "value": float(match.group(1).replace(",", "."))},
-            bbox=bbox,
-            source=source,
-            unit_system=unit_system,
-        ))
+        results.append(
+            PDFAnnotation(
+                id=f"ann_{counter:03d}",
+                raw_text=text,
+                annotation_type=AnnotationType.SURFACE_FINISH,
+                parsed={
+                    "parameter": match.group(0).split("=")[0].split("<")[0].split(">")[0].strip(),
+                    "value": float(match.group(1).replace(",", ".")),
+                },
+                bbox=bbox,
+                source=source,
+                unit_system=unit_system,
+            )
+        )
         return results
 
     return results
@@ -565,8 +591,8 @@ def _associate_nearby_annotations(
 
             # Check vertical proximity (annotations in same callout are usually stacked)
             vertical_dist = abs(ann_i.bbox.y1 - ann_j.bbox.y0)
-            horizontal_overlap = (
-                min(ann_i.bbox.x1, ann_j.bbox.x1) - max(ann_i.bbox.x0, ann_j.bbox.x0)
+            horizontal_overlap = min(ann_i.bbox.x1, ann_j.bbox.x1) - max(
+                ann_i.bbox.x0, ann_j.bbox.x0
             )
 
             if vertical_dist < proximity_threshold and horizontal_overlap > 0:

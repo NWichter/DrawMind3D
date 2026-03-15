@@ -78,12 +78,15 @@ def main():
         try:
             import fitz as _fitz
             from drawmind.pdf.vision import analyze_page_with_vision
+
             _doc = _fitz.open(str(pdf_path))
             num_pages = len(_doc)
             _doc.close()
             for page_idx in range(num_pages):
                 logger.info(f"  Vision LLM: analyzing page {page_idx + 1}/{num_pages}")
-                annotations = analyze_page_with_vision(str(pdf_path), page_idx, annotations, unit_system=unit_system)
+                annotations = analyze_page_with_vision(
+                    str(pdf_path), page_idx, annotations, unit_system=unit_system
+                )
             logger.info(f"  After LLM enrichment: {len(annotations)} annotations")
         except Exception as e:
             logger.warning(f"Vision LLM failed, continuing without: {e}")
@@ -91,6 +94,7 @@ def main():
     # === Step 2b: Leader-line tracking ===
     try:
         from drawmind.pdf.leader_lines import extract_leader_targets
+
         annotations = extract_leader_targets(str(pdf_path), annotations)
     except Exception as e:
         logger.warning(f"Leader-line extraction failed: {e}")
@@ -122,7 +126,10 @@ def main():
     # === Step 4: Match annotations to features ===
     logger.info("Matching annotations to 3D features...")
     matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
-        annotations, holes, pdf_path=str(pdf_path), use_llm_resolver=use_llm,
+        annotations,
+        holes,
+        pdf_path=str(pdf_path),
+        use_llm_resolver=use_llm,
     )
     logger.info(
         f"  {len(matches)} matches, "
@@ -137,9 +144,8 @@ def main():
         )
         try:
             from drawmind.matching.llm_resolver import resolve_ambiguous_matches
-            llm_matches = resolve_ambiguous_matches(
-                unmatched_ann, unmatched_holes, str(pdf_path)
-            )
+
+            llm_matches = resolve_ambiguous_matches(unmatched_ann, unmatched_holes, str(pdf_path))
             if llm_matches:
                 matches.extend(llm_matches)
                 resolved_ann_ids = {m.annotation_id for m in llm_matches}
@@ -164,7 +170,9 @@ def main():
 
     # Print summary
     high_conf = sum(1 for m in matches if m.confidence >= LLM_REVIEW_THRESHOLD)
-    needs_review = sum(1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD)
+    needs_review = sum(
+        1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD
+    )
 
     print("\n" + "=" * 50)
     print("DrawMind3D - Results")

@@ -9,7 +9,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 
 from drawmind.config import TEMP_DIR, LLM_REVIEW_THRESHOLD, MATCH_CONFIDENCE_THRESHOLD
 from drawmind.pdf.extractor import extract_all_text, detect_unit_system
@@ -57,6 +57,7 @@ def _cleanup_old_jobs():
         if job_dir and Path(job_dir).exists():
             shutil.rmtree(job_dir, ignore_errors=True)
         del jobs[jid]
+
 
 # Serve static files
 STATIC_DIR = Path(__file__).parent / "static"
@@ -125,6 +126,7 @@ async def analyze(job_id: str, use_llm: bool = True):
             try:
                 import fitz
                 from drawmind.pdf.vision import analyze_page_with_vision
+
                 doc = fitz.open(pdf_path)
                 num_pages = len(doc)
                 doc.close()
@@ -161,7 +163,8 @@ async def analyze(job_id: str, use_llm: bool = True):
 
         # 5. Matching (with LLM resolver when using LLM mode)
         matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
-            annotations, holes,
+            annotations,
+            holes,
             pdf_path=pdf_path if use_llm else None,
             use_llm_resolver=use_llm and USE_VISION_LLM,
         )
@@ -169,8 +172,12 @@ async def analyze(job_id: str, use_llm: bool = True):
         # 6. Write output
         output_path = job_dir / "result.json"
         write_output(
-            matches, unmatched_ann, unmatched_holes,
-            output_path, job["pdf_name"], job["step_name"],
+            matches,
+            unmatched_ann,
+            unmatched_holes,
+            output_path,
+            job["pdf_name"],
+            job["step_name"],
             llm_enhanced=use_llm and USE_VISION_LLM,
         )
 
@@ -181,7 +188,9 @@ async def analyze(job_id: str, use_llm: bool = True):
         job["holes"] = [h.model_dump() for h in holes]
         job["matches"] = [m.model_dump() for m in matches]
         high_conf = sum(1 for m in matches if m.confidence >= LLM_REVIEW_THRESHOLD)
-        needs_review = sum(1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD)
+        needs_review = sum(
+            1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD
+        )
         job["summary"] = {
             "annotations_found": len(annotations),
             "holes_found": len(holes),
@@ -191,8 +200,7 @@ async def analyze(job_id: str, use_llm: bool = True):
             "unmatched_annotations": len(unmatched_ann),
             "unmatched_holes": len(unmatched_holes),
             "avg_confidence": (
-                round(sum(m.confidence for m in matches) / len(matches), 3)
-                if matches else 0.0
+                round(sum(m.confidence for m in matches) / len(matches), 3) if matches else 0.0
             ),
         }
 
@@ -266,10 +274,13 @@ async def get_evaluation():
         json_path = eval_dir / f"evaluation_results_{variant}.json"
         if json_path.exists():
             import json
+
             with open(json_path) as f:
                 results[variant] = json.load(f)
     if not results:
-        raise HTTPException(404, "No evaluation results found. Run: uv run python scripts/evaluate.py")
+        raise HTTPException(
+            404, "No evaluation results found. Run: uv run python scripts/evaluate.py"
+        )
     return results
 
 
@@ -332,13 +343,15 @@ async def list_testcases():
         else:
             category = "other"
 
-        testcases.append({
-            "id": tc_id,
-            "category": category,
-            "has_pdf": has_pdf,
-            "has_step": has_step,
-            "evaluation": eval_data.get(tc_id, {}),
-        })
+        testcases.append(
+            {
+                "id": tc_id,
+                "category": category,
+                "has_pdf": has_pdf,
+                "has_step": has_step,
+                "evaluation": eval_data.get(tc_id, {}),
+            }
+        )
 
     return testcases
 
@@ -395,6 +408,7 @@ async def get_status(job_id: str):
 
 if __name__ == "__main__":
     import uvicorn
+
     logging.basicConfig(level=logging.INFO)
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)

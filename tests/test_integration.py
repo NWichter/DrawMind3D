@@ -1,7 +1,6 @@
 """End-to-end integration test with a synthetic PDF."""
 
 import json
-import tempfile
 from pathlib import Path
 
 import fitz  # PyMuPDF
@@ -12,7 +11,9 @@ from drawmind.pdf.parser import parse_annotations
 from drawmind.matching.matcher import match_annotations_to_features
 from drawmind.output.writer import write_output
 from drawmind.models import (
-    AnnotationType, CylindricalFeature, HoleGroup,
+    AnnotationType,
+    CylindricalFeature,
+    HoleGroup,
 )
 
 
@@ -29,9 +30,9 @@ def _create_test_pdf(path: Path) -> None:
         ((80, 150), "M10x1.5-6H"),
         ((80, 180), "depth 20"),
         ((300, 150), "4x M8 THRU"),
-        ((300, 250), "\u00d88.5H7"),         # Ø8.5H7
+        ((300, 250), "\u00d88.5H7"),  # Ø8.5H7
         ((80, 350), "M6"),
-        ((300, 350), "\u23009.0"),            # ⌀9.0
+        ((300, 350), "\u23009.0"),  # ⌀9.0
     ]
     for pos, text in annotations:
         page.insert_text(pos, text, fontsize=10)
@@ -72,16 +73,18 @@ def _create_mock_holes() -> list[HoleGroup]:
             is_through_hole=through,
             group_id=hid,
         )
-        holes.append(HoleGroup(
-            id=hid,
-            features=[feat],
-            primary_diameter=diam,
-            total_depth=depth,
-            center=center,
-            axis_direction=(0.0, 0.0, 1.0),
-            is_through_hole=through,
-            hole_type=htype,
-        ))
+        holes.append(
+            HoleGroup(
+                id=hid,
+                features=[feat],
+                primary_diameter=diam,
+                total_depth=depth,
+                center=center,
+                axis_direction=(0.0, 0.0, 1.0),
+                is_through_hole=through,
+                hole_type=htype,
+            )
+        )
     return holes
 
 
@@ -114,7 +117,8 @@ class TestIntegrationPipeline:
 
         # Check M10x1.5-6H parsed correctly
         m10_anns = [
-            a for a in annotations
+            a
+            for a in annotations
             if a.annotation_type == AnnotationType.THREAD
             and a.parsed.get("nominal_diameter") == 10.0
         ]
@@ -127,7 +131,8 @@ class TestIntegrationPipeline:
         annotations = parse_annotations(raw)
 
         m8_anns = [
-            a for a in annotations
+            a
+            for a in annotations
             if a.annotation_type == AnnotationType.THREAD
             and a.parsed.get("nominal_diameter") == 8.0
         ]
@@ -190,10 +195,7 @@ class TestIntegrationPipeline:
         annotations = parse_annotations(raw)
         matches, _, _ = match_annotations_to_features(annotations, self.holes)
 
-        m10_matches = [
-            m for m in matches
-            if "M10" in (m.annotation_text or "")
-        ]
+        m10_matches = [m for m in matches if "M10" in (m.annotation_text or "")]
         if m10_matches:
             assert m10_matches[0].feature_id == "hole_001"
             assert m10_matches[0].confidence > 0.5

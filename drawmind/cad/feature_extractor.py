@@ -65,24 +65,26 @@ def extract_cylindrical_faces(shape: TopoDS_Shape) -> list[CylindricalFeature]:
             estimated_depth = area / (2 * math.pi * radius) if radius > 1e-6 else 0.0
 
             feat_counter += 1
-            features.append(CylindricalFeature(
-                id=f"feat_{feat_counter:03d}",
-                face_ids=[face_id],
-                radius=round(radius, 4),
-                diameter=round(radius * 2, 4),
-                center=(
-                    round(location.X(), 4),
-                    round(location.Y(), 4),
-                    round(location.Z(), 4),
-                ),
-                axis_direction=(
-                    round(direction.X(), 6),
-                    round(direction.Y(), 6),
-                    round(direction.Z(), 6),
-                ),
-                estimated_depth=round(estimated_depth, 4),
-                surface_area=round(area, 4),
-            ))
+            features.append(
+                CylindricalFeature(
+                    id=f"feat_{feat_counter:03d}",
+                    face_ids=[face_id],
+                    radius=round(radius, 4),
+                    diameter=round(radius * 2, 4),
+                    center=(
+                        round(location.X(), 4),
+                        round(location.Y(), 4),
+                        round(location.Z(), 4),
+                    ),
+                    axis_direction=(
+                        round(direction.X(), 6),
+                        round(direction.Y(), 6),
+                        round(direction.Z(), 6),
+                    ),
+                    estimated_depth=round(estimated_depth, 4),
+                    surface_area=round(area, 4),
+                )
+            )
 
         elif surf_type == GeomAbs_Cone:
             # Conical faces → countersinks
@@ -105,29 +107,33 @@ def extract_cylindrical_faces(shape: TopoDS_Shape) -> list[CylindricalFeature]:
             area = props.Mass()
 
             # Approximate depth from cone geometry
-            estimated_depth = ref_radius / math.tan(abs(semi_angle)) if abs(semi_angle) > 0.01 else 0.0
+            estimated_depth = (
+                ref_radius / math.tan(abs(semi_angle)) if abs(semi_angle) > 0.01 else 0.0
+            )
 
             feat_counter += 1
-            features.append(CylindricalFeature(
-                id=f"feat_{feat_counter:03d}",
-                face_ids=[face_id],
-                radius=round(ref_radius, 4),
-                diameter=round(ref_radius * 2, 4),
-                center=(
-                    round(location.X(), 4),
-                    round(location.Y(), 4),
-                    round(location.Z(), 4),
-                ),
-                axis_direction=(
-                    round(direction.X(), 6),
-                    round(direction.Y(), 6),
-                    round(direction.Z(), 6),
-                ),
-                estimated_depth=round(estimated_depth, 4),
-                surface_area=round(area, 4),
-                is_conical=True,
-                cone_half_angle=round(math.degrees(abs(semi_angle)), 2),
-            ))
+            features.append(
+                CylindricalFeature(
+                    id=f"feat_{feat_counter:03d}",
+                    face_ids=[face_id],
+                    radius=round(ref_radius, 4),
+                    diameter=round(ref_radius * 2, 4),
+                    center=(
+                        round(location.X(), 4),
+                        round(location.Y(), 4),
+                        round(location.Z(), 4),
+                    ),
+                    axis_direction=(
+                        round(direction.X(), 6),
+                        round(direction.Y(), 6),
+                        round(direction.Z(), 6),
+                    ),
+                    estimated_depth=round(estimated_depth, 4),
+                    surface_area=round(area, 4),
+                    is_conical=True,
+                    cone_half_angle=round(math.degrees(abs(semi_angle)), 2),
+                )
+            )
 
         elif surf_type == GeomAbs_Sphere:
             # Spherical faces → ball-end holes, spherical countersinks
@@ -149,20 +155,22 @@ def extract_cylindrical_faces(shape: TopoDS_Shape) -> list[CylindricalFeature]:
             estimated_depth = radius
 
             feat_counter += 1
-            features.append(CylindricalFeature(
-                id=f"feat_{feat_counter:03d}",
-                face_ids=[face_id],
-                radius=round(radius, 4),
-                diameter=round(radius * 2, 4),
-                center=(
-                    round(center_pt.X(), 4),
-                    round(center_pt.Y(), 4),
-                    round(center_pt.Z(), 4),
-                ),
-                axis_direction=(0.0, 0.0, 1.0),  # Default axis for spherical
-                estimated_depth=round(estimated_depth, 4),
-                surface_area=round(area, 4),
-            ))
+            features.append(
+                CylindricalFeature(
+                    id=f"feat_{feat_counter:03d}",
+                    face_ids=[face_id],
+                    radius=round(radius, 4),
+                    diameter=round(radius * 2, 4),
+                    center=(
+                        round(center_pt.X(), 4),
+                        round(center_pt.Y(), 4),
+                        round(center_pt.Z(), 4),
+                    ),
+                    axis_direction=(0.0, 0.0, 1.0),  # Default axis for spherical
+                    estimated_depth=round(estimated_depth, 4),
+                    surface_area=round(area, 4),
+                )
+            )
 
         elif surf_type == GeomAbs_Torus:
             # Toroidal faces → torus inner/outer bore
@@ -189,24 +197,26 @@ def extract_cylindrical_faces(shape: TopoDS_Shape) -> list[CylindricalFeature]:
                 area = props.Mass()
 
                 feat_counter += 1
-                features.append(CylindricalFeature(
-                    id=f"feat_{feat_counter:03d}",
-                    face_ids=[face_id],
-                    radius=round(inner_diameter / 2, 4),
-                    diameter=round(inner_diameter, 4),
-                    center=(
-                        round(location.X(), 4),
-                        round(location.Y(), 4),
-                        round(location.Z(), 4),
-                    ),
-                    axis_direction=(
-                        round(direction.X(), 6),
-                        round(direction.Y(), 6),
-                        round(direction.Z(), 6),
-                    ),
-                    estimated_depth=round(minor_r * 2, 4),  # Torus cross-section
-                    surface_area=round(area, 4),
-                ))
+                features.append(
+                    CylindricalFeature(
+                        id=f"feat_{feat_counter:03d}",
+                        face_ids=[face_id],
+                        radius=round(inner_diameter / 2, 4),
+                        diameter=round(inner_diameter, 4),
+                        center=(
+                            round(location.X(), 4),
+                            round(location.Y(), 4),
+                            round(location.Z(), 4),
+                        ),
+                        axis_direction=(
+                            round(direction.X(), 6),
+                            round(direction.Y(), 6),
+                            round(direction.Z(), 6),
+                        ),
+                        estimated_depth=round(minor_r * 2, 4),  # Torus cross-section
+                        surface_area=round(area, 4),
+                    )
+                )
 
         face_id += 1
         explorer.Next()
@@ -225,9 +235,7 @@ def _axes_parallel(dir1: tuple, dir2: tuple, tolerance_deg: float) -> bool:
     return angle_deg < tolerance_deg
 
 
-def _centers_coaxial(
-    center1: tuple, center2: tuple, axis: tuple, distance_tol: float
-) -> bool:
+def _centers_coaxial(center1: tuple, center2: tuple, axis: tuple, distance_tol: float) -> bool:
     """Check if two centers lie on the same axis (within tolerance)."""
     c1 = np.array(center1)
     c2 = np.array(center2)
@@ -266,11 +274,11 @@ def group_coaxial_features(features: list[CylindricalFeature]) -> list[HoleGroup
             if j in used:
                 continue
 
-            if (_axes_parallel(feat_i.axis_direction, feat_j.axis_direction,
-                               COAXIAL_ANGLE_TOLERANCE_DEG)
-                and _centers_coaxial(feat_i.center, feat_j.center,
-                                     feat_i.axis_direction,
-                                     COAXIAL_DISTANCE_TOLERANCE_MM)):
+            if _axes_parallel(
+                feat_i.axis_direction, feat_j.axis_direction, COAXIAL_ANGLE_TOLERANCE_DEG
+            ) and _centers_coaxial(
+                feat_i.center, feat_j.center, feat_i.axis_direction, COAXIAL_DISTANCE_TOLERANCE_MM
+            ):
                 group_members.append(feat_j)
                 used.add(j)
 
@@ -299,23 +307,23 @@ def group_coaxial_features(features: list[CylindricalFeature]) -> list[HoleGroup
 
         primary_feat = min(group_members, key=lambda f: f.diameter)
 
-        groups.append(HoleGroup(
-            id=group_id,
-            features=group_members,
-            primary_diameter=round(primary_d, 4),
-            secondary_diameter=secondary_d,
-            total_depth=round(total_depth, 4),
-            center=primary_feat.center,
-            axis_direction=primary_feat.axis_direction,
-            hole_type=hole_type,
-        ))
+        groups.append(
+            HoleGroup(
+                id=group_id,
+                features=group_members,
+                primary_diameter=round(primary_d, 4),
+                secondary_diameter=secondary_d,
+                total_depth=round(total_depth, 4),
+                center=primary_feat.center,
+                axis_direction=primary_feat.axis_direction,
+                hole_type=hole_type,
+            )
+        )
 
     return groups
 
 
-def detect_through_holes(
-    shape: TopoDS_Shape, groups: list[HoleGroup]
-) -> list[HoleGroup]:
+def detect_through_holes(shape: TopoDS_Shape, groups: list[HoleGroup]) -> list[HoleGroup]:
     """Detect which hole groups are through-holes based on bounding box analysis."""
     bb_min, bb_max = get_bounding_box(shape)
     body_dims = np.array(bb_max) - np.array(bb_min)

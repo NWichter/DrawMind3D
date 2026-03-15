@@ -62,17 +62,19 @@ def resolve_ambiguous_matches(
 
     # Process in batches
     for batch_start in range(0, len(ambiguous_annotations), _BATCH_SIZE):
-        batch = ambiguous_annotations[batch_start:batch_start + _BATCH_SIZE]
+        batch = ambiguous_annotations[batch_start : batch_start + _BATCH_SIZE]
 
         # Build annotations array for the batch
         ann_items = []
         for ann in batch:
-            ann_items.append({
-                "id": ann.id,
-                "text": ann.raw_text,
-                "type": ann.annotation_type.value,
-                "parsed": ann.parsed,
-            })
+            ann_items.append(
+                {
+                    "id": ann.id,
+                    "text": ann.raw_text,
+                    "type": ann.annotation_type.value,
+                    "parsed": ann.parsed,
+                }
+            )
 
         annotations_json = json.dumps(ann_items, indent=1)
 
@@ -106,31 +108,33 @@ def resolve_ambiguous_matches(
 
                 if ann and hole:
                     match_counter = len(results) + 1
-                    results.append(MatchResult(
-                        id=f"llm_match_{match_counter:03d}",
-                        annotation_id=ann.id,
-                        feature_id=hole.id,
-                        annotation_text=ann.raw_text,
-                        parsed_interpretation=ann.parsed,
-                        feature_3d_ref={
-                            "hole_group_id": hole.id,
-                            "face_ids": [fid for f in hole.features for fid in f.face_ids],
-                            "primary_diameter_mm": hole.primary_diameter,
-                            "secondary_diameter_mm": hole.secondary_diameter,
-                            "center": list(hole.center),
-                            "axis_direction": list(hole.axis_direction),
-                            "total_depth_mm": hole.total_depth,
-                            "is_through_hole": hole.is_through_hole,
-                            "hole_type": hole.hole_type,
-                        },
-                        confidence=confidence,
-                        scoring_breakdown={"llm_resolved": True},
-                        evidence={
-                            "bbox": ann.bbox.model_dump(),
-                            "source": "llm_disambiguation",
-                            "reasoning": item.get("reasoning", ""),
-                        },
-                    ))
+                    results.append(
+                        MatchResult(
+                            id=f"llm_match_{match_counter:03d}",
+                            annotation_id=ann.id,
+                            feature_id=hole.id,
+                            annotation_text=ann.raw_text,
+                            parsed_interpretation=ann.parsed,
+                            feature_3d_ref={
+                                "hole_group_id": hole.id,
+                                "face_ids": [fid for f in hole.features for fid in f.face_ids],
+                                "primary_diameter_mm": hole.primary_diameter,
+                                "secondary_diameter_mm": hole.secondary_diameter,
+                                "center": list(hole.center),
+                                "axis_direction": list(hole.axis_direction),
+                                "total_depth_mm": hole.total_depth,
+                                "is_through_hole": hole.is_through_hole,
+                                "hole_type": hole.hole_type,
+                            },
+                            confidence=confidence,
+                            scoring_breakdown={"llm_resolved": True},
+                            evidence={
+                                "bbox": ann.bbox.model_dump(),
+                                "source": "llm_disambiguation",
+                                "reasoning": item.get("reasoning", ""),
+                            },
+                        )
+                    )
 
         except Exception as e:
             logger.error(f"LLM batch disambiguation failed: {e}")

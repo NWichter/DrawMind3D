@@ -81,13 +81,15 @@ class TestVisionFilters:
         assert result[0].parsed["value"] == pytest.approx(6.35)
 
     def test_counterbore_kept(self):
-        items = [{
-            "text": "⌳Ø.438 ↧.250",
-            "type": "counterbore",
-            "parsed": {"diameter": 0.438, "depth": 0.250},
-            "bbox_percent": {"x": 50, "y": 50, "w": 10, "h": 5},
-            "confidence": 0.85,
-        }]
+        items = [
+            {
+                "text": "⌳Ø.438 ↧.250",
+                "type": "counterbore",
+                "parsed": {"diameter": 0.438, "depth": 0.250},
+                "bbox_percent": {"x": 50, "y": 50, "w": 10, "h": 5},
+                "confidence": 0.85,
+            }
+        ]
         result = _process_vision_results(items, 0, 612, 792, "inch", 0)
         assert len(result) == 1
         assert result[0].annotation_type.value == "counterbore"

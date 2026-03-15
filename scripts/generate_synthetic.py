@@ -105,19 +105,22 @@ def generate_part(part_def: dict) -> tuple[TopoDS_Shape, list[dict]]:
             cone = BRepPrimAPI_MakeCone(cs_axis, cs_d / 2, diameter / 2, cs_depth).Shape()
             shape = BRepAlgoAPI_Cut(shape, cone).Shape()
 
-        holes_info.append({
-            "x": hx, "y": hy,
-            "diameter_mm": diameter,
-            "depth_mm": d if is_through else depth,
-            "is_through": is_through,
-            "type": hole.get("type", "simple"),
-            "thread": hole.get("thread"),
-            "count": hole.get("count", 1),
-            "annotation_text": hole.get("annotation_text", ""),
-            "image_annotation": hole.get("image_annotation", False),
-            "counterbore": hole.get("counterbore"),
-            "countersink": hole.get("countersink"),
-        })
+        holes_info.append(
+            {
+                "x": hx,
+                "y": hy,
+                "diameter_mm": diameter,
+                "depth_mm": d if is_through else depth,
+                "is_through": is_through,
+                "type": hole.get("type", "simple"),
+                "thread": hole.get("thread"),
+                "count": hole.get("count", 1),
+                "annotation_text": hole.get("annotation_text", ""),
+                "image_annotation": hole.get("image_annotation", False),
+                "counterbore": hole.get("counterbore"),
+                "countersink": hole.get("countersink"),
+            }
+        )
 
     return shape, holes_info
 
@@ -127,8 +130,10 @@ def _build_compound_shape(sub_shapes: list[dict]) -> TopoDS_Shape:
     result = None
     for ss in sub_shapes:
         ox, oy, oz = ss.get("ox", 0), ss.get("oy", 0), ss.get("oz", 0)
-        axis = gp_Ax2(gp_Pnt(ox, oy, oz), gp_Dir(0, 0, 1))
-        box = BRepPrimAPI_MakeBox(gp_Pnt(ox, oy, oz), gp_Pnt(ox + ss["w"], oy + ss["h"], oz + ss["d"])).Shape()
+        _ = gp_Ax2(gp_Pnt(ox, oy, oz), gp_Dir(0, 0, 1))  # noqa: F841
+        box = BRepPrimAPI_MakeBox(
+            gp_Pnt(ox, oy, oz), gp_Pnt(ox + ss["w"], oy + ss["h"], oz + ss["d"])
+        ).Shape()
         if result is None:
             result = box
         else:
@@ -160,12 +165,14 @@ def _draw_arrow(page, start, end, color=(0, 0, 0), width=0.5, head_size=4):
     page.draw_line(
         fitz.Point(end[0], end[1]),
         fitz.Point(ax + px * head_size * 0.4, ay + py * head_size * 0.4),
-        color=color, width=width
+        color=color,
+        width=width,
     )
     page.draw_line(
         fitz.Point(end[0], end[1]),
         fitz.Point(ax - px * head_size * 0.4, ay - py * head_size * 0.4),
-        color=color, width=width
+        color=color,
+        width=width,
     )
 
 
@@ -188,12 +195,14 @@ def _draw_dimension_line(page, p1, p2, offset, text, fontsize=8, color=(0, 0, 0)
     page.draw_line(
         fitz.Point(p1[0] + nx * (offset * 0.3), p1[1] + ny * (offset * 0.3)),
         fitz.Point(o1[0] + nx * ext_extra, o1[1] + ny * ext_extra),
-        color=color, width=0.3
+        color=color,
+        width=0.3,
     )
     page.draw_line(
         fitz.Point(p2[0] + nx * (offset * 0.3), p2[1] + ny * (offset * 0.3)),
         fitz.Point(o2[0] + nx * ext_extra, o2[1] + ny * ext_extra),
-        color=color, width=0.3
+        color=color,
+        width=0.3,
     )
 
     # Dimension line with arrows
@@ -226,8 +235,11 @@ def generate_pdf_drawing(
     draw_h = page_h - 2 * margin - title_block_h
 
     # Draw border
-    page.draw_rect(fitz.Rect(margin - 5, margin - 5, page_w - margin + 5, page_h - margin + 5),
-                   color=(0, 0, 0), width=1.5)
+    page.draw_rect(
+        fitz.Rect(margin - 5, margin - 5, page_w - margin + 5, page_h - margin + 5),
+        color=(0, 0, 0),
+        width=1.5,
+    )
 
     part_w = part_def["width"]
     part_h = part_def["height"]
@@ -254,9 +266,14 @@ def generate_pdf_drawing(
     front_w = part_w * scale
     front_h = part_d * scale
     if front_oy + front_h < page_h - margin - title_block_h - 10:
-        page.insert_text(fitz.Point(front_ox, front_oy - 8), "FRONT VIEW", fontsize=7, color=(0.4, 0.4, 0.4))
-        page.draw_rect(fitz.Rect(front_ox, front_oy, front_ox + front_w, front_oy + front_h),
-                       color=(0, 0, 0), width=1.0)
+        page.insert_text(
+            fitz.Point(front_ox, front_oy - 8), "FRONT VIEW", fontsize=7, color=(0.4, 0.4, 0.4)
+        )
+        page.draw_rect(
+            fitz.Rect(front_ox, front_oy, front_ox + front_w, front_oy + front_h),
+            color=(0, 0, 0),
+            width=1.0,
+        )
         # Draw through-hole projections as dashed lines in front view
         for hole in holes_info:
             if hole["is_through"]:
@@ -272,9 +289,14 @@ def generate_pdf_drawing(
     side_w = part_d * scale
     side_h = part_h * scale
     if side_ox + side_w < page_w - margin - 10:
-        page.insert_text(fitz.Point(side_ox, side_oy - 8), "SIDE VIEW", fontsize=7, color=(0.4, 0.4, 0.4))
-        page.draw_rect(fitz.Rect(side_ox, side_oy, side_ox + side_w, side_oy + side_h),
-                       color=(0, 0, 0), width=1.0)
+        page.insert_text(
+            fitz.Point(side_ox, side_oy - 8), "SIDE VIEW", fontsize=7, color=(0.4, 0.4, 0.4)
+        )
+        page.draw_rect(
+            fitz.Rect(side_ox, side_oy, side_ox + side_w, side_oy + side_h),
+            color=(0, 0, 0),
+            width=1.0,
+        )
 
     # Draw width dimension below top view
     _draw_dimension_line(
@@ -283,12 +305,14 @@ def generate_pdf_drawing(
         (ox + part_w * scale, oy + part_h * scale + 15),
         offset=0,
         text=f"{part_w:.0f}" if unit_system == "metric" else f"{part_w / 25.4:.3f}",
-        fontsize=7
+        fontsize=7,
     )
 
     # Draw holes in top view and annotations
     annotations = []
-    ann_x_base = ox + part_w * scale + (40 + side_w + 15 if side_ox + side_w < page_w - margin - 10 else 25)
+    ann_x_base = (
+        ox + part_w * scale + (40 + side_w + 15 if side_ox + side_w < page_w - margin - 10 else 25)
+    )
     ann_y = margin + 40
     font_size = 9
 
@@ -316,8 +340,12 @@ def generate_pdf_drawing(
 
         # Leader line with a small horizontal segment at the end
         leader_end_x = ann_x - 5
-        page.draw_line(fitz.Point(hx, hy), fitz.Point(leader_end_x, ann_text_y + font_size / 2),
-                       color=(0, 0, 0), width=0.5)
+        page.draw_line(
+            fitz.Point(hx, hy),
+            fitz.Point(leader_end_x, ann_text_y + font_size / 2),
+            color=(0, 0, 0),
+            width=0.5,
+        )
 
         # Place text (image-based for some, text for others)
         if hole.get("image_annotation"):
@@ -332,40 +360,70 @@ def generate_pdf_drawing(
                 color=(0, 0, 0),
             )
 
-        annotations.append({
-            "text": ann_text,
-            "bbox": {
-                "x0": ann_x, "y0": ann_text_y,
-                "x1": ann_x + len(ann_text) * font_size * 0.5,
-                "y1": ann_text_y + font_size + 2,
-            },
-            "page": 0,
-            "hole_index": i,
-        })
+        annotations.append(
+            {
+                "text": ann_text,
+                "bbox": {
+                    "x0": ann_x,
+                    "y0": ann_text_y,
+                    "x1": ann_x + len(ann_text) * font_size * 0.5,
+                    "y1": ann_text_y + font_size + 2,
+                },
+                "page": 0,
+                "hole_index": i,
+            }
+        )
 
     # Title block
     tb_y = page_h - margin - title_block_h
-    page.draw_rect(fitz.Rect(margin - 5, tb_y, page_w - margin + 5, page_h - margin + 5),
-                   color=(0, 0, 0), width=1.0)
+    page.draw_rect(
+        fitz.Rect(margin - 5, tb_y, page_w - margin + 5, page_h - margin + 5),
+        color=(0, 0, 0),
+        width=1.0,
+    )
 
     # Title block content
-    page.insert_text(fitz.Point(margin + 10, tb_y + 18),
-                     part_def["name"], fontsize=12, fontname="helv", color=(0, 0, 0))
-    page.insert_text(fitz.Point(margin + 10, tb_y + 32),
-                     part_def.get("description", ""), fontsize=7, color=(0.3, 0.3, 0.3))
+    page.insert_text(
+        fitz.Point(margin + 10, tb_y + 18),
+        part_def["name"],
+        fontsize=12,
+        fontname="helv",
+        color=(0, 0, 0),
+    )
+    page.insert_text(
+        fitz.Point(margin + 10, tb_y + 32),
+        part_def.get("description", ""),
+        fontsize=7,
+        color=(0.3, 0.3, 0.3),
+    )
 
     unit_label = "INCHES" if unit_system == "inch" else "MILLIMETERS"
-    page.insert_text(fitz.Point(page_w - margin - 150, tb_y + 18),
-                     f"UNITS: {unit_label}", fontsize=8, color=(0, 0, 0))
-    page.insert_text(fitz.Point(page_w - margin - 150, tb_y + 32),
-                     f"SCALE: ~{scale:.2f}:1", fontsize=7, color=(0.3, 0.3, 0.3))
-    page.insert_text(fitz.Point(page_w - margin - 150, tb_y + 44),
-                     "DrawMind3D Synthetic", fontsize=6, color=(0.5, 0.5, 0.5))
+    page.insert_text(
+        fitz.Point(page_w - margin - 150, tb_y + 18),
+        f"UNITS: {unit_label}",
+        fontsize=8,
+        color=(0, 0, 0),
+    )
+    page.insert_text(
+        fitz.Point(page_w - margin - 150, tb_y + 32),
+        f"SCALE: ~{scale:.2f}:1",
+        fontsize=7,
+        color=(0.3, 0.3, 0.3),
+    )
+    page.insert_text(
+        fitz.Point(page_w - margin - 150, tb_y + 44),
+        "DrawMind3D Synthetic",
+        fontsize=6,
+        color=(0.5, 0.5, 0.5),
+    )
 
     # Vertical divider in title block
-    page.draw_line(fitz.Point(page_w - margin - 160, tb_y),
-                   fitz.Point(page_w - margin - 160, page_h - margin + 5),
-                   color=(0, 0, 0), width=0.5)
+    page.draw_line(
+        fitz.Point(page_w - margin - 160, tb_y),
+        fitz.Point(page_w - margin - 160, page_h - margin + 5),
+        color=(0, 0, 0),
+        width=0.5,
+    )
 
     doc.save(str(pdf_path))
     doc.close()
@@ -387,7 +445,8 @@ def _draw_dashed_line(page, p1, p2, dash_len=4, gap_len=3, color=(0, 0, 0), widt
         page.draw_line(
             fitz.Point(p1[0] + ux * pos, p1[1] + uy * pos),
             fitz.Point(p1[0] + ux * end, p1[1] + uy * end),
-            color=color, width=width
+            color=color,
+            width=width,
         )
         pos = end + gap_len
 
@@ -437,13 +496,13 @@ def _build_annotation_text(hole: dict, unit_system: str) -> str:
     if hole.get("counterbore"):
         cb = hole["counterbore"]
         if unit_system == "inch":
-            ann_text += f" \u2334\u00d8{cb['diameter']/25.4:.3f} depth {cb['depth']/25.4:.3f}"
+            ann_text += f" \u2334\u00d8{cb['diameter'] / 25.4:.3f} depth {cb['depth'] / 25.4:.3f}"
         else:
             ann_text += f" \u2334\u00d8{cb['diameter']:.1f} depth {cb['depth']:.1f}"
 
     if hole.get("countersink"):
         cs = hole["countersink"]
-        cs_d = cs.get("diameter", hole["diameter_mm"] * 2)
+        _ = cs.get("diameter", hole["diameter_mm"] * 2)  # noqa: F841
         cs_a = cs.get("angle", 90)
         ann_text += f" \u2335{cs_a}\u00b0"
 
@@ -495,112 +554,270 @@ PART_DEFINITIONS = [
     {
         "name": "SYN-01-SimpleBlock",
         "description": "Simple block with 4 through-holes and 2 blind holes",
-        "width": 100, "height": 60, "depth": 20,
+        "width": 100,
+        "height": 60,
+        "depth": 20,
         "unit_system": "metric",
         "holes": [
-            {"x": 15, "y": 15, "diameter": 8.0, "through": True, "count": 4,
-             "annotation_text": "4X \u00d88.0 THRU"},
+            {
+                "x": 15,
+                "y": 15,
+                "diameter": 8.0,
+                "through": True,
+                "count": 4,
+                "annotation_text": "4X \u00d88.0 THRU",
+            },
             {"x": 45, "y": 15, "diameter": 8.0, "through": True},
             {"x": 15, "y": 45, "diameter": 8.0, "through": True},
             {"x": 45, "y": 45, "diameter": 8.0, "through": True},
-            {"x": 75, "y": 20, "diameter": 12.0, "depth": 15, "through": False,
-             "annotation_text": "\u00d812.0 depth 15"},
-            {"x": 75, "y": 40, "diameter": 10.0, "depth": 10, "through": False,
-             "annotation_text": "\u00d810.0 depth 10", "image_annotation": True},
+            {
+                "x": 75,
+                "y": 20,
+                "diameter": 12.0,
+                "depth": 15,
+                "through": False,
+                "annotation_text": "\u00d812.0 depth 15",
+            },
+            {
+                "x": 75,
+                "y": 40,
+                "diameter": 10.0,
+                "depth": 10,
+                "through": False,
+                "annotation_text": "\u00d810.0 depth 10",
+                "image_annotation": True,
+            },
         ],
     },
     {
         "name": "SYN-02-ThreadedPlate",
         "description": "Plate with metric threaded holes M6, M8, M10 with tolerance classes",
-        "width": 120, "height": 80, "depth": 15,
+        "width": 120,
+        "height": 80,
+        "depth": 15,
         "unit_system": "metric",
         "holes": [
-            {"x": 20, "y": 20, "diameter": 5.0, "through": True, "thread": "M6", "count": 4,
-             "tolerance_class": "6H",
-             "annotation_text": "4X M6x1.0 6H THRU"},
+            {
+                "x": 20,
+                "y": 20,
+                "diameter": 5.0,
+                "through": True,
+                "thread": "M6",
+                "count": 4,
+                "tolerance_class": "6H",
+                "annotation_text": "4X M6x1.0 6H THRU",
+            },
             {"x": 50, "y": 20, "diameter": 5.0, "through": True, "thread": "M6"},
             {"x": 20, "y": 60, "diameter": 5.0, "through": True, "thread": "M6"},
             {"x": 50, "y": 60, "diameter": 5.0, "through": True, "thread": "M6"},
-            {"x": 80, "y": 30, "diameter": 6.8, "depth": 12, "thread": "M8",
-             "annotation_text": "M8x1.25 depth 12", "image_annotation": True},
-            {"x": 100, "y": 30, "diameter": 6.8, "depth": 12, "thread": "M8",
-             "annotation_text": "2X M8x1.25 depth 12"},
-            {"x": 80, "y": 50, "diameter": 8.5, "through": True, "thread": "M10",
-             "annotation_text": "M10x1.5 THRU", "image_annotation": True},
+            {
+                "x": 80,
+                "y": 30,
+                "diameter": 6.8,
+                "depth": 12,
+                "thread": "M8",
+                "annotation_text": "M8x1.25 depth 12",
+                "image_annotation": True,
+            },
+            {
+                "x": 100,
+                "y": 30,
+                "diameter": 6.8,
+                "depth": 12,
+                "thread": "M8",
+                "annotation_text": "2X M8x1.25 depth 12",
+            },
+            {
+                "x": 80,
+                "y": 50,
+                "diameter": 8.5,
+                "through": True,
+                "thread": "M10",
+                "annotation_text": "M10x1.5 THRU",
+                "image_annotation": True,
+            },
         ],
     },
     {
         "name": "SYN-03-InchPart",
         "description": "Inch-dimensioned part with bilateral tolerances",
-        "width": 100, "height": 70, "depth": 25,
+        "width": 100,
+        "height": 70,
+        "depth": 25,
         "unit_system": "inch",
         "holes": [
-            {"x": 20, "y": 15, "diameter": 6.35, "through": True, "count": 2,
-             "annotation_text": "2X \u00d8.250 +.005/-.002 THRU"},
+            {
+                "x": 20,
+                "y": 15,
+                "diameter": 6.35,
+                "through": True,
+                "count": 2,
+                "annotation_text": "2X \u00d8.250 +.005/-.002 THRU",
+            },
             {"x": 50, "y": 15, "diameter": 6.35, "through": True},
-            {"x": 20, "y": 50, "diameter": 8.731, "through": True,
-             "annotation_text": "\u00d8.3438 +.003/-.001 THRU"},
-            {"x": 50, "y": 50, "diameter": 11.1125, "depth": 12.7,
-             "annotation_text": "\u00d8.4375 depth .500", "image_annotation": True},
-            {"x": 80, "y": 35, "diameter": 4.2, "depth": 10, "thread": "M5",
-             "annotation_text": "M5x0.8 depth 10"},
+            {
+                "x": 20,
+                "y": 50,
+                "diameter": 8.731,
+                "through": True,
+                "annotation_text": "\u00d8.3438 +.003/-.001 THRU",
+            },
+            {
+                "x": 50,
+                "y": 50,
+                "diameter": 11.1125,
+                "depth": 12.7,
+                "annotation_text": "\u00d8.4375 depth .500",
+                "image_annotation": True,
+            },
+            {
+                "x": 80,
+                "y": 35,
+                "diameter": 4.2,
+                "depth": 10,
+                "thread": "M5",
+                "annotation_text": "M5x0.8 depth 10",
+            },
         ],
     },
     {
         "name": "SYN-04-MixedFeatures",
         "description": "Complex part with counterbores, countersinks, threads, and tolerance classes",
-        "width": 150, "height": 100, "depth": 30,
+        "width": 150,
+        "height": 100,
+        "depth": 30,
         "unit_system": "metric",
         "holes": [
-            {"x": 25, "y": 25, "diameter": 6.0, "through": True, "count": 4,
-             "annotation_text": "4X \u00d86.0 THRU \u2334\u00d812.0 depth 5.0",
-             "counterbore": {"diameter": 12.0, "depth": 5.0}},
-            {"x": 55, "y": 25, "diameter": 6.0, "through": True,
-             "counterbore": {"diameter": 12.0, "depth": 5.0}},
-            {"x": 25, "y": 75, "diameter": 6.0, "through": True,
-             "counterbore": {"diameter": 12.0, "depth": 5.0}},
-            {"x": 55, "y": 75, "diameter": 6.0, "through": True,
-             "counterbore": {"diameter": 12.0, "depth": 5.0}},
-            {"x": 90, "y": 35, "diameter": 10.0, "depth": 20,
-             "tolerance": "H7",
-             "annotation_text": "\u00d810.0 H7 depth 20"},
-            {"x": 90, "y": 65, "diameter": 10.0, "depth": 20,
-             "annotation_text": "2X \u00d810.0 depth 20"},
-            {"x": 120, "y": 30, "diameter": 5.0, "through": True, "thread": "M6",
-             "tolerance_class": "6H",
-             "annotation_text": "M6x1.0 6H THRU"},
-            {"x": 120, "y": 50, "diameter": 6.8, "depth": 15, "thread": "M8",
-             "annotation_text": "M8x1.25 depth 15", "image_annotation": True},
-            {"x": 120, "y": 70, "diameter": 5.0, "through": True,
-             "countersink": {"diameter": 10.0, "angle": 90},
-             "annotation_text": "\u00d85.0 THRU \u233590\u00b0"},
+            {
+                "x": 25,
+                "y": 25,
+                "diameter": 6.0,
+                "through": True,
+                "count": 4,
+                "annotation_text": "4X \u00d86.0 THRU \u2334\u00d812.0 depth 5.0",
+                "counterbore": {"diameter": 12.0, "depth": 5.0},
+            },
+            {
+                "x": 55,
+                "y": 25,
+                "diameter": 6.0,
+                "through": True,
+                "counterbore": {"diameter": 12.0, "depth": 5.0},
+            },
+            {
+                "x": 25,
+                "y": 75,
+                "diameter": 6.0,
+                "through": True,
+                "counterbore": {"diameter": 12.0, "depth": 5.0},
+            },
+            {
+                "x": 55,
+                "y": 75,
+                "diameter": 6.0,
+                "through": True,
+                "counterbore": {"diameter": 12.0, "depth": 5.0},
+            },
+            {
+                "x": 90,
+                "y": 35,
+                "diameter": 10.0,
+                "depth": 20,
+                "tolerance": "H7",
+                "annotation_text": "\u00d810.0 H7 depth 20",
+            },
+            {
+                "x": 90,
+                "y": 65,
+                "diameter": 10.0,
+                "depth": 20,
+                "annotation_text": "2X \u00d810.0 depth 20",
+            },
+            {
+                "x": 120,
+                "y": 30,
+                "diameter": 5.0,
+                "through": True,
+                "thread": "M6",
+                "tolerance_class": "6H",
+                "annotation_text": "M6x1.0 6H THRU",
+            },
+            {
+                "x": 120,
+                "y": 50,
+                "diameter": 6.8,
+                "depth": 15,
+                "thread": "M8",
+                "annotation_text": "M8x1.25 depth 15",
+                "image_annotation": True,
+            },
+            {
+                "x": 120,
+                "y": 70,
+                "diameter": 5.0,
+                "through": True,
+                "countersink": {"diameter": 10.0, "angle": 90},
+                "annotation_text": "\u00d85.0 THRU \u233590\u00b0",
+            },
         ],
     },
     {
         "name": "SYN-05-ManyHoles",
         "description": "Plate with many holes of different sizes for stress-testing",
-        "width": 200, "height": 120, "depth": 10,
+        "width": 200,
+        "height": 120,
+        "depth": 10,
         "unit_system": "metric",
         "holes": [
-            {"x": 20, "y": 20, "diameter": 4.0, "through": True, "count": 6,
-             "annotation_text": "6X \u00d84.0 THRU"},
+            {
+                "x": 20,
+                "y": 20,
+                "diameter": 4.0,
+                "through": True,
+                "count": 6,
+                "annotation_text": "6X \u00d84.0 THRU",
+            },
             {"x": 50, "y": 20, "diameter": 4.0, "through": True},
             {"x": 80, "y": 20, "diameter": 4.0, "through": True},
             {"x": 20, "y": 100, "diameter": 4.0, "through": True},
             {"x": 50, "y": 100, "diameter": 4.0, "through": True},
             {"x": 80, "y": 100, "diameter": 4.0, "through": True},
-            {"x": 120, "y": 40, "diameter": 8.0, "through": True, "count": 3,
-             "tolerance": "H8",
-             "annotation_text": "3X \u00d88.0 H8 THRU"},
+            {
+                "x": 120,
+                "y": 40,
+                "diameter": 8.0,
+                "through": True,
+                "count": 3,
+                "tolerance": "H8",
+                "annotation_text": "3X \u00d88.0 H8 THRU",
+            },
             {"x": 150, "y": 40, "diameter": 8.0, "through": True},
             {"x": 120, "y": 80, "diameter": 8.0, "through": True},
-            {"x": 170, "y": 60, "diameter": 16.0, "through": True,
-             "annotation_text": "\u00d816.0 +0.025/-0.010 THRU"},
-            {"x": 35, "y": 60, "diameter": 3.3, "through": True, "thread": "M4",
-             "annotation_text": "M4x0.7 THRU", "image_annotation": True},
-            {"x": 65, "y": 60, "diameter": 5.0, "through": True, "thread": "M6",
-             "tolerance_class": "6H",
-             "annotation_text": "M6x1.0 6H THRU"},
+            {
+                "x": 170,
+                "y": 60,
+                "diameter": 16.0,
+                "through": True,
+                "annotation_text": "\u00d816.0 +0.025/-0.010 THRU",
+            },
+            {
+                "x": 35,
+                "y": 60,
+                "diameter": 3.3,
+                "through": True,
+                "thread": "M4",
+                "annotation_text": "M4x0.7 THRU",
+                "image_annotation": True,
+            },
+            {
+                "x": 65,
+                "y": 60,
+                "diameter": 5.0,
+                "through": True,
+                "thread": "M6",
+                "tolerance_class": "6H",
+                "annotation_text": "M6x1.0 6H THRU",
+            },
         ],
     },
 ]
@@ -608,6 +825,7 @@ PART_DEFINITIONS = [
 
 def main():
     import argparse
+
     parser = argparse.ArgumentParser(description="Generate synthetic test data")
     parser.add_argument("--count", type=int, default=len(PART_DEFINITIONS))
     args = parser.parse_args()

@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 
 class AnnotationType(str, Enum):
     """Types of engineering drawing annotations."""
+
     THREAD = "thread"
     DIAMETER = "diameter"
     DEPTH = "depth"
@@ -25,6 +26,7 @@ class AnnotationType(str, Enum):
 
 class BoundingBox(BaseModel):
     """Bounding box for a PDF annotation."""
+
     x0: float
     y0: float
     x1: float
@@ -34,6 +36,7 @@ class BoundingBox(BaseModel):
 
 class PDFAnnotation(BaseModel):
     """A parsed annotation extracted from a PDF technical drawing."""
+
     id: str
     raw_text: str
     annotation_type: AnnotationType
@@ -43,12 +46,15 @@ class PDFAnnotation(BaseModel):
     source: str = "native"  # "native", "ocr", or "vision_llm"
     multiplier: int = 1  # e.g. "4x M8" -> multiplier=4
     is_through: bool = False
-    unit_system: str = "metric"  # "metric" or "inch" — values are always stored in mm after conversion
+    unit_system: str = (
+        "metric"  # "metric" or "inch" — values are always stored in mm after conversion
+    )
     associated_annotations: list[str] = Field(default_factory=list)  # IDs of related annotations
 
 
 class CylindricalFeature(BaseModel):
     """A cylindrical feature (potential hole) extracted from a 3D CAD model."""
+
     id: str
     face_ids: list[int] = Field(default_factory=list)
     radius: float  # mm
@@ -65,6 +71,7 @@ class CylindricalFeature(BaseModel):
 
 class HoleGroup(BaseModel):
     """A group of coaxial cylindrical features forming one logical hole."""
+
     id: str
     features: list[CylindricalFeature]
     primary_diameter: float  # The main (smallest) hole diameter
@@ -78,6 +85,7 @@ class HoleGroup(BaseModel):
 
 class MatchResult(BaseModel):
     """A matched pair of PDF annotation and 3D CAD feature."""
+
     id: str
     annotation_id: str
     feature_id: str  # HoleGroup or CylindricalFeature ID
@@ -91,6 +99,7 @@ class MatchResult(BaseModel):
 
 class PipelineOutput(BaseModel):
     """Complete pipeline output."""
+
     metadata: dict = Field(default_factory=dict)
     features: list[dict] = Field(default_factory=list)
     unmatched_annotations: list[dict] = Field(default_factory=list)

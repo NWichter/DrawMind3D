@@ -39,7 +39,9 @@ def write_output(
 
     # Classify matches by confidence level
     high_conf = [m for m in matches if m.confidence >= LLM_REVIEW_THRESHOLD]
-    medium_conf = [m for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD]
+    medium_conf = [
+        m for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD
+    ]
 
     # Add confidence_level flag to each match
     features = []
@@ -58,9 +60,7 @@ def write_output(
             f"{len(unmatched_annotations)} annotation(s) could not be matched to any 3D feature"
         )
     if unmatched_holes:
-        warnings.append(
-            f"{len(unmatched_holes)} 3D hole(s) have no matching annotation"
-        )
+        warnings.append(f"{len(unmatched_holes)} 3D hole(s) have no matching annotation")
     if medium_conf:
         warnings.append(
             f"{len(medium_conf)} match(es) have medium confidence ({MATCH_CONFIDENCE_THRESHOLD:.0%}-{LLM_REVIEW_THRESHOLD:.0%}) and should be reviewed"
@@ -142,7 +142,9 @@ def generate_summary_text(output: PipelineOutput) -> str:
         lines.append("--- Matches ---")
         for feat in output.features:
             conf = feat.get("confidence", 0) if isinstance(feat, dict) else feat.confidence
-            text = feat.get("annotation_text", "") if isinstance(feat, dict) else feat.annotation_text
+            text = (
+                feat.get("annotation_text", "") if isinstance(feat, dict) else feat.annotation_text
+            )
             fid = feat.get("feature_id", "") if isinstance(feat, dict) else feat.feature_id
             lines.append(f"  [{conf:.0%}] '{text}' -> {fid}")
 
