@@ -19,9 +19,13 @@ OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/ap
 # LLM Settings
 USE_VISION_LLM = bool(OPENROUTER_API_KEY)
 VISION_MODEL = os.getenv("VISION_MODEL", "google/gemini-2.5-flash")
+VISION_MODEL_FALLBACK = os.getenv("VISION_MODEL_FALLBACK", "google/gemini-2.5-pro")
 TEXT_MODEL = os.getenv("TEXT_MODEL", "anthropic/claude-haiku-4-5-20251001")
 # Disambiguation uses the same cheap vision model — text-only context is sufficient
 DISAMBIGUATE_MODEL = os.getenv("DISAMBIGUATE_MODEL", "google/gemini-2.5-flash")
+
+# Vision fallback: re-analyze with stronger model if few annotations found
+VISION_FALLBACK_MIN_ANNOTATIONS = 2  # Trigger fallback if fewer than this found
 
 # Matching thresholds
 MATCH_CONFIDENCE_THRESHOLD = 0.6

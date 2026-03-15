@@ -1,6 +1,6 @@
 [project]
 name = "drawmind3d"
-version = "0.1.0"
+version = "1.0.0"
 description = "Link PDF technical drawing annotations to 3D CAD features"
 readme = "README.md"
 requires-python = ">=3.12"

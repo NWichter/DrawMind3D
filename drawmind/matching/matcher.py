@@ -286,16 +286,15 @@ def _filter_vision_false_positives(
         AnnotationType.THREAD,
     }
 
+    # Use wider tolerance for high-confidence annotations (still check against 3D)
+    strict_tolerance = wide_tolerance
+    loose_tolerance = wide_tolerance * 2  # For high-confidence: looser but still checked
+
     filtered = []
     for ann in annotations:
         # Only filter vision-sourced annotations
         is_vision = ann.source in ("vision", "vision_llm")
         if not is_vision:
-            filtered.append(ann)
-            continue
-
-        # High-confidence vision annotations are kept
-        if ann.confidence >= VISION_FP_CONFIDENCE_THRESHOLD:
             filtered.append(ann)
             continue
 
@@ -340,9 +339,12 @@ def _filter_vision_false_positives(
                         filtered.append(ann)
                         continue
 
+        # Choose tolerance based on confidence (high-confidence gets looser check)
+        tol = loose_tolerance if ann.confidence >= VISION_FP_CONFIDENCE_THRESHOLD else strict_tolerance
+
         # Check against hole diameters
         has_match = any(
-            abs(ann_d - hd) < wide_tolerance
+            abs(ann_d - hd) < tol
             for hd in hole_diameters
         )
         if not has_match:

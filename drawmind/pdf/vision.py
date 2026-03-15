@@ -11,6 +11,7 @@ from drawmind.pdf.extractor import get_page_as_image, get_page_dimensions
 from drawmind.pdf.parser import _convert_value, _is_gdt_false_positive, INCH_TO_MM
 from drawmind.llm.client import get_llm_client
 from drawmind.llm.prompts import VISION_EXTRACT_PROMPT, SYSTEM_ENGINEERING
+from drawmind.config import VISION_MODEL, VISION_MODEL_FALLBACK, VISION_FALLBACK_MIN_ANNOTATIONS
 
 logger = logging.getLogger(__name__)
 
@@ -93,107 +94,14 @@ def analyze_page_with_vision(
             return existing_annotations
 
         # Convert vision results to PDFAnnotation objects
-        vision_annotations = []
         ann_counter = max(
             (int(a.id.split("_")[-1]) for a in existing_annotations),
             default=0,
         )
 
-        for item in result:
-            ann_type_str = item.get("type", "").lower()
-            ann_type = TYPE_MAP.get(ann_type_str)
-            if ann_type is None:
-                continue
-
-            # Skip low-confidence extractions (LLM admits uncertainty)
-            conf = item.get("confidence", 0.7)
-            if conf < 0.4:
-                logger.debug(f"Vision LLM: skipping low-confidence ({conf}): {item.get('text', '')}")
-                continue
-
-            # Skip tolerance-only annotations (not standalone hole callouts)
-            if ann_type == AnnotationType.TOLERANCE:
-                continue
-
-            # Skip taper/ratio annotations (e.g., "1.00 : 2.00", "1:3")
-            text = item.get("text", "")
-            if re.search(r'\d+\.?\d*\s*:\s*\d+\.?\d*', text) and not re.search(r'[Øø⌀MmXx#]', text):
-                logger.debug(f"Vision LLM: skipping taper/ratio: {text}")
-                continue
-
-            # Skip radius annotations (e.g., "4X R.032")
-            if re.search(r'\bR\s*\.?\d', text, re.IGNORECASE) and not re.search(r'[Øø⌀]', text):
-                logger.debug(f"Vision LLM: skipping radius: {text}")
-                continue
-
-            # Skip torus/ring dimensions (I.D., O.D., AVG, web thickness)
-            if re.search(r'\b(I\.?D\.?|O\.?D\.?|AVG|MAJOR|MINOR)\b', text, re.IGNORECASE):
-                logger.debug(f"Vision LLM: skipping torus/ring dimension: {text}")
-                continue
-
-            # Skip standalone small values without diameter symbol (wall thickness, fillet, etc.)
-            if ann_type == AnnotationType.DIAMETER:
-                raw_value = _safe_float(item.get("parsed", {}).get("value"))
-                has_dia_sym = bool(re.search(r'[Øø⌀\u2300]', text))
-                if raw_value is not None and raw_value < 3.0 and not has_dia_sym:
-                    logger.debug(f"Vision LLM: skipping small non-diameter value: {text}")
-                    continue
-
-            # Get the raw parsed data from LLM
-            raw_parsed = item.get("parsed", {})
-
-            # GD&T disambiguation for diameter annotations
-            if ann_type == AnnotationType.DIAMETER:
-                raw_value = _safe_float(raw_parsed.get("value"))
-                text = item.get("text", "")
-                if raw_value is not None and _is_gdt_false_positive(text, raw_value, unit_system):
-                    logger.debug(f"Vision LLM: skipping GD&T false positive: {text}")
-                    continue
-
-            # Convert units for dimension values
-            parsed = _convert_parsed_values(raw_parsed, unit_system)
-
-            # Convert percentage bbox to absolute coordinates
-            bbox_pct = item.get("bbox_percent", {})
-            bbox = BoundingBox(
-                x0=bbox_pct.get("x", 0) * page_w / 100,
-                y0=bbox_pct.get("y", 0) * page_h / 100,
-                x1=(bbox_pct.get("x", 0) + bbox_pct.get("w", 5)) * page_w / 100,
-                y1=(bbox_pct.get("y", 0) + bbox_pct.get("h", 3)) * page_h / 100,
-                page=page_num,
-            )
-
-            ann_counter += 1
-            is_through = ann_type_str == "through" or bool(raw_parsed.get("through", False))
-
-            # Extract depth from LLM parsed data and convert if needed
-            llm_depth = _safe_float(raw_parsed.get("depth"))
-            if llm_depth is not None and "depth" not in parsed:
-                if unit_system == "inch":
-                    parsed["depth"] = round(llm_depth * INCH_TO_MM, 4)
-                    parsed["original_inch_depth"] = llm_depth
-                else:
-                    parsed["depth"] = llm_depth
-
-            multiplier = item.get("multiplier", 1)
-            if isinstance(multiplier, str):
-                try:
-                    multiplier = int(multiplier)
-                except ValueError:
-                    multiplier = 1
-
-            vision_annotations.append(PDFAnnotation(
-                id=f"ann_{ann_counter:03d}",
-                raw_text=item.get("text", ""),
-                annotation_type=ann_type,
-                parsed=parsed,
-                bbox=bbox,
-                confidence=item.get("confidence", 0.7),
-                source="vision_llm",
-                multiplier=multiplier,
-                is_through=is_through,
-                unit_system=unit_system,
-            ))
+        vision_annotations = _process_vision_results(
+            result, page_num, page_w, page_h, unit_system, ann_counter
+        )
 
         # Deduplicate vision annotations among themselves first
         vision_deduped = _deduplicate_vision_batch(vision_annotations)
@@ -225,16 +133,157 @@ def analyze_page_with_vision(
             else:
                 merged.append(v_ann)
 
+        new_count = len(merged) - len(existing_annotations)
         logger.info(
             f"Vision LLM found {len(vision_annotations)} annotations, "
             f"{len(vision_deduped)} after internal dedup, "
-            f"{len(merged) - len(existing_annotations)} new after merge"
+            f"{new_count} new after merge"
         )
+
+        # Fallback: if very few hole annotations found, re-analyze with stronger model
+        hole_types = {AnnotationType.THREAD, AnnotationType.DIAMETER,
+                      AnnotationType.HOLE_CALLOUT, AnnotationType.COUNTERBORE,
+                      AnnotationType.COUNTERSINK}
+        hole_ann_count = sum(1 for a in merged if a.annotation_type in hole_types)
+
+        if hole_ann_count < VISION_FALLBACK_MIN_ANNOTATIONS and VISION_MODEL_FALLBACK != VISION_MODEL:
+            logger.info(
+                f"Only {hole_ann_count} hole annotations found, "
+                f"re-analyzing with stronger model ({VISION_MODEL_FALLBACK})..."
+            )
+            try:
+                # Higher DPI for better detail
+                img_hq = get_page_as_image(pdf_path, page_num, dpi=200)
+                fallback_prompt = (
+                    VISION_EXTRACT_PROMPT + "\n\n"
+                    "IMPORTANT: A previous analysis found very few hole annotations. "
+                    "Please look VERY carefully at ALL views on this page. "
+                    "Check for small holes, threaded holes, counterbored holes, "
+                    "and any diameter callouts with leader lines pointing to circular features."
+                )
+                result2 = client.complete_json(
+                    fallback_prompt,
+                    images=[img_hq],
+                    system=SYSTEM_ENGINEERING,
+                    model=VISION_MODEL_FALLBACK,
+                )
+                if isinstance(result2, list) and len(result2) > len(vision_annotations):
+                    # Process fallback results through same pipeline
+                    fallback_anns = _process_vision_results(
+                        result2, page_num, page_w, page_h, unit_system, ann_counter
+                    )
+                    fallback_deduped = _deduplicate_vision_batch(fallback_anns)
+                    # Merge fallback into existing merged list
+                    for fb_ann in fallback_deduped:
+                        overlap = _find_overlap_idx(fb_ann, merged, set())
+                        if overlap is None:
+                            merged.append(fb_ann)
+                    new_from_fallback = len(merged) - len(existing_annotations) - new_count
+                    if new_from_fallback > 0:
+                        logger.info(f"Fallback model found {new_from_fallback} additional annotations")
+            except Exception as fb_err:
+                logger.warning(f"Fallback vision analysis failed: {fb_err}")
+
         return merged
 
     except Exception as e:
         logger.error(f"Vision analysis failed: {e}")
         return existing_annotations
+
+
+def _process_vision_results(
+    items: list[dict],
+    page_num: int,
+    page_w: float,
+    page_h: float,
+    unit_system: str,
+    start_counter: int,
+) -> list[PDFAnnotation]:
+    """Process raw Vision LLM results into PDFAnnotation objects with filtering."""
+    annotations = []
+    ann_counter = start_counter
+
+    for item in items:
+        ann_type_str = item.get("type", "").lower()
+        ann_type = TYPE_MAP.get(ann_type_str)
+        if ann_type is None:
+            continue
+
+        conf = item.get("confidence", 0.7)
+        if conf < 0.4:
+            continue
+
+        if ann_type == AnnotationType.TOLERANCE:
+            continue
+
+        text = item.get("text", "")
+
+        # Skip taper/ratio, radius, torus/ring dimensions
+        if re.search(r'\d+\.?\d*\s*:\s*\d+\.?\d*', text) and not re.search(r'[Øø⌀MmXx#]', text):
+            continue
+        if re.search(r'\bR\s*\.?\d', text, re.IGNORECASE) and not re.search(r'[Øø⌀]', text):
+            continue
+        if re.search(r'\b(I\.?D\.?|O\.?D\.?|AVG|MAJOR|MINOR)\b', text, re.IGNORECASE):
+            continue
+
+        # Skip small values without diameter symbol
+        if ann_type == AnnotationType.DIAMETER:
+            raw_value = _safe_float(item.get("parsed", {}).get("value"))
+            has_dia_sym = bool(re.search(r'[Øø⌀\u2300]', text))
+            if raw_value is not None and raw_value < 3.0 and not has_dia_sym:
+                continue
+
+        raw_parsed = item.get("parsed", {})
+
+        # GD&T disambiguation
+        if ann_type == AnnotationType.DIAMETER:
+            raw_value = _safe_float(raw_parsed.get("value"))
+            if raw_value is not None and _is_gdt_false_positive(text, raw_value, unit_system):
+                continue
+
+        parsed = _convert_parsed_values(raw_parsed, unit_system)
+
+        bbox_pct = item.get("bbox_percent", {})
+        bbox = BoundingBox(
+            x0=bbox_pct.get("x", 0) * page_w / 100,
+            y0=bbox_pct.get("y", 0) * page_h / 100,
+            x1=(bbox_pct.get("x", 0) + bbox_pct.get("w", 5)) * page_w / 100,
+            y1=(bbox_pct.get("y", 0) + bbox_pct.get("h", 3)) * page_h / 100,
+            page=page_num,
+        )
+
+        ann_counter += 1
+        is_through = ann_type_str == "through" or bool(raw_parsed.get("through", False))
+
+        llm_depth = _safe_float(raw_parsed.get("depth"))
+        if llm_depth is not None and "depth" not in parsed:
+            if unit_system == "inch":
+                parsed["depth"] = round(llm_depth * INCH_TO_MM, 4)
+                parsed["original_inch_depth"] = llm_depth
+            else:
+                parsed["depth"] = llm_depth
+
+        multiplier = item.get("multiplier", 1)
+        if isinstance(multiplier, str):
+            try:
+                multiplier = int(multiplier)
+            except ValueError:
+                multiplier = 1
+
+        annotations.append(PDFAnnotation(
+            id=f"ann_{ann_counter:03d}",
+            raw_text=text,
+            annotation_type=ann_type,
+            parsed=parsed,
+            bbox=bbox,
+            confidence=conf,
+            source="vision_llm",
+            multiplier=multiplier,
+            is_through=is_through,
+            unit_system=unit_system,
+        ))
+
+    return annotations
 
 
 def _get_ann_diameter(ann: PDFAnnotation) -> float | None:

@@ -153,8 +153,8 @@
     },
     "linking": {
       "correct_links": 4,
-      "total_links": 5,
-      "linking_accuracy": 0.8,
+      "total_links": 4,
+      "linking_accuracy": 1.0,
       "link_details": [
         {
           "correct": true,
@@ -169,11 +169,6 @@
           "feature_diameter": 12.0,
           "gt_diameter": 12.0,
           "confidence": 0.8515
-        },
-        {
-          "correct": false,
-          "reason": "no GT for diameter 100.00mm",
-          "confidence": 0.8
         },
         {
           "correct": true,
@@ -193,8 +188,8 @@
     },
     "annotations_found": 6,
     "holes_found": 143,
-    "matches_found": 5,
-    "avg_confidence": 0.8604
+    "matches_found": 4,
+    "avg_confidence": 0.8755
   },
   {
     "test_case": "CTC-03",
@@ -2080,9 +2075,9 @@
       "missed_annotations": []
     },
     "linking": {
-      "correct_links": 2,
+      "correct_links": 3,
       "total_links": 3,
-      "linking_accuracy": 0.6667,
+      "linking_accuracy": 1.0,
       "link_details": [
         {
           "correct": true,
@@ -2099,18 +2094,18 @@
           "confidence": 0.856
         },
         {
-          "correct": false,
-          "ann_diameter": 4.7752,
+          "correct": true,
+          "ann_diameter": 6.35,
           "feature_diameter": 6.858,
-          "gt_diameter": 4.763,
-          "confidence": 0.9
+          "gt_diameter": 6.35,
+          "confidence": 0.7
         }
       ]
     },
     "annotations_found": 7,
     "holes_found": 7,
     "matches_found": 3,
-    "avg_confidence": 0.8971
+    "avg_confidence": 0.8304
   },
   {
     "test_case": "D2MI-905",
@@ -2226,10 +2221,10 @@
         },
         {
           "correct": true,
-          "ann_diameter": 5.588,
+          "ann_diameter": 3.2512,
           "feature_diameter": 3.2512,
-          "gt_diameter": 4.763,
-          "confidence": 0.8811
+          "gt_diameter": 3.251,
+          "confidence": 0.876
         },
         {
           "correct": true,
@@ -2257,7 +2252,7 @@
     "annotations_found": 7,
     "holes_found": 7,
     "matches_found": 6,
-    "avg_confidence": 0.8851
+    "avg_confidence": 0.8842
   },
   {
     "test_case": "D2MI-907",
@@ -2373,10 +2368,10 @@
         },
         {
           "correct": true,
-          "ann_diameter": 5.588,
+          "ann_diameter": 3.2512,
           "feature_diameter": 3.2512,
-          "gt_diameter": 4.763,
-          "confidence": 0.8803
+          "gt_diameter": 3.251,
+          "confidence": 0.8752
         },
         {
           "correct": true,
@@ -2404,7 +2399,7 @@
     "annotations_found": 7,
     "holes_found": 7,
     "matches_found": 6,
-    "avg_confidence": 0.884
+    "avg_confidence": 0.8832
   },
   {
     "test_case": "SYN-01-SimpleBlock",

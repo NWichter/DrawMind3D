@@ -28,7 +28,17 @@ from drawmind.config import USE_VISION_LLM
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="DrawMind3D", version="0.1.0")
+app = FastAPI(
+    title="DrawMind3D",
+    version="1.0.0",
+    description=(
+        "GenAI-powered linking of PDF technical drawing annotations to 3D CAD hole features. "
+        "Upload a PDF drawing and STEP model, then run the analysis pipeline to get structured "
+        "JSON output with matched annotation-to-feature pairs, confidence scores, and evidence traces."
+    ),
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
 
 # Store job data in memory with TTL cleanup
 MAX_JOBS = 50
