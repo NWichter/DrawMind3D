@@ -37,6 +37,7 @@
                 <label class="checkbox-label">
                     <input type="checkbox" id="use-llm" checked>
                     Enable LLM Enhancement
+                    <span style="color:#64748b; font-size:0.7rem;" title="Uses Vision AI (Gemini Flash) to detect annotations in vector-drawn PDFs where text extraction fails. Improves F1 from ~27% to ~73%.">(?)</span>
                 </label>
                 <button type="submit" id="analyze-btn">Analyze</button>
             </div>
@@ -114,7 +115,7 @@
     <section id="evaluation-section" class="hidden">
         <div class="panel">
             <h2>Evaluation Results</h2>
-            <p class="eval-desc">Tested on 5 NIST CTC, 6 NIST FTC industrial cases, and 5 synthetic test cases with ground truth.</p>
+            <p class="eval-desc">Tested on 21 cases: 5 NIST CTC, 6 NIST FTC, 5 NIST D2MI industrial cases, and 5 synthetic test cases with ground truth.</p>
             <div id="eval-toggle" class="controls">
                 <div class="eval-btn-group">
                     <span class="eval-group-label">Mode:</span>
@@ -126,6 +127,7 @@
                     <button class="eval-filter-btn active" data-filter="all">All</button>
                     <button class="eval-filter-btn" data-filter="ctc">CTC</button>
                     <button class="eval-filter-btn" data-filter="ftc">FTC</button>
+                    <button class="eval-filter-btn" data-filter="d2mi">D2MI</button>
                     <button class="eval-filter-btn" data-filter="syn">Synthetic</button>
                 </div>
             </div>
@@ -153,7 +155,7 @@
     <section id="testcases-section" class="hidden">
         <div id="tc-list-view" class="panel">
             <h2>Test Cases</h2>
-            <p class="eval-desc">Browse and analyze all 21 test cases. Click a test case to view it, then click <strong>Analyze</strong> to run the pipeline.</p>
+            <p class="eval-desc">Browse and analyze all 21 built-in test cases. Click a test case to preview the PDF and 3D model, then click <strong style="color:#22c55e;">Analyze</strong> to run the full pipeline and see matched annotations.</p>
             <div class="controls" style="margin-bottom: 16px">
                 <div class="eval-btn-group">
                     <span class="eval-group-label">Filter:</span>
@@ -174,7 +176,7 @@
                 <span id="tc-detail-category" style="font-size: 0.7rem;"></span>
                 <span style="flex:1;"></span>
                 <label class="checkbox-label" style="font-size:0.75rem;">
-                    <input type="checkbox" id="tc-use-llm" checked> LLM
+                    <input type="checkbox" id="tc-use-llm" checked> LLM <span style="color:#64748b; font-size:0.65rem;" title="Uses Vision AI to detect annotations in vector-drawn PDFs">(?)</span>
                 </label>
                 <button id="tc-analyze-btn" class="nav-btn" style="background:#22c55e; color:#fff; border-color:#22c55e; padding:6px 16px;">Analyze</button>
             </div>
@@ -183,7 +185,7 @@
                 <span id="tc-analyze-text" style="color:#94a3b8;">Analyzing...</span>
             </div>
 
-            <p style="color:#64748b; font-size:0.75rem; padding:0 20px; margin:4px 0;">Click <strong style="color:#22c55e;">Analyze</strong> to run the pipeline. Results will appear below.</p>
+            <p style="color:#64748b; font-size:0.75rem; padding:0 20px; margin:4px 0;">Preview the PDF and 3D model below. Click <strong style="color:#22c55e;">Analyze</strong> to run the pipeline &mdash; matched annotations and confidence scores will appear at the bottom.</p>
 
             <div id="tc-viewer-area">
                 <div class="viewer-panel">

@@ -245,6 +245,7 @@ function filterEvalData(data, filter) {
     if (filter === 'all') return data;
     if (filter === 'ctc') return data.filter(r => r.test_case.startsWith('CTC'));
     if (filter === 'ftc') return data.filter(r => r.test_case.startsWith('FTC'));
+    if (filter === 'd2mi') return data.filter(r => r.test_case.startsWith('D2MI'));
     if (filter === 'syn') return data.filter(r => r.test_case.startsWith('SYN'));
     return data;
 }
