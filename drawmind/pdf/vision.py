@@ -126,6 +126,19 @@ def analyze_page_with_vision(
                 logger.debug(f"Vision LLM: skipping radius: {text}")
                 continue
 
+            # Skip torus/ring dimensions (I.D., O.D., AVG, web thickness)
+            if re.search(r'\b(I\.?D\.?|O\.?D\.?|AVG|MAJOR|MINOR)\b', text, re.IGNORECASE):
+                logger.debug(f"Vision LLM: skipping torus/ring dimension: {text}")
+                continue
+
+            # Skip standalone small values without diameter symbol (wall thickness, fillet, etc.)
+            if ann_type == AnnotationType.DIAMETER:
+                raw_value = _safe_float(item.get("parsed", {}).get("value"))
+                has_dia_sym = bool(re.search(r'[Øø⌀\u2300]', text))
+                if raw_value is not None and raw_value < 3.0 and not has_dia_sym:
+                    logger.debug(f"Vision LLM: skipping small non-diameter value: {text}")
+                    continue
+
             # Get the raw parsed data from LLM
             raw_parsed = item.get("parsed", {})
 

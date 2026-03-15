@@ -81,15 +81,15 @@ Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases, **5 NIST D2MI
 
 | Category | Cases | Precision | Recall | F1 | Linking | Confidence |
 |----------|-------|-----------|--------|-----|---------|------------|
-| CTC (Combinational) | 5 | 66.0% | 54.1% | 56.3% | 90.0% | 86.4% |
-| FTC (Fully-Toleranced) | 5 | 79.8% | 89.1% | 82.4% | 93.6% | 84.6% |
-| D2MI (Design-to-Mfg) | 5 | 44.3% | 100.0% | 59.3% | 93.3% | 88.6% |
+| CTC (Combinational) | 5 | 72.7% | 54.1% | 58.5% | 90.0% | 85.8% |
+| FTC (Fully-Toleranced) | 5 | 87.1% | 85.2% | 85.0% | 97.8% | 85.0% |
+| D2MI (Design-to-Mfg) | 5 | 47.1% | 100.0% | 61.7% | 93.3% | 88.6% |
 | Synthetic | 5 | 78.0% | 94.3% | 85.0% | 94.9% | 94.2% |
-| **Overall (20 cases)** | **20** | **67.0%** | **84.4%** | **70.8%** | **93.1%** | **88.5%** |
+| **Overall (20 cases)** | **20** | **71.2%** | **83.4%** | **72.6%** | **94.0%** | **88.4%** |
 
-**Top performers:** SYN-05 (100% F1, 100% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-08 (87.5% F1, 100% Linking), D2MI-904 (83.3% F1)
+**Top performers:** SYN-05 (100% F1, 100% Linking), FTC-07 (91.7% F1, 95.8% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-08/FTC-10 (87.5% F1, 100% Linking)
 
-> FTC-11 (torus part with no drilled holes) is excluded from metrics — the pipeline correctly identifies it has no hole features.
+> FTC-11 (torus part, no drilled holes) correctly returns 0 annotations — both with and without LLM.
 
 ### Without LLM (Regex + OCR only)
 
