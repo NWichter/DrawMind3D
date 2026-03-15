@@ -80,9 +80,11 @@ async def upload_files(
     job_dir = TEMP_DIR / job_id
     job_dir.mkdir(parents=True, exist_ok=True)
 
-    # Save uploaded files
-    pdf_path = job_dir / pdf.filename
-    step_path = job_dir / step.filename
+    # Save uploaded files (sanitize filenames to prevent path traversal)
+    pdf_name = Path(pdf.filename).name.replace("..", "")
+    step_name = Path(step.filename).name.replace("..", "")
+    pdf_path = job_dir / pdf_name
+    step_path = job_dir / step_name
 
     with open(pdf_path, "wb") as f:
         shutil.copyfileobj(pdf.file, f)

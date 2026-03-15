@@ -167,7 +167,7 @@ To add custom test cases, place `MyPart.pdf`, `MyPart.stp` and `MyPart_ground_tr
 | 3D Analysis | OCP (cadquery-ocp) | STEP file parsing, B-Rep geometry |
 | PDF Extraction | PyMuPDF + Tesseract | Text, bounding boxes, OCR |
 | Vision AI | Gemini Flash (OpenRouter) | Annotation detection in images |
-| Disambiguation | Claude Sonnet (OpenRouter) | Ambiguous match resolution |
+| Disambiguation | Gemini Flash (OpenRouter) | Batch disambiguation of unmatched annotations |
 | Matching | SciPy (Hungarian Algorithm) | Optimal assignment |
 | Web Backend | FastAPI + Uvicorn | REST API |
 | 3D Viewer | Three.js | Interactive 3D visualization |
