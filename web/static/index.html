@@ -21,6 +21,7 @@
     <!-- Upload Section -->
     <section id="upload-section" class="panel">
         <h2>Upload Files</h2>
+        <p style="color:#94a3b8; font-size:0.8rem; margin:-4px 0 12px 0;">Upload your own PDF + STEP files, or go to the <a href="#" id="link-to-testcases" style="color:#60a5fa;">Test Cases</a> tab to analyze built-in NIST and synthetic examples.</p>
         <form id="upload-form">
             <div class="file-inputs">
                 <div class="file-input">
@@ -152,13 +153,14 @@
     <section id="testcases-section" class="hidden">
         <div id="tc-list-view" class="panel">
             <h2>Test Cases</h2>
-            <p class="eval-desc">Browse all 16 test cases: 5 NIST CTC, 6 NIST FTC, and 5 synthetic cases.</p>
+            <p class="eval-desc">Browse and analyze all 21 test cases. Click a test case to view it, then click <strong>Analyze</strong> to run the pipeline.</p>
             <div class="controls" style="margin-bottom: 16px">
                 <div class="eval-btn-group">
                     <span class="eval-group-label">Filter:</span>
                     <button class="tc-filter-btn active" data-filter="all">All</button>
                     <button class="tc-filter-btn" data-filter="ctc">CTC</button>
                     <button class="tc-filter-btn" data-filter="ftc">FTC</button>
+                    <button class="tc-filter-btn" data-filter="d2mi">D2MI</button>
                     <button class="tc-filter-btn" data-filter="syn">Synthetic</button>
                 </div>
             </div>
@@ -170,6 +172,15 @@
                 <button id="tc-back-btn" class="nav-btn" style="background:transparent; color:#60a5fa; border-color:#60a5fa;">&larr; Back</button>
                 <span id="tc-detail-title" style="font-size: 1.2rem; font-weight: 700; color: #60a5fa;"></span>
                 <span id="tc-detail-category" style="font-size: 0.7rem;"></span>
+                <span style="flex:1;"></span>
+                <label class="checkbox-label" style="font-size:0.75rem;">
+                    <input type="checkbox" id="tc-use-llm" checked> LLM
+                </label>
+                <button id="tc-analyze-btn" class="nav-btn" style="background:#22c55e; color:#fff; border-color:#22c55e; padding:6px 16px;">Analyze</button>
+            </div>
+            <div id="tc-analyze-status" class="hidden" style="padding:8px 20px; display:flex; align-items:center; gap:8px;">
+                <div class="spinner"></div>
+                <span id="tc-analyze-text" style="color:#94a3b8;">Analyzing...</span>
             </div>
 
             <div id="tc-viewer-area">
@@ -197,6 +208,21 @@
             <div id="tc-detail-metrics" class="panel">
                 <h3>Evaluation Metrics</h3>
                 <div id="tc-metrics-content"></div>
+            </div>
+
+            <div id="tc-analysis-results" class="hidden">
+                <div class="panel summary" id="tc-results-summary">
+                    <div class="stat"><span class="stat-value" id="tc-stat-annotations">0</span><span class="stat-label">Annotations</span></div>
+                    <div class="stat"><span class="stat-value" id="tc-stat-holes">0</span><span class="stat-label">3D Holes</span></div>
+                    <div class="stat"><span class="stat-value" id="tc-stat-matched">0</span><span class="stat-label">Matches</span></div>
+                    <div class="stat"><span class="stat-value" id="tc-stat-confidence">0%</span><span class="stat-label">Avg Confidence</span></div>
+                </div>
+                <div class="panel">
+                    <h3>Matches</h3>
+                    <div style="overflow-x:auto;">
+                        <table id="tc-matches-table"><thead><tr><th>Annotation</th><th>Type</th><th>3D Feature</th><th>Confidence</th></tr></thead><tbody id="tc-matches-tbody"></tbody></table>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

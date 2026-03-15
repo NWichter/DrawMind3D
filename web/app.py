@@ -340,6 +340,8 @@ async def list_testcases():
             category = "CTC"
         elif tc_id.startswith("FTC"):
             category = "FTC"
+        elif tc_id.startswith("D2MI"):
+            category = "D2MI"
         elif tc_id.startswith("SYN"):
             category = "SYN"
         else:
@@ -399,6 +401,138 @@ async def get_testcase_model(tc_id: str):
             raise HTTPException(500, f"Model conversion failed: {e}")
 
     return FileResponse(str(glb_path), media_type="model/gltf-binary")
+
+
+@app.post("/api/testcases/{tc_id}/analyze")
+async def analyze_testcase(tc_id: str, use_llm: bool = True):
+    """Run the analysis pipeline on a built-in test case."""
+    if ".." in tc_id or "/" in tc_id or "\\" in tc_id:
+        raise HTTPException(400, "Invalid test case ID")
+
+    tc_dir = Path(__file__).parent.parent / "examples" / tc_id
+    pdf_path = tc_dir / "drawing.pdf"
+    step_path = None
+    for ext in ["stp", "step"]:
+        candidate = tc_dir / f"model.{ext}"
+        if candidate.exists():
+            step_path = candidate
+            break
+
+    if not pdf_path.exists() or not step_path:
+        raise HTTPException(404, f"Test case {tc_id} not found or incomplete")
+
+    # Create a job for this test case
+    _cleanup_old_jobs()
+    job_id = f"tc-{tc_id.lower()}-{str(uuid.uuid4())[:4]}"
+    job_dir = TEMP_DIR / job_id
+    job_dir.mkdir(parents=True, exist_ok=True)
+
+    jobs[job_id] = {
+        "pdf_path": str(pdf_path),
+        "step_path": str(step_path),
+        "pdf_name": f"{tc_id}/drawing.pdf",
+        "step_name": f"{tc_id}/model.stp",
+        "status": "analyzing",
+        "dir": str(job_dir),
+        "created_at": time.time(),
+    }
+
+    job = jobs[job_id]
+
+    try:
+        # 1. PDF extraction
+        raw_texts = extract_all_text(str(pdf_path))
+        unit_system = detect_unit_system(str(pdf_path))
+        annotations = parse_annotations(raw_texts, unit_system=unit_system)
+
+        # 2. Vision LLM (optional)
+        if USE_VISION_LLM and use_llm:
+            try:
+                import fitz
+
+                from drawmind.pdf.vision import analyze_page_with_vision
+
+                doc = fitz.open(str(pdf_path))
+                num_pages = len(doc)
+                doc.close()
+                for page_idx in range(num_pages):
+                    annotations = analyze_page_with_vision(
+                        str(pdf_path), page_idx, annotations, unit_system=unit_system
+                    )
+            except Exception as e:
+                logger.warning(f"Vision LLM failed: {e}")
+
+        # 2b. Leader-line tracking
+        try:
+            annotations = extract_leader_targets(str(pdf_path), annotations)
+        except Exception as e:
+            logger.warning(f"Leader-line extraction failed: {e}")
+
+        # 3. 3D feature extraction
+        shape = load_step(str(step_path))
+        features = extract_cylindrical_faces(shape)
+        holes = group_coaxial_features(features)
+        holes = detect_through_holes(shape, holes)
+
+        # 4. Export 3D model
+        glb_path = job_dir / "model.glb"
+        try:
+            export_glb(shape, glb_path)
+        except Exception as e:
+            logger.warning(f"GLB export failed: {e}")
+
+        job["glb_path"] = str(glb_path)
+
+        # 5. Matching
+        matches, unmatched_ann, unmatched_holes = match_annotations_to_features(
+            annotations,
+            holes,
+            pdf_path=str(pdf_path) if use_llm else None,
+            use_llm_resolver=use_llm and USE_VISION_LLM,
+        )
+
+        # 6. Write output
+        output_path = job_dir / "result.json"
+        write_output(
+            matches,
+            unmatched_ann,
+            unmatched_holes,
+            output_path,
+            job["pdf_name"],
+            job["step_name"],
+            llm_enhanced=use_llm and USE_VISION_LLM,
+        )
+
+        # Store results
+        job["status"] = "complete"
+        job["output_path"] = str(output_path)
+        job["annotations"] = [a.model_dump() for a in annotations]
+        job["holes"] = [h.model_dump() for h in holes]
+        job["matches"] = [m.model_dump() for m in matches]
+        high_conf = sum(1 for m in matches if m.confidence >= LLM_REVIEW_THRESHOLD)
+        needs_review = sum(
+            1 for m in matches if MATCH_CONFIDENCE_THRESHOLD <= m.confidence < LLM_REVIEW_THRESHOLD
+        )
+        job["summary"] = {
+            "annotations_found": len(annotations),
+            "holes_found": len(holes),
+            "matched": len(matches),
+            "high_confidence": high_conf,
+            "needs_review": needs_review,
+            "unmatched_annotations": len(unmatched_ann),
+            "unmatched_holes": len(unmatched_holes),
+            "avg_confidence": (
+                round(sum(m.confidence for m in matches) / len(matches), 3) if matches else 0.0
+            ),
+        }
+
+        return {"job_id": job_id, "status": "complete", "summary": job["summary"]}
+
+    except Exception as e:
+        job["status"] = "error"
+        job["error"] = str(e)
+        logger.error(f"Test case analysis failed: {e}", exc_info=True)
+        raise HTTPException(500, f"Analysis failed: {e}")
 
 
 @app.get("/api/status/{job_id}")

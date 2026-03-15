@@ -348,6 +348,7 @@ function renderTestCasesTable(filter) {
         let catClass;
         if (tc.category === 'CTC') catClass = 'ctc';
         else if (tc.category === 'FTC') catClass = 'ftc';
+        else if (tc.category === 'D2MI') catClass = 'ftc';
         else catClass = 'syn';
 
         html += `<tr class="tc-row" data-tc-id="${tc.id}">
@@ -376,11 +377,16 @@ async function showTestCaseDetail(tcId) {
     const tc = (testCasesData || []).find(t => t.id === tcId);
     if (!tc) return;
 
+    currentTcId = tcId;
+    document.getElementById('tc-analysis-results').classList.add('hidden');
+    document.getElementById('tc-analyze-status').classList.add('hidden');
+
     // Update header
     document.getElementById('tc-detail-title').textContent = tcId;
     let catTag;
     if (tc.category === 'CTC') catTag = '<span style="color:#f59e0b;">NIST CTC</span>';
     else if (tc.category === 'FTC') catTag = '<span style="color:#fb923c;">NIST FTC</span>';
+    else if (tc.category === 'D2MI') catTag = '<span style="color:#38bdf8;">NIST D2MI</span>';
     else catTag = '<span style="color:#a78bfa;">Synthetic</span>';
     document.getElementById('tc-detail-category').innerHTML = catTag;
 
@@ -460,12 +466,109 @@ function renderDetailMetrics(tc) {
     container.innerHTML = html;
 }
 
+let currentTcId = null;
+
+async function analyzeTestCase(tcId) {
+    const btn = document.getElementById('tc-analyze-btn');
+    const statusBar = document.getElementById('tc-analyze-status');
+    const statusText = document.getElementById('tc-analyze-text');
+    const resultsDiv = document.getElementById('tc-analysis-results');
+    const useLlm = document.getElementById('tc-use-llm').checked;
+
+    btn.disabled = true;
+    statusBar.classList.remove('hidden');
+    resultsDiv.classList.add('hidden');
+    statusText.textContent = 'Analyzing... (this may take 30-60 seconds with LLM)';
+
+    try {
+        const resp = await fetch(`/api/testcases/${tcId}/analyze?use_llm=${useLlm}`, {
+            method: 'POST',
+        });
+        const data = await resp.json();
+
+        if (data.status === 'complete') {
+            // Load full results
+            const resultsResp = await fetch(`/api/results/${data.job_id}`);
+            const results = await resultsResp.json();
+
+            // Update summary stats
+            const s = results.summary || data.summary;
+            document.getElementById('tc-stat-annotations').textContent = s.annotations_found;
+            document.getElementById('tc-stat-holes').textContent = s.holes_found;
+            document.getElementById('tc-stat-matched').textContent = s.matched;
+            document.getElementById('tc-stat-confidence').textContent =
+                (s.avg_confidence * 100).toFixed(0) + '%';
+
+            // Populate matches table
+            const tbody = document.getElementById('tc-matches-tbody');
+            const matches = results.matches || [];
+            tbody.innerHTML = matches.map(m => {
+                const confClass = m.confidence >= 0.8 ? 'confidence-high' :
+                    m.confidence >= 0.6 ? 'confidence-mid' : 'confidence-low';
+                const ref = m.feature_3d_ref || {};
+                const diam = ref.primary_diameter_mm ? ref.primary_diameter_mm.toFixed(2) + 'mm' : '-';
+                return `<tr>
+                    <td title="${(m.annotation_text || '').replace(/"/g, '&quot;')}">${(m.annotation_text || '').substring(0, 30)}</td>
+                    <td>${ref.hole_type || '-'}</td>
+                    <td>\u00d8${diam}</td>
+                    <td class="${confClass}"><strong>${(m.confidence * 100).toFixed(0)}%</strong></td>
+                </tr>`;
+            }).join('');
+
+            if (!matches.length) {
+                tbody.innerHTML = '<tr><td colspan="4" style="color:#888;">No matches found.</td></tr>';
+            }
+
+            // Update 3D viewer with match highlights
+            if (tcViewer3d && results.holes && results.matches) {
+                tcViewer3d.addFeatureMarkers(results.holes, results.matches);
+            }
+
+            // Update PDF viewer with annotation overlays
+            if (tcPdfViewer && results.annotations && results.matches) {
+                tcPdfViewer.setAnnotations(results.annotations, results.matches);
+            }
+
+            statusBar.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+        } else {
+            statusText.textContent = `Error: ${data.detail || data.error || 'Unknown error'}`;
+        }
+    } catch (e) {
+        statusText.textContent = `Error: ${e.message}`;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
 function initTestCases() {
     // Back button
     document.getElementById('tc-back-btn').addEventListener('click', () => {
         document.getElementById('tc-detail-view').classList.add('hidden');
         document.getElementById('tc-list-view').classList.remove('hidden');
+        document.getElementById('tc-analysis-results').classList.add('hidden');
+        document.getElementById('tc-analyze-status').classList.add('hidden');
     });
+
+    // Analyze button
+    document.getElementById('tc-analyze-btn').addEventListener('click', () => {
+        if (currentTcId) analyzeTestCase(currentTcId);
+    });
+
+    // Link from upload section to test cases tab
+    const linkEl = document.getElementById('link-to-testcases');
+    if (linkEl) {
+        linkEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.header-nav .nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.header-nav .nav-btn[data-tab="testcases"]').classList.add('active');
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('evaluation-section').classList.add('hidden');
+            document.getElementById('testcases-section').classList.remove('hidden');
+            loadTestCases();
+        });
+    }
 
     // Filter buttons
     document.querySelectorAll('.tc-filter-btn').forEach(btn => {
