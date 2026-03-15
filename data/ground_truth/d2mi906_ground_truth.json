@@ -1,0 +1,40 @@
+{
+  "test_case": "D2MI-906",
+  "source": "nist_d2mi",
+  "unit_system": "inch",
+  "description": "NIST D2MI machined housing 827-9999-906, inch drawing with counterbored holes and countersinks",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 3.251,
+      "count": 4,
+      "is_through": false,
+      "description": "4X Ø.128 counterbored holes (primary)"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 6.858,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.270 simple hole"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 4.763,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.187 countersink hole"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 3.81,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø.150 countersink hole"
+    }
+  ]
+}

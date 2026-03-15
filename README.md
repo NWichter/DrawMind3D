@@ -81,12 +81,15 @@ Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases, **5 NIST D2MI
 
 | Category | Cases | Precision | Recall | F1 | Linking | Confidence |
 |----------|-------|-----------|--------|-----|---------|------------|
-| CTC (Combinational) | 5 | 61.7% | 54.1% | 55.2% | 86.0% | 85.3% |
-| FTC (Fully-Toleranced) | 6 | 73.3% | 93.0% | 79.2% | 93.0% | 84.9% |
-| Synthetic | 5 | 79.0% | 94.3% | 84.9% | 97.1% | 93.4% |
-| **Overall (16 cases)** | **16** | **74.6%** | **79.1%** | **74.6%** | **93.0%** | **88.4%** |
+| CTC (Combinational) | 5 | 66.0% | 54.1% | 56.3% | 90.0% | 86.4% |
+| FTC (Fully-Toleranced) | 5 | 79.8% | 89.1% | 82.4% | 93.6% | 84.6% |
+| D2MI (Design-to-Mfg) | 5 | 44.3% | 100.0% | 59.3% | 93.3% | 88.6% |
+| Synthetic | 5 | 78.0% | 94.3% | 85.0% | 94.9% | 94.2% |
+| **Overall (20 cases)** | **20** | **67.0%** | **84.4%** | **70.8%** | **93.1%** | **88.5%** |
 
-**Top performers:** SYN-05 (100% F1, 100% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-08 (87.5% F1, 100% Linking), FTC-10 (87.5% F1, 100% Linking)
+**Top performers:** SYN-05 (100% F1, 100% Linking), SYN-03 (90.9% F1, 100% Linking), FTC-08 (87.5% F1, 100% Linking), D2MI-904 (83.3% F1)
+
+> FTC-11 (torus part with no drilled holes) is excluded from metrics — the pipeline correctly identifies it has no hole features.
 
 ### Without LLM (Regex + OCR only)
 
@@ -95,9 +98,10 @@ Evaluated on **5 NIST CTC**, **6 NIST FTC** industrial test cases, **5 NIST D2MI
 | CTC | 0.0% | 0.0% | Vector-drawn PDFs, no extractable text |
 | FTC | 24.0% | 56.0% | Only FTC-07, FTC-09, FTC-10 have extractable text |
 | Synthetic | 81.6% | 100.0% | Pure regex extraction, no vision needed |
-| **Overall** | **36.5%** | **53.3%** | |
+| D2MI | 0.0% | 0.0% | Vector-drawn inch drawings, no extractable text |
+| **Overall** | **27.4%** | **40.0%** | |
 
-**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 36.5% to 74.6% and linking accuracy from 53.3% to 93.0%. Vision-based unit detection ensures correct inch→mm conversion even when PDF text extraction fails.
+**Key insight:** Most NIST cases use vector-drawn annotations without searchable text. The Vision LLM raises overall F1 from 27.4% to 70.8% and linking accuracy from 40.0% to 93.1%. Vision-based unit detection ensures correct inch→mm conversion even when PDF text extraction fails.
 
 Evaluation charts: [`data/evaluation/presentation/`](data/evaluation/presentation/)
 

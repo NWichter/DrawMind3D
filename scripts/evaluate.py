@@ -105,6 +105,19 @@ def _build_test_cases() -> list[tuple]:
         ),
     ]
 
+    # Add D2MI test cases from examples/
+    EXAMPLES_DIR = Path(__file__).parent.parent / "examples"
+    for part in ["904", "905", "906", "907", "908"]:
+        tc_dir = EXAMPLES_DIR / f"D2MI-{part}"
+        gt_file = GT_DIR / f"d2mi{part}_ground_truth.json"
+        if tc_dir.exists() and gt_file.exists():
+            cases.append((
+                f"D2MI-{part}",
+                tc_dir / "drawing.pdf",
+                tc_dir / "model.stp",
+                gt_file,
+            ))
+
     # Add synthetic test cases
     if SYNTH_DIR.exists():
         for gt_file in sorted(SYNTH_DIR.glob("*_ground_truth.json")):

@@ -2085,6 +2085,390 @@
     "avg_confidence": 0.8626
   },
   {
+    "test_case": "D2MI-904",
+    "unit_system": "inch",
+    "llm_enhanced": true,
+    "extraction": {
+      "true_positives": 5,
+      "false_positives": 2,
+      "false_negatives": 0,
+      "precision": 0.7143,
+      "recall": 1.0,
+      "f1": 0.8333,
+      "total_extracted": 7,
+      "total_ground_truth": 5,
+      "match_details": [
+        {
+          "extracted": "4X \u00d8.188",
+          "ground_truth": "\u00c3\u02dc.187 counterbored hole (primary)",
+          "ext_diameter_mm": 4.7752,
+          "gt_diameter_mm": 4.763,
+          "diff_mm": 0.012199999999999989,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d8.182 - .192 \u21a7.250 \u00b1 .010",
+          "ground_truth": "\u00c3\u02dc.150 counterbored hole (primary)",
+          "ext_diameter_mm": 4.7498,
+          "gt_diameter_mm": 3.81,
+          "diff_mm": 0.9397999999999995,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d8.245 - .255 \u21a7.100 \u00b1 .010",
+          "ground_truth": "\u00c3\u02dc.250 counterbored hole (primary)",
+          "ext_diameter_mm": 6.35,
+          "gt_diameter_mm": 6.35,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d8.145 - .155 \u21a7.100 \u00b1 .010",
+          "ground_truth": "4X \u00c3\u02dc.128 simple holes",
+          "ext_diameter_mm": 3.81,
+          "gt_diameter_mm": 3.251,
+          "diff_mm": 0.5590000000000002,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d8.245 - .255 \u21a7.125 \u00b1 .010",
+          "ground_truth": "\u00c3\u02dc.270 simple hole",
+          "ext_diameter_mm": 6.35,
+          "gt_diameter_mm": 6.858,
+          "diff_mm": 0.508,
+          "correct": true
+        }
+      ],
+      "missed_annotations": []
+    },
+    "linking": {
+      "correct_links": 2,
+      "total_links": 3,
+      "linking_accuracy": 0.6667,
+      "link_details": [
+        {
+          "correct": true,
+          "ann_diameter": 4.7498,
+          "feature_diameter": 4.7625,
+          "gt_diameter": 4.763,
+          "confidence": 0.9352
+        },
+        {
+          "correct": true,
+          "ann_diameter": 6.35,
+          "feature_diameter": 3.81,
+          "gt_diameter": 6.35,
+          "confidence": 0.856
+        },
+        {
+          "correct": false,
+          "ann_diameter": 4.7752,
+          "feature_diameter": 6.858,
+          "gt_diameter": 4.763,
+          "confidence": 0.9
+        }
+      ]
+    },
+    "annotations_found": 7,
+    "holes_found": 7,
+    "matches_found": 3,
+    "avg_confidence": 0.8971
+  },
+  {
+    "test_case": "D2MI-905",
+    "unit_system": "inch",
+    "llm_enhanced": true,
+    "extraction": {
+      "true_positives": 1,
+      "false_positives": 3,
+      "false_negatives": 0,
+      "precision": 0.25,
+      "recall": 1.0,
+      "f1": 0.4,
+      "total_extracted": 4,
+      "total_ground_truth": 1,
+      "match_details": [
+        {
+          "extracted": "\u00d8.164 - .167",
+          "ground_truth": "\u00c3\u02dc.140 countersink through-hole",
+          "ext_diameter_mm": 4.2037,
+          "gt_diameter_mm": 3.569,
+          "diff_mm": 0.6347000000000005,
+          "correct": true
+        }
+      ],
+      "missed_annotations": []
+    },
+    "linking": {
+      "correct_links": 1,
+      "total_links": 1,
+      "linking_accuracy": 1.0,
+      "link_details": [
+        {
+          "correct": true,
+          "ann_diameter": 3.5687,
+          "feature_diameter": 3.5687,
+          "gt_diameter": 3.569,
+          "confidence": 0.8816
+        }
+      ]
+    },
+    "annotations_found": 4,
+    "holes_found": 1,
+    "matches_found": 1,
+    "avg_confidence": 0.8816
+  },
+  {
+    "test_case": "D2MI-906",
+    "unit_system": "inch",
+    "llm_enhanced": true,
+    "extraction": {
+      "true_positives": 4,
+      "false_positives": 4,
+      "false_negatives": 0,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "total_extracted": 8,
+      "total_ground_truth": 4,
+      "match_details": [
+        {
+          "extracted": "\u00d8.182 - .192 \u21a7.250 \u00b1 .010",
+          "ground_truth": "\u00c3\u02dc.187 countersink hole",
+          "ext_diameter_mm": 4.7498,
+          "gt_diameter_mm": 4.763,
+          "diff_mm": 0.013200000000000323,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d8.145 - .155 \u21a7.250 \u00b1 .010",
+          "ground_truth": "\u00c3\u02dc.150 countersink hole",
+          "ext_diameter_mm": 3.81,
+          "gt_diameter_mm": 3.81,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "\u2333\u00d8.245 - .255 \u21a7.125 \u00b1.010",
+          "ground_truth": "\u00c3\u02dc.270 simple hole",
+          "ext_diameter_mm": 6.35,
+          "gt_diameter_mm": 6.858,
+          "diff_mm": 0.508,
+          "correct": true
+        },
+        {
+          "extracted": "4X \u00d8.123 - .133",
+          "ground_truth": "4X \u00c3\u02dc.128 counterbored holes (primary)",
+          "ext_diameter_mm": 3.2512,
+          "gt_diameter_mm": 3.251,
+          "diff_mm": 0.00019999999999997797,
+          "correct": true
+        }
+      ],
+      "missed_annotations": []
+    },
+    "linking": {
+      "correct_links": 6,
+      "total_links": 6,
+      "linking_accuracy": 1.0,
+      "link_details": [
+        {
+          "correct": true,
+          "ann_diameter": 4.7498,
+          "feature_diameter": 4.7625,
+          "gt_diameter": 4.763,
+          "confidence": 0.8965
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.81,
+          "feature_diameter": 3.81,
+          "gt_diameter": 3.251,
+          "confidence": 0.8896
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8811
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8811
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8811
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8811
+        }
+      ]
+    },
+    "annotations_found": 8,
+    "holes_found": 7,
+    "matches_found": 6,
+    "avg_confidence": 0.8851
+  },
+  {
+    "test_case": "D2MI-907",
+    "unit_system": "inch",
+    "llm_enhanced": true,
+    "extraction": {
+      "true_positives": 1,
+      "false_positives": 3,
+      "false_negatives": 0,
+      "precision": 0.25,
+      "recall": 1.0,
+      "f1": 0.4,
+      "total_extracted": 4,
+      "total_ground_truth": 1,
+      "match_details": [
+        {
+          "extracted": "\u00d8.164 - .167",
+          "ground_truth": "\u00c3\u02dc.140 countersink through-hole",
+          "ext_diameter_mm": 4.2037,
+          "gt_diameter_mm": 3.569,
+          "diff_mm": 0.6347000000000005,
+          "correct": true
+        }
+      ],
+      "missed_annotations": []
+    },
+    "linking": {
+      "correct_links": 1,
+      "total_links": 1,
+      "linking_accuracy": 1.0,
+      "link_details": [
+        {
+          "correct": true,
+          "ann_diameter": 3.5687,
+          "feature_diameter": 3.5687,
+          "gt_diameter": 3.569,
+          "confidence": 0.8816
+        }
+      ]
+    },
+    "annotations_found": 4,
+    "holes_found": 1,
+    "matches_found": 1,
+    "avg_confidence": 0.8816
+  },
+  {
+    "test_case": "D2MI-908",
+    "unit_system": "inch",
+    "llm_enhanced": true,
+    "extraction": {
+      "true_positives": 4,
+      "false_positives": 4,
+      "false_negatives": 0,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.6667,
+      "total_extracted": 8,
+      "total_ground_truth": 4,
+      "match_details": [
+        {
+          "extracted": "\u00d8.182 - .192 \u21a7.250\u00b1.010",
+          "ground_truth": "\u00c3\u02dc.187 countersink hole",
+          "ext_diameter_mm": 4.7498,
+          "gt_diameter_mm": 4.763,
+          "diff_mm": 0.013200000000000323,
+          "correct": true
+        },
+        {
+          "extracted": "\u2333\u00d8.245 - .255 \u21a7.100\u00b1.010",
+          "ground_truth": "\u00c3\u02dc.270 simple hole",
+          "ext_diameter_mm": 6.35,
+          "gt_diameter_mm": 6.858,
+          "diff_mm": 0.508,
+          "correct": true
+        },
+        {
+          "extracted": "\u00d8.145 - .155 \u21a7.250\u00b1.010",
+          "ground_truth": "\u00c3\u02dc.150 countersink hole",
+          "ext_diameter_mm": 3.81,
+          "gt_diameter_mm": 3.81,
+          "diff_mm": 0.0,
+          "correct": true
+        },
+        {
+          "extracted": "4X \u00d8.123 - .133",
+          "ground_truth": "4X \u00c3\u02dc.128 counterbored holes (primary)",
+          "ext_diameter_mm": 3.2512,
+          "gt_diameter_mm": 3.251,
+          "diff_mm": 0.00019999999999997797,
+          "correct": true
+        }
+      ],
+      "missed_annotations": []
+    },
+    "linking": {
+      "correct_links": 6,
+      "total_links": 6,
+      "linking_accuracy": 1.0,
+      "link_details": [
+        {
+          "correct": true,
+          "ann_diameter": 4.7498,
+          "feature_diameter": 4.7625,
+          "gt_diameter": 4.763,
+          "confidence": 0.8949
+        },
+        {
+          "correct": true,
+          "ann_diameter": 3.81,
+          "feature_diameter": 3.81,
+          "gt_diameter": 3.251,
+          "confidence": 0.888
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8803
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8803
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8803
+        },
+        {
+          "correct": true,
+          "ann_diameter": 5.588,
+          "feature_diameter": 3.2512,
+          "gt_diameter": 4.763,
+          "confidence": 0.8803
+        }
+      ]
+    },
+    "annotations_found": 8,
+    "holes_found": 7,
+    "matches_found": 6,
+    "avg_confidence": 0.884
+  },
+  {
     "test_case": "SYN-01-SimpleBlock",
     "unit_system": "metric",
     "llm_enhanced": true,

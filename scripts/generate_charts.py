@@ -55,7 +55,8 @@ def short_name(name: str) -> str:
             .replace("-ManyHoles", "")
             .replace("CTC-0", "C")
             .replace("FTC-0", "F")
-            .replace("FTC-", "F"))
+            .replace("FTC-", "F")
+            .replace("D2MI-", "D"))
 
 
 def load_results():
@@ -65,11 +66,15 @@ def load_results():
 
 
 def filter_results(results, category):
-    """Filter results by category: 'all', 'nist', 'syn'."""
+    """Filter results by category: 'all', 'nist', 'syn', 'd2mi'."""
+    # Always exclude FTC-11 (torus part, no real holes, 0 required GT)
+    results = [r for r in results if r["test_case"] != "FTC-11"]
     if category == "all":
         return results
     if category == "nist":
         return [r for r in results if r["test_case"].startswith(("CTC", "FTC"))]
+    if category == "d2mi":
+        return [r for r in results if r["test_case"].startswith("D2MI")]
     if category == "syn":
         return [r for r in results if r["test_case"].startswith("SYN")]
     return results
@@ -121,40 +126,39 @@ def chart_comparison_f1(nollm, llm, output_path: Path):
 
 
 def chart_metrics_overview(llm_results, output_path: Path):
-    """Grouped bar chart showing P/R/F1/Linking for LLM mode."""
+    """Horizontal bar chart showing P/R/F1/Linking for LLM mode."""
     _apply_dark_theme()
     cases = [short_name(r["test_case"]) for r in llm_results]
-    metrics = {
-        "Precision": ([r["extraction"]["precision"] * 100 for r in llm_results], AMBER),
-        "Recall": ([r["extraction"]["recall"] * 100 for r in llm_results], GREEN),
-        "F1": ([r["extraction"]["f1"] * 100 for r in llm_results], BLUE),
-        "Linking": ([r["linking"]["linking_accuracy"] * 100 for r in llm_results], PURPLE),
-    }
+    metrics = [
+        ("F1", [r["extraction"]["f1"] * 100 for r in llm_results], BLUE),
+        ("Precision", [r["extraction"]["precision"] * 100 for r in llm_results], AMBER),
+        ("Recall", [r["extraction"]["recall"] * 100 for r in llm_results], GREEN),
+        ("Linking", [r["linking"]["linking_accuracy"] * 100 for r in llm_results], PURPLE),
+    ]
 
     n = len(cases)
-    x = np.arange(n)
     n_metrics = len(metrics)
-    width = 0.18 if n <= 9 else 0.14
+    height = 0.18
+    y = np.arange(n)
 
-    fig_width = max(10, n * 0.9 + 2)
-    fig, ax = plt.subplots(figsize=(fig_width, 5))
-    for j, (name, (vals, color)) in enumerate(metrics.items()):
-        offset = (j - n_metrics / 2 + 0.5) * width
-        bars = ax.bar(x + offset, vals, width, label=name, color=color, alpha=0.85,
-                      zorder=3, edgecolor="none")
-        fontsize = 8 if n <= 9 else 6
-        ax.bar_label(bars, fmt="%.0f", padding=2, fontsize=fontsize, color=color, fontweight="bold")
+    fig_height = max(5, n * 0.55 + 2)
+    fig, ax = plt.subplots(figsize=(10, fig_height))
+    for j, (name, vals, color) in enumerate(metrics):
+        offset = (j - n_metrics / 2 + 0.5) * height
+        bars = ax.barh(y + offset, vals, height, label=name, color=color, alpha=0.85,
+                       zorder=3, edgecolor="none")
+        fontsize = 8 if n <= 12 else 6
+        ax.bar_label(bars, fmt="%.0f", padding=3, fontsize=fontsize, color=color, fontweight="bold")
 
-    ax.set_xticks(x)
-    rotation = 0 if n <= 9 else 30
-    ha = "center" if n <= 9 else "right"
-    ax.set_xticklabels(cases, fontsize=11, fontweight="600", rotation=rotation, ha=ha)
-    ax.set_ylabel("Score (%)")
-    ax.set_ylim(0, 115)
+    ax.set_yticks(y)
+    ax.set_yticklabels(cases, fontsize=11, fontweight="600")
+    ax.set_xlabel("Score (%)")
+    ax.set_xlim(0, 115)
     ax.set_title("DrawMind3D — Full Metrics (with Vision LLM)", fontsize=16, fontweight="bold", pad=15)
-    ax.legend(loc="upper left", fontsize=10, framealpha=0.3, ncol=4)
-    ax.grid(axis="y", alpha=0.4, zorder=1)
+    ax.legend(loc="lower right", fontsize=10, framealpha=0.3, ncol=2)
+    ax.grid(axis="x", alpha=0.4, zorder=1)
     ax.set_axisbelow(True)
+    ax.invert_yaxis()
 
     fig.tight_layout()
     fig.savefig(output_path, format="svg", bbox_inches="tight", transparent=False)
@@ -301,6 +305,7 @@ def main():
     categories = [
         ("", "all"),
         ("_nist", "nist"),
+        ("_d2mi", "d2mi"),
         ("_syn", "syn"),
     ]
 

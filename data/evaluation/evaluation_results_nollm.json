@@ -697,6 +697,161 @@
     "avg_confidence": 0.0
   },
   {
+    "test_case": "D2MI-904",
+    "unit_system": "inch",
+    "llm_enhanced": false,
+    "extraction": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_extracted": 0,
+      "total_ground_truth": 5,
+      "match_details": [],
+      "missed_annotations": [
+        "\u00c3\u02dc.187 counterbored hole (primary)",
+        "\u00c3\u02dc.250 counterbored hole (primary)",
+        "4X \u00c3\u02dc.128 simple holes",
+        "\u00c3\u02dc.270 simple hole",
+        "\u00c3\u02dc.150 counterbored hole (primary)"
+      ]
+    },
+    "linking": {
+      "correct_links": 0,
+      "total_links": 0,
+      "linking_accuracy": 0.0,
+      "link_details": []
+    },
+    "annotations_found": 0,
+    "holes_found": 7,
+    "matches_found": 0,
+    "avg_confidence": 0.0
+  },
+  {
+    "test_case": "D2MI-905",
+    "unit_system": "inch",
+    "llm_enhanced": false,
+    "extraction": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_extracted": 0,
+      "total_ground_truth": 1,
+      "match_details": [],
+      "missed_annotations": [
+        "\u00c3\u02dc.140 countersink through-hole"
+      ]
+    },
+    "linking": {
+      "correct_links": 0,
+      "total_links": 0,
+      "linking_accuracy": 0.0,
+      "link_details": []
+    },
+    "annotations_found": 0,
+    "holes_found": 1,
+    "matches_found": 0,
+    "avg_confidence": 0.0
+  },
+  {
+    "test_case": "D2MI-906",
+    "unit_system": "inch",
+    "llm_enhanced": false,
+    "extraction": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 4,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_extracted": 0,
+      "total_ground_truth": 4,
+      "match_details": [],
+      "missed_annotations": [
+        "4X \u00c3\u02dc.128 counterbored holes (primary)",
+        "\u00c3\u02dc.270 simple hole",
+        "\u00c3\u02dc.187 countersink hole",
+        "\u00c3\u02dc.150 countersink hole"
+      ]
+    },
+    "linking": {
+      "correct_links": 0,
+      "total_links": 0,
+      "linking_accuracy": 0.0,
+      "link_details": []
+    },
+    "annotations_found": 0,
+    "holes_found": 7,
+    "matches_found": 0,
+    "avg_confidence": 0.0
+  },
+  {
+    "test_case": "D2MI-907",
+    "unit_system": "inch",
+    "llm_enhanced": false,
+    "extraction": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_extracted": 0,
+      "total_ground_truth": 1,
+      "match_details": [],
+      "missed_annotations": [
+        "\u00c3\u02dc.140 countersink through-hole"
+      ]
+    },
+    "linking": {
+      "correct_links": 0,
+      "total_links": 0,
+      "linking_accuracy": 0.0,
+      "link_details": []
+    },
+    "annotations_found": 0,
+    "holes_found": 1,
+    "matches_found": 0,
+    "avg_confidence": 0.0
+  },
+  {
+    "test_case": "D2MI-908",
+    "unit_system": "inch",
+    "llm_enhanced": false,
+    "extraction": {
+      "true_positives": 0,
+      "false_positives": 0,
+      "false_negatives": 4,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_extracted": 0,
+      "total_ground_truth": 4,
+      "match_details": [],
+      "missed_annotations": [
+        "4X \u00c3\u02dc.128 counterbored holes (primary)",
+        "\u00c3\u02dc.270 simple hole",
+        "\u00c3\u02dc.187 countersink hole",
+        "\u00c3\u02dc.150 countersink hole"
+      ]
+    },
+    "linking": {
+      "correct_links": 0,
+      "total_links": 0,
+      "linking_accuracy": 0.0,
+      "link_details": []
+    },
+    "annotations_found": 0,
+    "holes_found": 7,
+    "matches_found": 0,
+    "avg_confidence": 0.0
+  },
+  {
     "test_case": "SYN-01-SimpleBlock",
     "unit_system": "metric",
     "llm_enhanced": false,
