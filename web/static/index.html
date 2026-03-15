@@ -72,7 +72,7 @@
         <!-- Viewer Area -->
         <div id="viewer-area">
             <div id="viewer-3d" class="viewer-panel">
-                <h3>3D Model</h3>
+                <h3>3D Model <span style="color:#64748b; font-size:0.65rem; font-weight:400;">(drag to rotate, scroll to zoom, right-click to pan)</span></h3>
                 <canvas id="three-canvas"></canvas>
             </div>
             <div id="viewer-pdf" class="viewer-panel">
@@ -183,9 +183,11 @@
                 <span id="tc-analyze-text" style="color:#94a3b8;">Analyzing...</span>
             </div>
 
+            <p style="color:#64748b; font-size:0.75rem; padding:0 20px; margin:4px 0;">Click <strong style="color:#22c55e;">Analyze</strong> to run the pipeline. Results will appear below.</p>
+
             <div id="tc-viewer-area">
                 <div class="viewer-panel">
-                    <h3>3D Model</h3>
+                    <h3>3D Model <span style="color:#64748b; font-size:0.65rem; font-weight:400;">(drag to rotate, scroll to zoom, right-click to pan)</span></h3>
                     <canvas id="tc-three-canvas"></canvas>
                     <div id="tc-model-loading" class="hidden" style="text-align:center; padding:20px;">
                         <div class="spinner"></div>

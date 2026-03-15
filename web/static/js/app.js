@@ -306,6 +306,7 @@ let testCasesData = null;
 let currentTcFilter = 'all';
 let tcViewer3d = null;
 let tcPdfViewer = null;
+let currentTcId = null;
 
 async function loadTestCases() {
     if (testCasesData) {
@@ -465,8 +466,6 @@ function renderDetailMetrics(tc) {
     html += '</tbody></table>';
     container.innerHTML = html;
 }
-
-let currentTcId = null;
 
 async function analyzeTestCase(tcId) {
     const btn = document.getElementById('tc-analyze-btn');
