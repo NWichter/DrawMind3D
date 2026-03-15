@@ -397,7 +397,7 @@ async function showTestCaseDetail(tcId) {
     // Load PDF
     if (tc.has_pdf) {
         if (!tcPdfViewer) {
-            tcPdfViewer = new PDFViewer('tc-pdf-canvas', null);
+            tcPdfViewer = new PDFViewer('tc-pdf-canvas', 'tc-annotation-overlay');
             // Wire up page navigation buttons
             const tcPdfPanel = document.getElementById('tc-pdf-container').closest('.viewer-panel');
             const prevBtn = tcPdfPanel.querySelector('.pdf-prev-btn');
@@ -484,6 +484,10 @@ async function analyzeTestCase(tcId) {
         const resp = await fetch(`/api/testcases/${tcId}/analyze?use_llm=${useLlm}`, {
             method: 'POST',
         });
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({}));
+            throw new Error(err.detail || `Server error ${resp.status}`);
+        }
         const data = await resp.json();
 
         if (data.status === 'complete') {
@@ -555,20 +559,6 @@ function initTestCases() {
         if (currentTcId) analyzeTestCase(currentTcId);
     });
 
-    // Link from upload section to test cases tab
-    const linkEl = document.getElementById('link-to-testcases');
-    if (linkEl) {
-        linkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelectorAll('.header-nav .nav-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.header-nav .nav-btn[data-tab="testcases"]').classList.add('active');
-            document.getElementById('upload-section').style.display = 'none';
-            document.getElementById('results-section').style.display = 'none';
-            document.getElementById('evaluation-section').classList.add('hidden');
-            document.getElementById('testcases-section').classList.remove('hidden');
-            loadTestCases();
-        });
-    }
 
     // Filter buttons
     document.querySelectorAll('.tc-filter-btn').forEach(btn => {

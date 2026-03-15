@@ -21,7 +21,7 @@
     <!-- Upload Section -->
     <section id="upload-section" class="panel">
         <h2>Upload Files</h2>
-        <p style="color:#94a3b8; font-size:0.8rem; margin:-4px 0 12px 0;">Upload your own PDF + STEP files, or go to the <a href="#" id="link-to-testcases" style="color:#60a5fa;">Test Cases</a> tab to analyze built-in NIST and synthetic examples.</p>
+        <p style="color:#94a3b8; font-size:0.8rem; margin:-4px 0 12px 0;">Upload your own PDF + STEP files, or use the <strong>Test Cases</strong> tab to analyze built-in NIST and synthetic examples.</p>
         <form id="upload-form">
             <div class="file-inputs">
                 <div class="file-input">
@@ -199,8 +199,9 @@
                         <span class="pdf-page-info">Page 1 / 1</span>
                         <button class="pdf-next-btn">Next &raquo;</button>
                     </div>
-                    <div id="tc-pdf-container">
+                    <div id="tc-pdf-container" style="position:relative;">
                         <canvas id="tc-pdf-canvas"></canvas>
+                        <svg id="tc-annotation-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></svg>
                     </div>
                 </div>
             </div>
