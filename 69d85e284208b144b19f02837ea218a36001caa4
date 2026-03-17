@@ -1,0 +1,27 @@
+web/static/css/style.css
+  749c4c41cda35b91 399-432
+web/static/js/app.js
+  749c4c41cda35b91 5-15,17-69,71-155,249,256,274,284,831,1089
+web/static/index.html
+  749c4c41cda35b91 15,22,29,33,37-40,45,48,57,63,77,79,110,116,120,124,133,142,167,172-177,188-189,220,261-262,300,321,327,350-351,354-355,360,375,381,405,416,422,426,430,436,442-447
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "69d85e284208b144b19f02837ea218a36001caa4",
+  "prompts": {
+    "749c4c41cda35b91": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d0b68188-8268-433a-900f-daab72b5890b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 242,
+      "total_deletions": 53,
+      "accepted_lines": 243,
+      "overriden_lines": 2
+    }
+  }
+}
