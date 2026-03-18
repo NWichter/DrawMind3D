@@ -1,0 +1,54 @@
+drawmind/output/schema.py
+  c841493a58c48d18 8,12,14-15,18,21-22,27,30,32,34,37,44,48,51,56,59-60,62-64,70-71,76-78,82,86,90-91,99,101-104,108-109,111-112,114-116,118-120,122-124,126-128,130-132,134-136,138,143,146-154,156-157,160-161,164-165,174-186,188-206,213-214,216-218,224
+tests/test_output_writer.py
+  c841493a58c48d18 145-153
+drawmind/output/writer.py
+  c841493a58c48d18 94,99
+web/static/js/viewer3d.js
+  c841493a58c48d18 356,358-359
+web/static/js/app.js
+  749c4c41cda35b91 5-15,17-69,71-155,204-206,208-210,215-217,219-221,227-229,231,233-236,249,256,274,284,823-824,831-833,848-853,855-856,859,992,1089
+README.md
+  c841493a58c48d18 40,55-64,132,134-207,209-217
+web/app.py
+  749c4c41cda35b91 8,108-115,123,126-127,134-135,150-152,154,160-162,168,181-182,191-192,205,229-234,236-237,248,250-251,253,479,481-482,484,491-499
+web/static/css/style.css
+  749c4c41cda35b91 159-162,164-169,171-174,176-180,182-188,190-195,399-432
+data/DATA_SOURCES.md
+  c841493a58c48d18 13,15-19,28,30-35
+web/static/index.html
+  749c4c41cda35b91 15,22,29,33,37-40,45,48,57,63,77,79,85-86,88-96,110,116,120,124,133,142,167,172-177,188-189,220,261-262,300,321,325-327,330,332-337,339,350-351,354-355,360,375,381,405,416,422,426,430,436,442-447
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "779149d6ef114fd1ad45d30ed1ea2ea21cd4a039",
+  "prompts": {
+    "749c4c41cda35b91": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d0b68188-8268-433a-900f-daab72b5890b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 382,
+      "overriden_lines": 0
+    },
+    "c841493a58c48d18": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9da2459c-7e1e-4148-b9e3-59dcab6a5aa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 234,
+      "overriden_lines": 0
+    }
+  }
+}
