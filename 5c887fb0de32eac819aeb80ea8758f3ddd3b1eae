@@ -1,0 +1,36 @@
+web/static/js/viewer3d.js
+  c841493a58c48d18 356,358-359
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "5c887fb0de32eac819aeb80ea8758f3ddd3b1eae",
+  "prompts": {
+    "c841493a58c48d18": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9da2459c-7e1e-4148-b9e3-59dcab6a5aa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 235,
+      "overriden_lines": 0
+    },
+    "d2672df498646f0e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9ebffdf7-9116-45b8-967b-fac123783dc0",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 56,
+      "overriden_lines": 0
+    }
+  }
+}
