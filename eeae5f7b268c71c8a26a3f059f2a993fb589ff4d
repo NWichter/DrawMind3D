@@ -1,0 +1,34 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "eeae5f7b268c71c8a26a3f059f2a993fb589ff4d",
+  "prompts": {
+    "c841493a58c48d18": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9da2459c-7e1e-4148-b9e3-59dcab6a5aa5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 1450,
+      "total_deletions": 1241,
+      "accepted_lines": 307,
+      "overriden_lines": 27
+    },
+    "d2672df498646f0e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9ebffdf7-9116-45b8-967b-fac123783dc0",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Niklas Wichter <niklaswichter@gmail.com>",
+      "messages": [],
+      "total_additions": 179,
+      "total_deletions": 138,
+      "accepted_lines": 58,
+      "overriden_lines": 0
+    }
+  }
+}
