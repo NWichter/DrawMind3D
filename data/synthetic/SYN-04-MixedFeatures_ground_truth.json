@@ -1,0 +1,98 @@
+{
+  "test_case": "SYN-04-MixedFeatures",
+  "source": "synthetic",
+  "unit_system": "metric",
+  "description": "Complex part with counterbores, countersinks, threads, and tolerance classes",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "counterbore",
+      "diameter_mm": 6.0,
+      "count": 4,
+      "is_through": true,
+      "description": "Hole 1",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
+    },
+    {
+      "id": "gt_02",
+      "type": "counterbore",
+      "diameter_mm": 6.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 2",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
+    },
+    {
+      "id": "gt_03",
+      "type": "counterbore",
+      "diameter_mm": 6.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 3",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
+    },
+    {
+      "id": "gt_04",
+      "type": "counterbore",
+      "diameter_mm": 6.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 4",
+      "counterbore_diameter_mm": 12.0,
+      "counterbore_depth_mm": 5.0
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 10.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 5",
+      "depth_mm": 20
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 10.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 6",
+      "depth_mm": 20
+    },
+    {
+      "id": "gt_07",
+      "type": "thread",
+      "diameter_mm": 5.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 7",
+      "thread": "M6",
+      "drill_diameter_mm": 5.0
+    },
+    {
+      "id": "gt_08",
+      "type": "thread",
+      "diameter_mm": 6.8,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 8",
+      "thread": "M8",
+      "drill_diameter_mm": 6.8,
+      "depth_mm": 15
+    },
+    {
+      "id": "gt_09",
+      "type": "countersink",
+      "diameter_mm": 5.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 9",
+      "countersink_angle": 90
+    }
+  ],
+  "total_unique_annotations": 9,
+  "total_individual_holes": 12
+}

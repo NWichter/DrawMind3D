@@ -1,0 +1,59 @@
+[project]
+name = "drawmind3d"
+version = "1.0.0"
+description = "Link PDF technical drawing annotations to 3D CAD features"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "LicenseRef-Proprietary"
+
+dependencies = [
+    # CAD / 3D geometry (pip-installable OpenCASCADE bindings)
+    "cadquery-ocp>=7.9.0",
+    # PDF extraction
+    "PyMuPDF>=1.24.0",
+    "pdfplumber>=0.11.0",
+    # OCR fallback
+    "pdf2image>=1.17.0",
+    "pytesseract>=0.3.13",
+    "Pillow>=10.0",
+    "opencv-python-headless>=4.9.0",
+    # Core
+    "numpy>=1.26",
+    "scipy>=1.12",
+    "pydantic>=2.5",
+    # LLM (OpenRouter uses OpenAI-compatible API)
+    "openai>=1.30.0",
+    "httpx>=0.27.0",
+    # Web UI
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+    "python-multipart>=0.0.9",
+    # Mesh export
+    "pygltflib>=1.16",
+    # Config
+    "python-dotenv>=1.0",
+    # Charts
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["drawmind", "web"]
+
+[project.scripts]
+drawmind3d = "drawmind.cli:main"
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

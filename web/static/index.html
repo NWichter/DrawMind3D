@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DrawMind3D</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>
+        <img src="/static/favicon.svg" alt="" class="header-logo" />DrawMind3D
+      </h1>
+      <span class="subtitle" data-i18n="subtitle"
+        >PDF Drawing Annotations &harr; 3D CAD Features</span
+      >
+      <nav class="header-nav">
+        <button
+          class="nav-btn active"
+          data-tab="analyze"
+          data-i18n="nav_analyze"
+        >
+          Analyze
+        </button>
+        <button
+          class="nav-btn"
+          data-tab="evaluation"
+          data-i18n="nav_evaluation"
+        >
+          Evaluation
+        </button>
+        <button class="nav-btn" data-tab="testcases" data-i18n="nav_testcases">
+          Test Cases
+        </button>
+      </nav>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="de">DE</button>
+      </div>
+    </header>
+
+    <!-- Upload Section -->
+    <section id="upload-section" class="panel">
+      <h2 data-i18n="upload_title">Upload Files</h2>
+      <p
+        style="color: #94a3b8; font-size: 0.8rem; margin: -4px 0 12px 0"
+        data-i18n-html="upload_desc"
+      >
+        Upload your own PDF + STEP files, or use the
+        <strong>Test Cases</strong> tab to analyze built-in NIST and synthetic
+        examples.
+      </p>
+      <form id="upload-form">
+        <div class="file-inputs">
+          <div class="file-input">
+            <label for="pdf-file" data-i18n="label_pdf"
+              >Technical Drawing (PDF)</label
+            >
+            <input type="file" id="pdf-file" accept=".pdf" required />
+          </div>
+          <div class="file-input">
+            <label for="step-file" data-i18n="label_step"
+              >3D Model (STEP/STP)</label
+            >
+            <input
+              type="file"
+              id="step-file"
+              accept=".step,.stp,.STEP,.STP"
+              required
+            />
+          </div>
+        </div>
+        <div class="controls">
+          <label class="checkbox-label">
+            <input type="checkbox" id="use-llm" checked />
+            <span data-i18n="enable_llm">Enable LLM Enhancement</span>
+          </label>
+          <button type="submit" id="analyze-btn" data-i18n="btn_analyze">
+            Analyze
+          </button>
+        </div>
+      </form>
+      <div id="status-bar" class="hidden">
+        <div class="progress-container">
+          <div class="progress-header">
+            <span id="status-text">Processing...</span>
+            <span id="status-step" class="progress-step"></span>
+          </div>
+          <div class="progress-track">
+            <div
+              id="progress-fill"
+              class="progress-fill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results-section" class="hidden">
+      <!-- Summary Bar -->
+      <div id="summary-bar" class="panel summary">
+        <span id="llm-mode-badge" class="llm-badge llm-badge-on"
+          >LLM Enhanced</span
+        >
+        <div class="stat">
+          <span class="stat-value" id="stat-annotations">0</span>
+          <span class="stat-label" data-i18n="stat_annotations"
+            >Annotations</span
+          >
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-holes">0</span>
+          <span class="stat-label" data-i18n="stat_holes">3D Holes</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-matched">0</span>
+          <span class="stat-label" data-i18n="stat_matched">Matched</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-confidence">0%</span>
+          <span class="stat-label" data-i18n="stat_confidence"
+            >Avg Confidence</span
+          >
+        </div>
+      </div>
+
+      <!-- Viewer Area -->
+      <div id="viewer-area">
+        <div id="viewer-3d" class="viewer-panel">
+          <h3 data-i18n-html="viewer_3d_title">
+            3D Model
+            <span style="color: #64748b; font-size: 0.65rem; font-weight: 400"
+              >(drag to rotate, scroll to zoom, right-click to pan)</span
+            >
+          </h3>
+          <canvas id="three-canvas"></canvas>
+        </div>
+        <div id="viewer-pdf" class="viewer-panel">
+          <h3 data-i18n="viewer_pdf_title">Technical Drawing</h3>
+          <div class="pdf-page-nav" style="display: none">
+            <button
+              class="pdf-prev-btn"
+              onclick="window.drawMindApp?.pdfViewer?.prevPage()"
+            >
+              &laquo; Prev
+            </button>
+            <span class="pdf-page-info">Page 1 / 1</span>
+            <button
+              class="pdf-next-btn"
+              onclick="window.drawMindApp?.pdfViewer?.nextPage()"
+            >
+              Next &raquo;
+            </button>
+          </div>
+          <div id="pdf-container">
+            <canvas id="pdf-canvas"></canvas>
+            <svg id="annotation-overlay"></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matches Table -->
+      <div id="matches-panel" class="panel">
+        <h3 data-i18n="matched_features">Matched Features</h3>
+        <table id="matches-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-i18n="th_annotation">Annotation</th>
+              <th data-i18n="th_type">Type</th>
+              <th data-i18n="th_3d_feature">3D Feature</th>
+              <th data-i18n="th_drawing_spec">Drawing Spec</th>
+              <th data-i18n="th_3d_actual">3D Actual</th>
+              <th data-i18n="th_confidence">Confidence</th>
+            </tr>
+          </thead>
+          <tbody id="matches-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Evaluation Section -->
+    <section id="evaluation-section" class="hidden">
+      <div class="panel">
+        <h2 data-i18n="eval_title">Evaluation Results</h2>
+        <p class="eval-desc" data-i18n="eval_desc">
+          Tested on 21 cases: 5 NIST CTC, 6 NIST FTC, 5 NIST D2MI industrial
+          cases, and 5 synthetic test cases with ground truth.
+        </p>
+        <div id="eval-toggle" class="controls">
+          <div class="eval-btn-group">
+            <span class="eval-group-label">Mode:</span>
+            <button class="eval-mode-btn active" data-mode="llm">
+              With Vision LLM
+            </button>
+            <button class="eval-mode-btn" data-mode="nollm">Without LLM</button>
+          </div>
+          <div class="eval-btn-group">
+            <span class="eval-group-label">Data:</span>
+            <button class="eval-filter-btn active" data-filter="all">
+              All
+            </button>
+            <button class="eval-filter-btn" data-filter="ctc">CTC</button>
+            <button class="eval-filter-btn" data-filter="ftc">FTC</button>
+            <button class="eval-filter-btn" data-filter="d2mi">D2MI</button>
+            <button class="eval-filter-btn" data-filter="syn">Synthetic</button>
+          </div>
+        </div>
+        <div id="eval-charts">
+          <img
+            id="eval-chart-main"
+            src="/api/evaluation/chart/evaluation_chart_llm.svg"
+            alt="Evaluation Chart"
+          />
+        </div>
+        <div id="eval-table-container"></div>
+        <h3 data-i18n="pres_charts">Presentation Charts</h3>
+        <div class="eval-btn-group" style="margin-bottom: 12px">
+          <span class="eval-group-label">Filter:</span>
+          <button class="pres-filter-btn active" data-pfilter="">All</button>
+          <button class="pres-filter-btn" data-pfilter="_nist">
+            NIST (Real)
+          </button>
+          <button class="pres-filter-btn" data-pfilter="_syn">Synthetic</button>
+        </div>
+        <div class="eval-gallery">
+          <img
+            class="pres-chart"
+            data-base="01_f1_comparison"
+            src="/api/evaluation/chart/01_f1_comparison.svg"
+            alt="F1 Comparison"
+          />
+          <img
+            class="pres-chart"
+            data-base="02_metrics_overview"
+            src="/api/evaluation/chart/02_metrics_overview.svg"
+            alt="Metrics Overview"
+          />
+          <img
+            class="pres-chart"
+            data-base="03_llm_impact"
+            src="/api/evaluation/chart/03_llm_impact.svg"
+            alt="LLM Impact"
+          />
+          <img
+            class="pres-chart"
+            data-base="04_summary_table"
+            src="/api/evaluation/chart/04_summary_table.svg"
+            alt="Summary Table"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Test Cases Section -->
+    <section id="testcases-section" class="hidden">
+      <div id="tc-list-view" class="panel">
+        <h2 data-i18n="tc_title">Test Cases</h2>
+        <p class="eval-desc" data-i18n-html="tc_desc">
+          Browse and analyze all 21 built-in test cases. Click a test case to
+          preview the PDF and 3D model, then click
+          <strong style="color: #22c55e">Analyze</strong> to run the full
+          pipeline and see matched annotations.
+        </p>
+        <div class="controls" style="margin-bottom: 16px">
+          <div class="eval-btn-group">
+            <span class="eval-group-label">Filter:</span>
+            <button class="tc-filter-btn active" data-filter="all">All</button>
+            <button class="tc-filter-btn" data-filter="ctc">CTC</button>
+            <button class="tc-filter-btn" data-filter="ftc">FTC</button>
+            <button class="tc-filter-btn" data-filter="d2mi">D2MI</button>
+            <button class="tc-filter-btn" data-filter="syn">Synthetic</button>
+          </div>
+        </div>
+        <div id="tc-table-container"></div>
+      </div>
+
+      <div id="tc-detail-view" class="hidden">
+        <div
+          class="panel"
+          style="
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          "
+        >
+          <button
+            id="tc-back-btn"
+            class="nav-btn"
+            style="
+              background: transparent;
+              color: #60a5fa;
+              border-color: #60a5fa;
+            "
+          >
+            <span data-i18n-html="btn_back">&larr; Back</span>
+          </button>
+          <span
+            id="tc-detail-title"
+            style="font-size: 1.2rem; font-weight: 700; color: #60a5fa"
+          ></span>
+          <span id="tc-detail-category" style="font-size: 0.7rem"></span>
+          <span style="flex: 1"></span>
+          <label class="checkbox-label" style="font-size: 0.75rem">
+            <input type="checkbox" id="tc-use-llm" checked /> LLM
+          </label>
+          <button
+            id="tc-analyze-btn"
+            class="nav-btn"
+            style="
+              background: #22c55e;
+              color: #fff;
+              border-color: #22c55e;
+              padding: 6px 16px;
+            "
+          >
+            <span data-i18n="btn_analyze">Analyze</span>
+          </button>
+        </div>
+        <div id="tc-analyze-status" class="hidden" style="padding: 8px 20px">
+          <div class="progress-container">
+            <div class="progress-header">
+              <span id="tc-analyze-text" data-i18n="analyzing"
+                >Analyzing...</span
+              >
+              <span id="tc-status-step" class="progress-step"></span>
+            </div>
+            <div class="progress-track">
+              <div
+                id="tc-progress-fill"
+                class="progress-fill"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <p
+          style="
+            color: #64748b;
+            font-size: 0.75rem;
+            padding: 0 20px;
+            margin: 4px 0;
+          "
+        >
+          <span data-i18n-html="tc_preview_hint"
+            >Preview the PDF and 3D model below. Click
+            <strong style="color: #22c55e">Analyze</strong> to run the pipeline
+            &mdash; matched annotations and confidence scores will appear at the
+            bottom.</span
+          >
+        </p>
+
+        <div id="tc-viewer-area">
+          <div class="viewer-panel">
+            <h3 data-i18n-html="viewer_3d_title">
+              3D Model
+              <span style="color: #64748b; font-size: 0.65rem; font-weight: 400"
+                >(drag to rotate, scroll to zoom, right-click to pan)</span
+              >
+            </h3>
+            <canvas id="tc-three-canvas"></canvas>
+            <div
+              id="tc-model-loading"
+              class="hidden"
+              style="text-align: center; padding: 20px"
+            >
+              <div class="spinner"></div>
+              <span
+                style="color: #888; margin-left: 8px"
+                data-i18n="converting_step"
+                >Converting STEP to 3D view...</span
+              >
+            </div>
+          </div>
+          <div class="viewer-panel">
+            <h3 data-i18n="viewer_pdf_title_full">Technical Drawing (PDF)</h3>
+            <div class="pdf-page-nav" style="display: none">
+              <button class="pdf-prev-btn">&laquo; Prev</button>
+              <span class="pdf-page-info">Page 1 / 1</span>
+              <button class="pdf-next-btn">Next &raquo;</button>
+            </div>
+            <div id="tc-pdf-container" style="position: relative">
+              <canvas id="tc-pdf-canvas"></canvas>
+              <svg
+                id="tc-annotation-overlay"
+                style="
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  pointer-events: none;
+                "
+              ></svg>
+            </div>
+          </div>
+        </div>
+
+        <div id="tc-detail-metrics" class="panel">
+          <h3 data-i18n="eval_metrics">Evaluation Metrics</h3>
+          <div id="tc-metrics-content"></div>
+        </div>
+
+        <div id="tc-analysis-results" class="hidden">
+          <div class="panel summary" id="tc-results-summary">
+            <span id="tc-llm-mode-badge" class="llm-badge llm-badge-on"
+              >LLM Enhanced</span
+            >
+            <div class="stat">
+              <span class="stat-value" id="tc-stat-annotations">0</span
+              ><span class="stat-label" data-i18n="stat_annotations"
+                >Annotations</span
+              >
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="tc-stat-holes">0</span
+              ><span class="stat-label" data-i18n="stat_holes">3D Holes</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="tc-stat-matched">0</span
+              ><span class="stat-label" data-i18n="stat_matches">Matches</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="tc-stat-confidence">0%</span
+              ><span class="stat-label" data-i18n="stat_confidence"
+                >Avg Confidence</span
+              >
+            </div>
+          </div>
+          <div id="tc-matches-panel" class="panel">
+            <h3 data-i18n="matched_features">Matched Features</h3>
+            <div style="overflow-x: auto">
+              <table id="tc-matches-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th data-i18n="th_annotation">Annotation</th>
+                    <th data-i18n="th_type">Type</th>
+                    <th data-i18n="th_3d_feature">3D Feature</th>
+                    <th data-i18n="th_drawing_spec">Drawing Spec</th>
+                    <th data-i18n="th_3d_actual">3D Actual</th>
+                    <th data-i18n="th_confidence">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody id="tc-matches-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div
+      id="lightbox"
+      class="lightbox-overlay"
+      onclick="this.classList.remove('active')"
+    >
+      <img id="lightbox-img" src="" alt="Enlarged chart" />
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- App Scripts -->
+    <script src="/static/js/viewer3d.js"></script>
+    <script src="/static/js/pdfviewer.js"></script>
+    <script src="/static/js/annotations.js"></script>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>

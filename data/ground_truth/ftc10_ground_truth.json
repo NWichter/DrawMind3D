@@ -1,0 +1,144 @@
+{
+  "test_case": "FTC-10",
+  "source": "nist",
+  "unit_system": "metric",
+  "description": "Complex metric part with counterbored holes, threaded holes, cross-drilled manifold holes, and precision fits",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 6.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø6 ±0.15"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 2.5,
+      "count": 8,
+      "is_through": true,
+      "description": "8X Ø2.5 ±0.15 holes in pocket"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 6.0,
+      "count": 2,
+      "is_through": false,
+      "description": "2X Ø6 ±0.15 mounting holes"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 6.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø6 ±0.15"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 10.0,
+      "count": 4,
+      "is_through": false,
+      "description": "4X ↧Ø10 ±0.25 counterbored holes (set 1)"
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 5.5,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø5.5 ±0.2"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "diameter_mm": 10.0,
+      "count": 4,
+      "is_through": false,
+      "description": "4X ↧Ø10 ±0.25 counterbored holes (set 2)"
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "diameter_mm": 3.5,
+      "count": 3,
+      "is_through": false,
+      "description": "3X Ø3.5 ±0.2 holes in boss"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "diameter_mm": 5.5,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø5.5 ±0.2"
+    },
+    {
+      "id": "gt_10",
+      "type": "diameter",
+      "diameter_mm": 10.0,
+      "count": 4,
+      "is_through": false,
+      "description": "4X ↧Ø10 ±0.25 counterbored holes (set 3)"
+    },
+    {
+      "id": "gt_11",
+      "type": "diameter",
+      "diameter_mm": 3.5,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø3.5 G6 precision fit"
+    },
+    {
+      "id": "gt_12",
+      "type": "diameter",
+      "diameter_mm": 3.5,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø3.5 G6 precision fit"
+    },
+    {
+      "id": "gt_13",
+      "type": "thread",
+      "diameter_mm": 3.0,
+      "count": 2,
+      "is_through": false,
+      "description": "2X M3x0.5-6g threaded holes (set 1)",
+      "thread": "M3",
+      "drill_diameter_mm": 2.5
+    },
+    {
+      "id": "gt_14",
+      "type": "thread",
+      "diameter_mm": 3.0,
+      "count": 2,
+      "is_through": false,
+      "description": "2X M3x0.5-6g threaded holes (set 2)",
+      "thread": "M3",
+      "drill_diameter_mm": 2.5
+    },
+    {
+      "id": "gt_15",
+      "type": "thread",
+      "diameter_mm": 3.0,
+      "count": 2,
+      "is_through": false,
+      "description": "2X M3x0.5-6g threaded holes (set 3)",
+      "thread": "M3",
+      "drill_diameter_mm": 2.5
+    },
+    {
+      "id": "gt_16",
+      "type": "diameter",
+      "diameter_mm": 7.0,
+      "count": 4,
+      "is_through": true,
+      "description": "4X Ø7 ±0.25 through holes"
+    }
+  ],
+  "total_unique_annotations": 16,
+  "total_individual_holes": 41
+}

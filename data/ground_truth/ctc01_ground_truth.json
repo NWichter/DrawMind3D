@@ -1,0 +1,58 @@
+{
+  "test_case": "CTC-01",
+  "source": "nist",
+  "unit_system": "metric",
+  "description": "Metric part with concentric hole patterns, datum references, and position tolerances",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 10.0,
+      "count": 6,
+      "is_through": false,
+      "description": "6X Ø10 holes"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 20.0,
+      "count": 16,
+      "is_through": false,
+      "description": "Ø20 +0.05/-0.10"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 25.0,
+      "count": 4,
+      "is_through": false,
+      "description": "Ø25 ±0.15"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 35.0,
+      "count": 4,
+      "is_through": false,
+      "description": "Ø35 (34.8-35.2)"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 40.0,
+      "count": 2,
+      "is_through": false,
+      "description": "Ø40 holes"
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 50.0,
+      "count": 4,
+      "is_through": false,
+      "description": "Ø50 holes"
+    }
+  ],
+  "total_unique_annotations": 6,
+  "total_individual_holes": 36
+}

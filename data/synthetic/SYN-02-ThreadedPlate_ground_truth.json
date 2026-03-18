@@ -1,0 +1,82 @@
+{
+  "test_case": "SYN-02-ThreadedPlate",
+  "source": "synthetic",
+  "unit_system": "metric",
+  "description": "Plate with metric threaded holes M6, M8, M10 with tolerance classes",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "thread",
+      "diameter_mm": 5.0,
+      "count": 4,
+      "is_through": true,
+      "description": "Hole 1",
+      "thread": "M6",
+      "drill_diameter_mm": 5.0
+    },
+    {
+      "id": "gt_02",
+      "type": "thread",
+      "diameter_mm": 5.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 2",
+      "thread": "M6",
+      "drill_diameter_mm": 5.0
+    },
+    {
+      "id": "gt_03",
+      "type": "thread",
+      "diameter_mm": 5.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 3",
+      "thread": "M6",
+      "drill_diameter_mm": 5.0
+    },
+    {
+      "id": "gt_04",
+      "type": "thread",
+      "diameter_mm": 5.0,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 4",
+      "thread": "M6",
+      "drill_diameter_mm": 5.0
+    },
+    {
+      "id": "gt_05",
+      "type": "thread",
+      "diameter_mm": 6.8,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 5",
+      "thread": "M8",
+      "drill_diameter_mm": 6.8,
+      "depth_mm": 12
+    },
+    {
+      "id": "gt_06",
+      "type": "thread",
+      "diameter_mm": 6.8,
+      "count": 1,
+      "is_through": false,
+      "description": "Hole 6",
+      "thread": "M8",
+      "drill_diameter_mm": 6.8,
+      "depth_mm": 12
+    },
+    {
+      "id": "gt_07",
+      "type": "thread",
+      "diameter_mm": 8.5,
+      "count": 1,
+      "is_through": true,
+      "description": "Hole 7",
+      "thread": "M10",
+      "drill_diameter_mm": 8.5
+    }
+  ],
+  "total_unique_annotations": 7,
+  "total_individual_holes": 10
+}
