@@ -1,0 +1,22 @@
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+tmp/
+data/output/
+*.egg-info
+dist/
+build/
+.env
+RESEARCH.md
+
+# Internal notes and tooling state, never part of the image
+hack-internal/
+hackathon-context/
+.omc/
+.claude/
+CLAUDE.md
+# Mounted as a volume by docker-compose
+data/

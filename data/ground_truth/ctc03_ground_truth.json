@@ -1,0 +1,42 @@
+{
+  "test_case": "CTC-03",
+  "source": "nist",
+  "unit_system": "inch",
+  "description": "Inch part with hole patterns and position tolerances",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 11.125,
+      "count": 4,
+      "is_through": false,
+      "description": "2X Ø.438 ±.005"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 12.7,
+      "count": 11,
+      "is_through": false,
+      "description": "Ø.500 holes"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 15.875,
+      "count": 4,
+      "is_through": false,
+      "description": "4X Ø.625 ±.005"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 19.05,
+      "count": 4,
+      "is_through": false,
+      "description": "Ø.750 holes"
+    }
+  ],
+  "total_unique_annotations": 4,
+  "total_individual_holes": 23
+}

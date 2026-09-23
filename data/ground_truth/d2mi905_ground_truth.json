@@ -1,0 +1,16 @@
+{
+  "test_case": "D2MI-905",
+  "source": "nist_d2mi",
+  "unit_system": "inch",
+  "description": "NIST D2MI machined pin 827-9999-905, simple part with one countersink through-hole",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 3.569,
+      "count": 1,
+      "is_through": true,
+      "description": "Ø.140 countersink through-hole"
+    }
+  ]
+}

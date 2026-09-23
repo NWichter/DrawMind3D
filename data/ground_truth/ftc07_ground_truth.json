@@ -1,0 +1,120 @@
+{
+  "test_case": "FTC-07",
+  "source": "NIST MBE PMI FTC-07 FSI (Feature and Specification Index)",
+  "unit_system": "inch",
+  "description": "Manifold block with threaded holes, counterbored mounting holes, and gland holes",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "text": "0.250 +.003/-.000",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 1,
+      "feature_ids": ["F3"],
+      "description": "Datum Feature B"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "text": "0.250 +.003/-.000",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 1,
+      "feature_ids": ["F5"],
+      "description": "Datum Feature C"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "text": "2X 0.250 +.003/-.000",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 2,
+      "feature_ids": ["F15", "F16"],
+      "description": "Other Cover Mtg Holes"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "text": "4X 0.250 +.003/-.001",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 4,
+      "feature_ids": ["F19", "F20", "F21", "F22"],
+      "description": "Back Panel Mtg Holes"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "text": "4X 0.281 +.006/-.001",
+      "diameter_mm": 7.1374,
+      "diameter_inch": 0.281,
+      "count": 4,
+      "feature_ids": ["F28", "F29", "F30", "F31"],
+      "description": "Counterbored Holes for Cover Mtg"
+    },
+    {
+      "id": "gt_06",
+      "type": "counterbore",
+      "text": "0.438 +/-.010",
+      "diameter_mm": 11.1252,
+      "diameter_inch": 0.438,
+      "count": 4,
+      "feature_ids": ["F32", "F33", "F34", "F35"],
+      "description": "Counterbore diameter"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "text": "3X 0.875 +/-.020",
+      "diameter_mm": 22.225,
+      "diameter_inch": 0.875,
+      "count": 3,
+      "feature_ids": ["F40", "F41", "F42"],
+      "description": "Gland Mtg Holes (wider tolerance)"
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "text": "3X 0.875 +/-.010",
+      "diameter_mm": 22.225,
+      "diameter_inch": 0.875,
+      "count": 3,
+      "feature_ids": ["F40", "F41", "F42"],
+      "description": "Gland Mtg Holes (tighter tolerance)"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "text": "4X 0.173 +.005/-.001",
+      "diameter_mm": 4.3942,
+      "diameter_inch": 0.173,
+      "count": 4,
+      "feature_ids": ["F43", "F44", "F45", "F46"],
+      "description": "Placard Mtg Holes"
+    },
+    {
+      "id": "gt_10",
+      "type": "diameter",
+      "text": "2X 0.594 +.012/-.002",
+      "diameter_mm": 15.0876,
+      "diameter_inch": 0.594,
+      "count": 2,
+      "feature_ids": ["F47", "F48"],
+      "description": "Bulkhead Union Holes (set 1)"
+    },
+    {
+      "id": "gt_11",
+      "type": "diameter",
+      "text": "2X 0.594 +.012/-.002",
+      "diameter_mm": 15.0876,
+      "diameter_inch": 0.594,
+      "count": 2,
+      "feature_ids": ["F49", "F50"],
+      "description": "Bulkhead Union Holes (set 2)"
+    }
+  ],
+  "total_unique_annotations": 11,
+  "total_individual_holes": 30
+}

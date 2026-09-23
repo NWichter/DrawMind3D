@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    # Published on loopback only. The application has no authentication, so
+    # set BIND_ADDRESS=0.0.0.0 only behind an authenticated reverse proxy.
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${PORT:-8000}:${PORT:-8000}"
+    environment:
+      - PORT=${PORT:-8000}
+      - HOST=0.0.0.0
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./evaluation:/app/evaluation
+    restart: unless-stopped

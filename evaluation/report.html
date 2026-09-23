@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DrawMind3D Evaluation Report</title>
+<style>
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { font: 15px/1.6 -apple-system, "Segoe UI", Roboto, sans-serif;
+       margin: 0 auto; max-width: 1080px; padding: 32px 20px 64px;
+       color: #1a1d23; background: #fff; }
+h1 { font-size: 1.75rem; margin: 0 0 4px; }
+h2 { font-size: 1.15rem; margin: 40px 0 12px; padding-bottom: 6px;
+     border-bottom: 1px solid #e3e6ea; }
+h3 { font-size: 1rem; margin: 24px 0 8px; }
+.sub { color: #6b7280; margin: 0 0 8px; }
+.verdict { background: #f4f7fb; border: 1px solid #d7e0ea; border-radius: 8px;
+           padding: 4px 20px 16px; margin-top: 28px; }
+.verdict h2 { border: none; margin-top: 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #eceff3; }
+th { font-weight: 600; color: #4b5563; font-size: 0.8rem; text-transform: uppercase;
+     letter-spacing: 0.03em; }
+td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.missed { font-size: 0.82rem; color: #374151; }
+tbody tr:hover { background: #f8fafc; }
+.bar { display: inline-block; width: 52px; height: 7px; border-radius: 4px;
+       background: #e3e8ee; vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: #2f6fed; }
+.muted { color: #6b7280; font-size: 0.85rem; }
+.warn { background: #fff4e5; border-left: 3px solid #d97706; padding: 10px 14px;
+        border-radius: 4px; }
+.ok { color: #15803d; }
+.flag { display: inline-block; font-size: 0.68rem; padding: 1px 6px; border-radius: 9px;
+        background: #eef2f7; color: #4b5563; vertical-align: middle; cursor: help; }
+.flag.bad { background: #fdeaea; color: #b91c1c; }
+.scroll { overflow-x: auto; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 20px; margin: 0; }
+dt { color: #6b7280; }
+dd { margin: 0; }
+code { background: #f1f3f6; padding: 1px 5px; border-radius: 4px; font-size: 0.88em; }
+@media (prefers-color-scheme: dark) {
+  body { background: #14171c; color: #e6e8eb; }
+  h2 { border-color: #2a2f38; }
+  .verdict { background: #1a1f27; border-color: #2c333d; }
+  th, td { border-color: #242932; }
+  th { color: #9aa4b2; }
+  tbody tr:hover { background: #1b2028; }
+  .bar { background: #2a303a; }
+  .muted, dt { color: #9aa4b2; }
+  .flag { background: #232a34; color: #9aa4b2; }
+  .flag.bad { background: #3a1f1f; color: #f87171; }
+  .warn { background: #2e2314; border-left-color: #f59e0b; }
+  code { background: #232a34; }
+  .ok { color: #4ade80; }
+}
+@media print { body { max-width: none; } .verdict { background: none; } }
+</style>
+</head>
+<body>
+<h1>DrawMind3D &mdash; Evaluation Report</h1><p class="sub">Linking annotations on 2D technical drawings to hole features in the matching 3D model.</p>
+    <section class="verdict">
+      <h2>What the measurement says</h2>
+      
+      <p>Across <strong>21 reference drawings</strong>, DrawMind3D found
+      <strong>115 of 138</strong> required callouts (83.3%) and linked
+      <strong>94.8%</strong> of them to the correct hole in the 3D model.</p>
+      <p>Fully offline, with no drawing leaving the machine, it reaches <strong>27.4% F1</strong> and <strong>40.0%</strong> linking accuracy.</p>
+      <p class="muted">Every number on this page comes from
+      <code>evaluation/results/</code> and can be reproduced with
+      <code>uv run python scripts/evaluate.py --llm</code>.</p>
+    </section>
+    
+    <section>
+      <h2>Operating modes</h2>
+      <p>The offline mode exists for drawings that may not be sent to a third party.
+      It is the same pipeline with every model call disabled.</p>
+      <table>
+        <thead><tr><th>Mode</th><th>Precision</th><th>Recall</th><th>F1</th>
+        <th>Linking</th><th>Per drawing</th></tr></thead>
+        <tbody><tr>
+              <td>With vision model</td>
+              <td class="num">71.3%</td>
+              <td class="num">81.8%</td>
+              <td class="num"><span class="bar"><span class="bar-fill" style="width:72.2%"></span></span> 72.2%</td>
+              <td class="num"><span class="bar"><span class="bar-fill" style="width:94.8%"></span></span> 94.8%</td>
+              <td class="num">19.2 s</td>
+            </tr><tr>
+              <td>Offline (regex + OCR only)</td>
+              <td class="num">34.7%</td>
+              <td class="num">27.0%</td>
+              <td class="num"><span class="bar"><span class="bar-fill" style="width:27.4%"></span></span> 27.4%</td>
+              <td class="num"><span class="bar"><span class="bar-fill" style="width:40.0%"></span></span> 40.0%</td>
+              <td class="num">5.0 s</td>
+            </tr></tbody>
+      </table>
+    </section>
+    <section><h2>Where it fails</h2>
+        <table>
+          <thead><tr><th>Mode</th><th>Callouts missed</th>
+          <th>Never read from the page</th><th>Read but not understood</th></tr></thead>
+          <tbody><tr>
+              <td>With vision model</td>
+              <td class="num">23</td>
+              <td class="num">20 (87.0%)</td>
+              <td class="num">3 (13.0%)</td>
+            </tr><tr>
+              <td>Offline (regex + OCR only)</td>
+              <td class="num">90</td>
+              <td class="num">73 (81.1%)</td>
+              <td class="num">17 (18.9%)</td>
+            </tr></tbody>
+        </table>
+        <p>A callout in the first column never reached the pipeline as text: it is drawn
+        as path geometry or is unreadable by OCR, and better parsing cannot recover it.
+        One in the second column was read and then not understood, which is a grammar gap
+        and cheap to close. The split is found by searching the extracted text for the
+        missing callout, so it is indicative rather than exact.</p>
+        </section>
+    <section>
+      <h2>Per drawing &mdash; With vision model</h2>
+      <p>Sorted worst first, so the hard cases are visible without scrolling.</p>
+      <div class="scroll">
+      <table>
+        <thead><tr><th>Case</th><th>Required</th><th>Found</th><th>False&nbsp;pos.</th>
+        <th>Missed</th><th>F1</th><th>Linking</th><th>Time</th><th>Missed callouts</th></tr></thead>
+        <tbody><tr>
+              <td><strong>CTC-03</strong> <span class='flag' title='Unit system taken from ground truth'>units</span></td>
+              <td class="num">4</td>
+              <td class="num">2</td>
+              <td class="num">4</td>
+              <td class="num">2</td>
+              <td class="num">40.0%</td>
+              <td class="num">70.0%</td>
+              <td class="num">6.0 s</td>
+              <td class="missed">Ã˜.500 holes, Ã˜.750 holes <span class="muted">(2 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>D2MI-905</strong> <span class='flag' title='Unit system taken from ground truth'>units</span></td>
+              <td class="num">1</td>
+              <td class="num">1</td>
+              <td class="num">3</td>
+              <td class="num">0</td>
+              <td class="num">40.0%</td>
+              <td class="num">100.0%</td>
+              <td class="num">8.9 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>D2MI-907</strong> <span class='flag' title='Unit system taken from ground truth'>units</span></td>
+              <td class="num">1</td>
+              <td class="num">1</td>
+              <td class="num">3</td>
+              <td class="num">0</td>
+              <td class="num">40.0%</td>
+              <td class="num">100.0%</td>
+              <td class="num">9.6 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>CTC-05</strong> <span class='flag' title='Unit system taken from ground truth'>units</span></td>
+              <td class="num">3</td>
+              <td class="num">1</td>
+              <td class="num">0</td>
+              <td class="num">2</td>
+              <td class="num">50.0%</td>
+              <td class="num">100.0%</td>
+              <td class="num">36.7 s</td>
+              <td class="missed">Ã˜.500 holes, Ã˜.750 holes <span class="muted">(2 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>CTC-01</strong> </td>
+              <td class="num">6</td>
+              <td class="num">3</td>
+              <td class="num">2</td>
+              <td class="num">3</td>
+              <td class="num">54.5%</td>
+              <td class="num">100.0%</td>
+              <td class="num">12.4 s</td>
+              <td class="missed">6X Ã˜10 holes, Ã˜40 holes, Ã˜50 holes <span class="muted">(3 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>D2MI-904</strong> </td>
+              <td class="num">5</td>
+              <td class="num">3</td>
+              <td class="num">3</td>
+              <td class="num">2</td>
+              <td class="num">54.5%</td>
+              <td class="num">100.0%</td>
+              <td class="num">33.3 s</td>
+              <td class="missed">4X Ã˜.128 simple holes, Ã˜.270 simple hole <span class="muted">(2 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>CTC-02</strong> </td>
+              <td class="num">7</td>
+              <td class="num">4</td>
+              <td class="num">1</td>
+              <td class="num">3</td>
+              <td class="num">66.7%</td>
+              <td class="num">85.7%</td>
+              <td class="num">22.3 s</td>
+              <td class="missed">Ã˜30 holes, Ã˜36 holes, Ã˜50 holes <span class="muted">(2 unread, 1 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>SYN-02-ThreadedPlate</strong> </td>
+              <td class="num">7</td>
+              <td class="num">5</td>
+              <td class="num">3</td>
+              <td class="num">2</td>
+              <td class="num">66.7%</td>
+              <td class="num">85.7%</td>
+              <td class="num">5.8 s</td>
+              <td class="missed">Hole 6, Hole 7 <span class="muted">(0 unread, 2 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>CTC-04</strong> </td>
+              <td class="num">5</td>
+              <td class="num">4</td>
+              <td class="num">2</td>
+              <td class="num">1</td>
+              <td class="num">72.7%</td>
+              <td class="num">97.7%</td>
+              <td class="num">14.6 s</td>
+              <td class="missed">Ã˜50 features <span class="muted">(1 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>D2MI-906</strong> </td>
+              <td class="num">4</td>
+              <td class="num">4</td>
+              <td class="num">3</td>
+              <td class="num">0</td>
+              <td class="num">72.7%</td>
+              <td class="num">88.9%</td>
+              <td class="num">33.2 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>D2MI-908</strong> </td>
+              <td class="num">4</td>
+              <td class="num">4</td>
+              <td class="num">3</td>
+              <td class="num">0</td>
+              <td class="num">72.7%</td>
+              <td class="num">100.0%</td>
+              <td class="num">34.9 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>FTC-09</strong> </td>
+              <td class="num">15</td>
+              <td class="num">11</td>
+              <td class="num">2</td>
+              <td class="num">4</td>
+              <td class="num">78.6%</td>
+              <td class="num">100.0%</td>
+              <td class="num">27.5 s</td>
+              <td class="missed">0.140 +/-.008, 2X 0.234 +/-.008, 3X 0.250 +.003/-.000, 2X 0.156 +/-.008 <span class="muted">(4 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>FTC-08</strong> </td>
+              <td class="num">9</td>
+              <td class="num">6</td>
+              <td class="num">0</td>
+              <td class="num">3</td>
+              <td class="num">80.0%</td>
+              <td class="num">100.0%</td>
+              <td class="num">22.6 s</td>
+              <td class="missed">Ã˜.228 +.005/-.001 Datum Feature K, Ã˜.242 +.005/-.001 Datum Feature L, 2X Ã˜.238 +.005/-.001 other main mounting holes <span class="muted">(3 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>SYN-01-SimpleBlock</strong> </td>
+              <td class="num">6</td>
+              <td class="num">6</td>
+              <td class="num">2</td>
+              <td class="num">0</td>
+              <td class="num">85.7%</td>
+              <td class="num">100.0%</td>
+              <td class="num">4.4 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>SYN-04-MixedFeatures</strong> </td>
+              <td class="num">9</td>
+              <td class="num">9</td>
+              <td class="num">3</td>
+              <td class="num">0</td>
+              <td class="num">85.7%</td>
+              <td class="num">100.0%</td>
+              <td class="num">9.3 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>SYN-03-InchPart</strong> </td>
+              <td class="num">5</td>
+              <td class="num">5</td>
+              <td class="num">1</td>
+              <td class="num">0</td>
+              <td class="num">90.9%</td>
+              <td class="num">100.0%</td>
+              <td class="num">4.6 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>FTC-07</strong> </td>
+              <td class="num">11</td>
+              <td class="num">11</td>
+              <td class="num">1</td>
+              <td class="num">0</td>
+              <td class="num">95.7%</td>
+              <td class="num">92.0%</td>
+              <td class="num">24.6 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>FTC-10</strong> </td>
+              <td class="num">16</td>
+              <td class="num">15</td>
+              <td class="num">0</td>
+              <td class="num">1</td>
+              <td class="num">96.8%</td>
+              <td class="num">88.9%</td>
+              <td class="num">36.4 s</td>
+              <td class="missed">Ã˜3.5 G6 precision fit <span class="muted">(1 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>FTC-06</strong> </td>
+              <td class="num">8</td>
+              <td class="num">8</td>
+              <td class="num">0</td>
+              <td class="num">0</td>
+              <td class="num">100.0%</td>
+              <td class="num">87.5%</td>
+              <td class="num">20.4 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>FTC-11</strong> </td>
+              <td class="num">0</td>
+              <td class="num">0</td>
+              <td class="num">0</td>
+              <td class="num">0</td>
+              <td class="num">100.0%</td>
+              <td class="num">100.0%</td>
+              <td class="num">29.2 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr><tr>
+              <td><strong>SYN-05-ManyHoles</strong> </td>
+              <td class="num">12</td>
+              <td class="num">12</td>
+              <td class="num">0</td>
+              <td class="num">0</td>
+              <td class="num">100.0%</td>
+              <td class="num">100.0%</td>
+              <td class="num">7.3 s</td>
+              <td class="missed"><span class='ok'>none</span> <span class="muted">(0 unread, 0 unparsed)</span></td>
+            </tr></tbody>
+      </table>
+      </div>
+    </section>
+    
+    <section>
+      <h2>How these numbers were produced</h2>
+      <dl>
+        <dt>Pipeline version</dt><dd>1.0.0</dd>
+        <dt>Vision model</dt><dd><code>google/gemini-2.5-flash</code></dd>
+        <dt>Results read from</dt><dd><code>C:\Users\nikla\Desktop\Sonstiges\Projekte\DrawMind3D\evaluation\results</code></dd>
+        <dt>Report generated</dt><dd>2026-09-22 11:22 UTC</dd>
+        <dt>Unit system taken from ground truth</dt>
+        <dd>8 case(s) &mdash; drawings whose text layer carries no unit evidence</dd>
+      </dl>
+      <h3>What this does not measure</h3>
+      <ul>
+        <li>Only cylindrical hole features are evaluated. Profiles, radii, surface finish
+        and geometric tolerancing are extracted but not scored.</li>
+        <li>The corpus is public reference data (NIST PMI, plus synthetic parts) and
+        production drawings from a given shop may differ in notation and quality.</li>
+        <li>Linking accuracy is measured against holes the STEP model actually contains;
+        a drawing callout with no counterpart in the model cannot be scored.</li>
+        <li>Cases where the unit system came from ground truth are flagged in the table;
+        their extraction score would be lower without that assist.</li>
+      </ul>
+    </section>
+    
+</body>
+</html>

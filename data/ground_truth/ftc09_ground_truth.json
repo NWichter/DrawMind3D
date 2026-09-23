@@ -1,0 +1,160 @@
+{
+  "test_case": "FTC-09",
+  "source": "NIST MBE PMI FTC-09 FSI",
+  "unit_system": "inch",
+  "description": "Sheet metal flat panel with through-holes, slots, and dual-unit specifications",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "text": "0.234 +/-.008",
+      "diameter_mm": 5.9436,
+      "diameter_inch": 0.234,
+      "count": 1,
+      "feature_ids": ["F2"],
+      "description": "Datum Feature B"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "text": "0.234 +/-.008",
+      "diameter_mm": 5.9436,
+      "diameter_inch": 0.234,
+      "count": 1,
+      "feature_ids": ["F3"],
+      "description": "Datum Feature C"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "text": "0.750 +/-.008",
+      "diameter_mm": 19.05,
+      "diameter_inch": 0.750,
+      "count": 1,
+      "feature_ids": ["F4"],
+      "description": "Datum Feature D"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "text": "2X 0.221 +/-.008",
+      "diameter_mm": 5.6134,
+      "diameter_inch": 0.221,
+      "count": 2,
+      "feature_ids": ["F5", "F6"],
+      "description": "Datum Feature E"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "text": "4X 0.250 +/-.008",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 4,
+      "feature_ids": ["F7", "F8", "F9", "F10"],
+      "description": "Datum Feature F"
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "text": "0.375 +/-.008",
+      "diameter_mm": 9.525,
+      "diameter_inch": 0.375,
+      "count": 1,
+      "feature_ids": ["F11"],
+      "description": "Datum Feature G"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "text": "0.140 +/-.008",
+      "diameter_mm": 3.556,
+      "diameter_inch": 0.140,
+      "count": 1,
+      "feature_ids": ["F12"],
+      "description": "Datum Feature H"
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "text": "2X 0.234 +/-.008",
+      "diameter_mm": 5.9436,
+      "diameter_inch": 0.234,
+      "count": 2,
+      "feature_ids": ["F18", "F19"],
+      "description": "Panel Mounting Holes"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "text": "3X 0.250 +.003/-.000",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 3,
+      "feature_ids": ["F20", "F21", "F22"],
+      "description": "Horizontal Holes"
+    },
+    {
+      "id": "gt_10",
+      "type": "diameter",
+      "text": "3X 0.250 +.003/-.000",
+      "diameter_mm": 6.35,
+      "diameter_inch": 0.250,
+      "count": 3,
+      "feature_ids": ["F24", "F25", "F26"],
+      "description": "Vertical Holes"
+    },
+    {
+      "id": "gt_11",
+      "type": "diameter",
+      "text": "3X 0.156 +/-.008",
+      "diameter_mm": 3.9624,
+      "diameter_inch": 0.156,
+      "count": 3,
+      "feature_ids": ["F32", "F33", "F34"],
+      "description": "Polar Holes"
+    },
+    {
+      "id": "gt_12",
+      "type": "diameter",
+      "text": "2X 0.315 +/-.008 [8 +/-0.2]",
+      "diameter_mm": 8.001,
+      "diameter_inch": 0.315,
+      "count": 2,
+      "feature_ids": ["F35", "F36"],
+      "description": "Dual Unit Holes"
+    },
+    {
+      "id": "gt_13",
+      "type": "diameter",
+      "text": "3X 0.281 +/-.008",
+      "diameter_mm": 7.1374,
+      "diameter_inch": 0.281,
+      "count": 3,
+      "feature_ids": ["F37", "F38", "F39"],
+      "description": "Bidirectional Tolerance Holes"
+    },
+    {
+      "id": "gt_14",
+      "type": "diameter",
+      "text": "2X 0.156 +/-.008",
+      "diameter_mm": 3.9624,
+      "diameter_inch": 0.156,
+      "count": 2,
+      "feature_ids": ["F40", "F41"],
+      "description": "SIM REQT LH Holes"
+    },
+    {
+      "id": "gt_15",
+      "type": "diameter",
+      "text": "2X 0.156 +/-.008",
+      "diameter_mm": 3.9624,
+      "diameter_inch": 0.156,
+      "count": 2,
+      "feature_ids": ["F42", "F43"],
+      "description": "SIM REQT RH Holes"
+    }
+  ],
+  "total_unique_annotations": 15,
+  "total_individual_holes": 34
+}

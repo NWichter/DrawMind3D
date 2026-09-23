@@ -1,0 +1,96 @@
+{
+  "test_case": "CTC-02",
+  "source": "nist",
+  "unit_system": "metric",
+  "description": "Complex metric assembly with multiple diameter features, counterbores, and datum references",
+  "expected_annotations": [
+    {
+      "id": "gt_01",
+      "type": "diameter",
+      "diameter_mm": 12.0,
+      "count": 10,
+      "is_through": false,
+      "description": "Ø12 ±0.05"
+    },
+    {
+      "id": "gt_02",
+      "type": "diameter",
+      "diameter_mm": 22.0,
+      "count": 6,
+      "is_through": false,
+      "description": "Ø22 ±0.1"
+    },
+    {
+      "id": "gt_03",
+      "type": "diameter",
+      "diameter_mm": 30.0,
+      "count": 4,
+      "is_through": false,
+      "description": "Ø30 holes"
+    },
+    {
+      "id": "gt_04",
+      "type": "diameter",
+      "diameter_mm": 36.0,
+      "count": 6,
+      "is_through": false,
+      "description": "Ø36 holes"
+    },
+    {
+      "id": "gt_05",
+      "type": "diameter",
+      "diameter_mm": 40.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø40 ±0.15"
+    },
+    {
+      "id": "gt_06",
+      "type": "diameter",
+      "diameter_mm": 50.0,
+      "count": 16,
+      "is_through": false,
+      "description": "Ø50 holes"
+    },
+    {
+      "id": "gt_07",
+      "type": "diameter",
+      "diameter_mm": 52.0,
+      "count": 1,
+      "is_through": false,
+      "description": "2X Ø52 ±0.15"
+    },
+    {
+      "id": "gt_08",
+      "type": "diameter",
+      "diameter_mm": 85.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø85 outer feature",
+      "optional": true,
+      "reason_optional": "Convex outer feature, not a drilled hole"
+    },
+    {
+      "id": "gt_09",
+      "type": "diameter",
+      "diameter_mm": 100.0,
+      "count": 2,
+      "is_through": false,
+      "description": "2X Ø100 ±0.15 outer feature",
+      "optional": true,
+      "reason_optional": "Convex outer feature, not a drilled hole"
+    },
+    {
+      "id": "gt_10",
+      "type": "diameter",
+      "diameter_mm": 120.0,
+      "count": 1,
+      "is_through": false,
+      "description": "Ø120 outer feature",
+      "optional": true,
+      "reason_optional": "Convex outer feature, not a drilled hole"
+    }
+  ],
+  "total_unique_annotations": 7,
+  "total_individual_holes": 44
+}
